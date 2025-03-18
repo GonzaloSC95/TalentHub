@@ -15,7 +15,8 @@ El Sistema de Gestión de Vacantes de Empleo y Solicitudes de Usuarios es una ap
 ![](Resources/Documentacion/img/Aspose.Words.3e67954a-83a3-4d22-bea4-71ab62b9e107.002.jpeg)
 
 4. **Funcionalidades Principales**
-  4.1. **Para la Empresa**
+
+   4.1. **Para la Empresa**
   
   - Publicación de Vacantes: La empresa puede publicar nuevas vacantes de empleo, incluyendo detalles como título del puesto, descripción del trabajo, requisitos y ubicación. El estado de la vacante será “CREADA”.
   - Gestión de Vacantes: la empresa puede ver, editar o eliminar vacantes publicadas (el estado de la vacante será “CANCELADA”, y no se eliminará de la base de datos).
