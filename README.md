@@ -1,6 +1,6 @@
-﻿**Reto segundo DAW: Sistema de Gestión de Vacantes de Empleo y Solicitudes de Usuarios**
+**Reto segundo DAW: Sistema de Gestión de Vacantes de Empleo y Solicitudes de Usuarios**
 
-1. **Introducci**
+1. **Introducción**
 
 El Sistema de Gestión de Vacantes de Empleo y Solicitudes de Usuarios es una aplicación web diseñada para simplificar y agilizar el proceso de contratación de personal para empresas y la búsqueda de empleo para los usuarios. Este sistema permite publicar vacantes de empleo y gestionar las solicitudes recibidas, mientras que los usuarios pueden buscar y postularse a las vacantes disponibles.
 
