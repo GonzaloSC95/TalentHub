@@ -20,7 +20,7 @@ tanto para empresas como para usuarios individuales.
 
 3. **Modelo de base de datos**
 
-![](\Resources\Documentacion\img\Aspose.Words.3e67954a-83a3-4d22-bea4-71ab62b9e107.002.jpeg)
+![](.\Resources\Documentacion\img\Aspose.Words.3e67954a-83a3-4d22-bea4-71ab62b9e107.002.jpeg)
 
 4. **Funcionalidades Principales**
 5. **Para la Empresa**:
