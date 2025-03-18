@@ -23,15 +23,15 @@ El Sistema de Gestión de Vacantes de Empleo y Solicitudes de Usuarios es una ap
   - Cuando una vacante se asigna a un candidato el estado quedará “ASIGNADA”, y la solicitud de este usuario se pondrá el estado a 1(adjudicada).
   - Recepción de Solicitudes: La empresa puede ver y gestionar las solicitudes recibidas para cada vacante, incluyendo la capacidad de revisar currículums y enviar respuestas a los solicitantes (esto último es opcional).
   - Modificación de los datos de su Empresa.
-
-  4.2. **Para el Administrador**
+    
+   4.2. **Para el Administrador**
   
   - Gestión de Empresas: Da de alta las Empresas que quieran publicar vacantes en nuestro sistema. Además de editar, ver detalles y eliminar.
   - Para dar de alta una empresa nos tienen que proporcionar los datos de la Empresa(ver tabla Empresas), así como los datos del usuario(ver tabla usuarios). El usuario le daremos de alta asignando una password al azar (te inventas el algoritmo), y el rol “EMPRESA”.
   - Gestión de Categorías: Crud de categorías.
   - Gestión de Usuarios: posibilidad de dar de baja usuarios por mal uso del sistema(no se da de baja, se modifica la columna enabled a 0).
   - Gestión de nuevos administradores: CRUD de usuarios con perfil “ADMON”.
-
+    
   4.3. **Para Usuarios**
   
   - Registro de Usuario: Los usuarios pueden registrarse en el sistema.
