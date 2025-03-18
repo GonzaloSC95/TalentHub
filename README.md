@@ -18,26 +18,26 @@ El Sistema de Gestión de Vacantes de Empleo y Solicitudes de Usuarios es una ap
 
    4.1. **Para la Empresa**
   
-  - Publicación de Vacantes: La empresa puede publicar nuevas vacantes de empleo, incluyendo detalles como título del puesto, descripción del trabajo, requisitos y ubicación. El estado de la vacante será “CREADA”.
-  - Gestión de Vacantes: la empresa puede ver, editar o eliminar vacantes publicadas (el estado de la vacante será “CANCELADA”, y no se eliminará de la base de datos).
-  - Cuando una vacante se asigna a un candidato el estado quedará “ASIGNADA”, y la solicitud de este usuario se pondrá el estado a 1(adjudicada).
-  - Recepción de Solicitudes: La empresa puede ver y gestionar las solicitudes recibidas para cada vacante, incluyendo la capacidad de revisar currículums y enviar respuestas a los solicitantes (esto último es opcional).
-  - Modificación de los datos de su Empresa.
-    
-   4.2. **Para el Administrador**
+     - Publicación de Vacantes: La empresa puede publicar nuevas vacantes de empleo, incluyendo detalles como título del puesto, descripción del trabajo, requisitos y ubicación. El estado de la vacante será “CREADA”.
+     - Gestión de Vacantes: la empresa puede ver, editar o eliminar vacantes publicadas (el estado de la vacante será “CANCELADA”, y no se eliminará de la base de datos).
+     - Cuando una vacante se asigna a un candidato el estado quedará “ASIGNADA”, y la solicitud de este usuario se pondrá el estado a 1(adjudicada).
+     - Recepción de Solicitudes: La empresa puede ver y gestionar las solicitudes recibidas para cada vacante, incluyendo la capacidad de revisar currículums y enviar respuestas a los solicitantes (esto último es opcional).
+     - Modificación de los datos de su Empresa.
+
+    4.2. **Para el Administrador**
   
-  - Gestión de Empresas: Da de alta las Empresas que quieran publicar vacantes en nuestro sistema. Además de editar, ver detalles y eliminar.
-  - Para dar de alta una empresa nos tienen que proporcionar los datos de la Empresa(ver tabla Empresas), así como los datos del usuario(ver tabla usuarios). El usuario le daremos de alta asignando una password al azar (te inventas el algoritmo), y el rol “EMPRESA”.
-  - Gestión de Categorías: Crud de categorías.
-  - Gestión de Usuarios: posibilidad de dar de baja usuarios por mal uso del sistema(no se da de baja, se modifica la columna enabled a 0).
-  - Gestión de nuevos administradores: CRUD de usuarios con perfil “ADMON”.
-    
-  4.3. **Para Usuarios**
+     - Gestión de Empresas: Da de alta las Empresas que quieran publicar vacantes en nuestro sistema. Además de editar, ver detalles y eliminar.
+     - Para dar de alta una empresa nos tienen que proporcionar los datos de la Empresa(ver tabla Empresas), así como los datos del usuario(ver tabla usuarios). El usuario le daremos de alta asignando una password al azar (te inventas el algoritmo), y el rol “EMPRESA”.
+     - Gestión de Categorías: Crud de categorías.
+     - Gestión de Usuarios: posibilidad de dar de baja usuarios por mal uso del sistema(no se da de baja, se modifica la columna enabled a 0).
+     - Gestión de nuevos administradores: CRUD de usuarios con perfil “ADMON”.
+
+    4.3. **Para Usuarios**
   
-  - Registro de Usuario: Los usuarios pueden registrarse en el sistema.
-  - Búsqueda de Empleo: Los usuarios pueden buscar vacantes de empleo utilizando filtros como empresas, tipo de contrato, categoría. Solo verán aquellas vacantes que están en estado “CREADA”.
-  - Postulación a Vacantes: Los usuarios pueden enviar solicitudes para las vacantes de empleo que les interesen, adjuntando su currículum, y en el campo detalles aspectos como : información personal, experiencia laboral y educación.
-  - Seguimiento de Solicitudes: Los usuarios pueden hacer un seguimiento del estado de sus solicitudes, ver si han sido revisadas o si han recibido alguna respuesta por parte de la empresa, con opción a cancelar la solicitud caso que no esté ya interesado.
+     - Registro de Usuario: Los usuarios pueden registrarse en el sistema.
+     - Búsqueda de Empleo: Los usuarios pueden buscar vacantes de empleo utilizando filtros como empresas, tipo de contrato, categoría. Solo verán aquellas vacantes que están en estado “CREADA”.
+     - Postulación a Vacantes: Los usuarios pueden enviar solicitudes para las vacantes de empleo que les interesen, adjuntando su currículum, y en el campo detalles aspectos como : información personal, experiencia laboral y educación.
+     - Seguimiento de Solicitudes: Los usuarios pueden hacer un seguimiento del estado de sus solicitudes, ver si han sido revisadas o si han recibido alguna respuesta por parte de la empresa, con opción a cancelar la solicitud caso que no esté ya interesado.
 
 5. **Tecnologías Utilizadas**
 
