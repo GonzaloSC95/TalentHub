@@ -5,6 +5,8 @@ import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -41,8 +43,11 @@ public class Solicitud implements Serializable{
 		
 		private String archivo;
 		private String comentarios;
-		private int estado; /* tinyint NOT NULL default 0,-- 0 presentada, 1 adjudicada*/
-	  	private String curriculum;
+		
+		@Enumerated(EnumType.ORDINAL)
+		private Estado estado = Estado.PRESENTADA; /* tinyint NOT NULL default 0,-- 0 presentada, 1 adjudicada*/
+	  	
+		private String curriculum;
 	  
 		@ManyToOne
 		@JoinColumn(name="id_vacante")

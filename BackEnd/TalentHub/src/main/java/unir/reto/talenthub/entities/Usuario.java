@@ -37,15 +37,15 @@ public class Usuario implements Serializable{
 			private String apellidos;
 			private String password;
 			
-			/*@Enumerated(EnumType.ORDINAL)*/
-			private int enabled /* DEFAULT 1*/;
+			@Enumerated(EnumType.ORDINAL)
+			private Enabled enabled = Enabled.ENABLED; /* DEFAULT 1*/
 			
 	  		@Column(name="fecha_Registro")
 	  		@Temporal(TemporalType.DATE)
 	  		private Date fechaRegistro;
 	  		
 	  		@Enumerated(EnumType.STRING)
-	  		private String rol;
+	  		private Rol rol;
 
 
 }
