@@ -1,4 +1,4 @@
-package unir.reto.talenthub.entities;
+package unir.reto.talenthub.entity;
 
 public enum Estado {
     PRESENTADA(0),

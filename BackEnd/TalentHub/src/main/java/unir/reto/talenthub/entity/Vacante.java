@@ -1,4 +1,4 @@
-package unir.reto.talenthub.entities;
+package unir.reto.talenthub.entity;
 
 import java.io.Serializable;
 import java.util.Date;
