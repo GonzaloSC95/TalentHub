@@ -31,9 +31,9 @@ public class Empresa implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id_empresa")
-	private int isEmpresa;
+	private int idEmpresa;
 	
-	private String cif;/* unique*/
+	private String cif;
 	
 	@Column(name="nombre_empresa") 
 	private String nombreEmpresa;

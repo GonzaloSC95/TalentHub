@@ -43,6 +43,7 @@ public class Solicitud implements Serializable{
 	
 	@Enumerated(EnumType.ORDINAL)
 	private Estado estado = Estado.PRESENTADA;
+	
 	private String curriculum;
 	
 	@ManyToOne

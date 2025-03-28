@@ -1,5 +1,17 @@
 package unir.reto.talenthub.repository;
 
-public interface SolicitudRepository {
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import unir.reto.talenthub.entity.Solicitud;
+import unir.reto.talenthub.entity.Usuario;
+import unir.reto.talenthub.entity.Vacante;
+
+public interface SolicitudRepository extends JpaRepository<Solicitud, Integer> {
+   
+   Solicitud findByIdSolicitud(int idSolicitud);
+   List<Solicitud> findByUsuario(Usuario objUsuario);
+   List<Solicitud> findByVacante(Vacante vacante);
 
 }

@@ -46,7 +46,7 @@ public class Vacante implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private Estatus estatus;
 	
-	private int destacado;/* tinyint NOT NULL,*/
+	private int destacado;
 	private String  imagen;
 	private String  detalles;
 	
