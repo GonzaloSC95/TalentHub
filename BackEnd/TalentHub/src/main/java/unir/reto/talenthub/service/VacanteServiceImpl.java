@@ -60,7 +60,7 @@ public class VacanteServiceImpl implements VacanteService {
    }
 
    @Override
-   public List<Vacante> findByIdEmpresa(Empresa empresa) {
+   public List<Vacante> findByEmpresa(Empresa empresa) {
       // TODO Auto-generated method stub
       throw new UnsupportedOperationException("Unimplemented method 'findByIdEmpresa'");
    }

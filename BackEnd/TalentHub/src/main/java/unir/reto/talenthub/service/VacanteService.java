@@ -17,7 +17,7 @@ public interface VacanteService {
    List <Vacante> findByNombreContaining(String nombre);
    List <Vacante> findByDescripcionContaining(String descripcion);
    List <Vacante> findByCategoria(Categoria categoria);
-   List <Vacante> findByIdEmpresa(Empresa empresa);
+   List <Vacante> findByEmpresa(Empresa empresa);
 
    int save(Vacante vacante);
    int update(Vacante vacante);

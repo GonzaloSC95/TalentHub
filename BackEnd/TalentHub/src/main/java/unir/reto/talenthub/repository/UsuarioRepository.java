@@ -3,6 +3,7 @@ package unir.reto.talenthub.repository;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.boot.ansi.AnsiOutput.Enabled;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -18,7 +19,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, String> {
    List <Usuario> findByNombre(String nombre);
    List <Usuario> findByApellidos(String apellidos);
    List <Usuario> findByFechaRegistro(Date fechaRegistro);
-   List <Usuario> findByEnabled(String enabled);
+   List <Usuario> findByEnabled(Enabled enabled);
    List <Usuario> findByRol(Rol rol);
 
    

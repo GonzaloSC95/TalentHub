@@ -52,9 +52,9 @@ public class Vacante implements Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name="id_Categoria")
-	private Categoria  idCategoria;
+	private Categoria categoria;
 	
 	@ManyToOne
 	@JoinColumn(name="id_empresa")
-	private Empresa idEmpresa;
+	private Empresa empresa;
 }

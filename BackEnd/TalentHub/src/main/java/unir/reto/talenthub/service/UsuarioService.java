@@ -3,6 +3,8 @@ package unir.reto.talenthub.service;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.boot.ansi.AnsiOutput.Enabled;
+
 import unir.reto.talenthub.entity.Rol;
 import unir.reto.talenthub.entity.Usuario;
 
@@ -15,7 +17,7 @@ public interface UsuarioService {
    List <Usuario> findByNombre(String nombre);
    List <Usuario> findByApellidos(String apellidos);
    List <Usuario> findByFechaRegistro(Date fechaRegistro);
-   List <Usuario> findByEnabled(String enabled);
+   List <Usuario> findByEnabled(Enabled enabled);
    List <Usuario> findByRol(Rol rol);
 
    int save(Usuario usuario);

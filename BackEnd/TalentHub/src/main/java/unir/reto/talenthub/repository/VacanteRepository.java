@@ -19,7 +19,7 @@ public interface VacanteRepository extends JpaRepository<Vacante, Integer> {
    List <Vacante> findByNombreContaining(String nombre);
    List <Vacante> findByDescripcionContaining(String descripcion);
    List <Vacante> findByCategoria(Categoria categoria);
-   List <Vacante> findByIdEmpresa(Empresa empresa);
+   List <Vacante> findByEmpresa(Empresa empresa);
 
 
 }

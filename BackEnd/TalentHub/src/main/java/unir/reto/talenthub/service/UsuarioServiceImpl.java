@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ansi.AnsiOutput.Enabled;
 import org.springframework.stereotype.Repository;
 
 import unir.reto.talenthub.entity.Rol;
@@ -53,7 +54,7 @@ public class UsuarioServiceImpl implements UsuarioService {
    }
 
    @Override
-   public List<Usuario> findByEnabled(String enabled) {
+   public List<Usuario> findByEnabled(Enabled enabled) {
       // TODO Auto-generated method stub
       throw new UnsupportedOperationException("Unimplemented method 'findByEnabled'");
    }
