@@ -24,28 +24,24 @@ import lombok.NoArgsConstructor;
 @Table(name="usuarios")
 public class Usuario implements Serializable{
 	
-	  /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-
-			@Id
-			private String email;
-			
-			private String nombre;
-			private String apellidos;
-			private String password;
-			
-			@Enumerated(EnumType.ORDINAL)
-			private Enabled enabled = Enabled.ENABLED; /* DEFAULT 1*/
-			
-	  		@Column(name="fecha_Registro")
-	  		@Temporal(TemporalType.DATE)
-	  		private Date fechaRegistro;
-	  		
-	  		@Enumerated(EnumType.STRING)
-	  		private Rol rol;
+	@Id
+	private String email;
+	
+	private String nombre;
+	private String apellidos;
+	private String password;
+	
+	@Enumerated(EnumType.ORDINAL)
+	private Enabled enabled = Enabled.ENABLED;
+	
+	@Column(name="fecha_Registro")
+	@Temporal(TemporalType.DATE)
+	private Date fechaRegistro;
+	
+	@Enumerated(EnumType.STRING)
+	private Rol rol;
 
 
 }

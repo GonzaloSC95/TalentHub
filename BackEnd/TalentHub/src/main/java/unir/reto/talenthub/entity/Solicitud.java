@@ -28,36 +28,30 @@ import lombok.NoArgsConstructor;
 @Table(name="solicitudes")
 public class Solicitud implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 		
-		@Id
-		@GeneratedValue(strategy=GenerationType.IDENTITY)
-		@Column(name="id_solicitud")
-		private int idSolicitud;
-		
-		@Temporal(TemporalType.DATE)
-		private Date fecha;
-		
-		private String archivo;
-		private String comentarios;
-		
-		@Enumerated(EnumType.ORDINAL)
-		private Estado estado = Estado.PRESENTADA; /* tinyint NOT NULL default 0,-- 0 presentada, 1 adjudicada*/
-	  	
-		private String curriculum;
-	  
-		@ManyToOne
-		@JoinColumn(name="id_vacante")
-		private Vacante vacante;
-	  
-		@ManyToOne
-		@JoinColumn(name="email")
-		private Usuario usuario;
-	  
-	 /* UNIQUE(id_Vacante,email),*/
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="id_solicitud")
+	private int idSolicitud;
+	
+	@Temporal(TemporalType.DATE)
+	private Date fecha;
+	
+	private String archivo;
+	private String comentarios;
+	
+	@Enumerated(EnumType.ORDINAL)
+	private Estado estado = Estado.PRESENTADA;
+	private String curriculum;
+	
+	@ManyToOne
+	@JoinColumn(name="id_vacante")
+	private Vacante vacante;
+	
+	@ManyToOne
+	@JoinColumn(name="email")
+	private Usuario usuario;
 
 
 }

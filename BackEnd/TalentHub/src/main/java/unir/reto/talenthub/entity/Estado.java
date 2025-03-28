@@ -1,6 +1,7 @@
 package unir.reto.talenthub.entity;
 
 public enum Estado {
+    
     PRESENTADA(0),
     ADJUDICADA(1);
 

@@ -28,9 +28,6 @@ import lombok.NoArgsConstructor;
 @Table(name="vacantes")
 public class Vacante implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -45,7 +42,7 @@ public class Vacante implements Serializable {
 	private Date  fecha;
 	
 	private double salario;
-	  
+
 	@Enumerated(EnumType.STRING)
 	private Estatus estatus;
 	
@@ -60,7 +57,4 @@ public class Vacante implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="id_empresa")
 	private Empresa idEmpresa;
-
-
-
 }

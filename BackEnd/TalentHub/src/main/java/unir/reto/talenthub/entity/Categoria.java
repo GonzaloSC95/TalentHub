@@ -21,19 +21,16 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name="categorias")
-public class Categoria implements Serializable{/**
-	 * 
-	 */
+public class Categoria implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
-	   
-		@Id
-		@GeneratedValue(strategy=GenerationType.IDENTITY)
-		@Column(name="id_categoria")
-		private int idCategoria;
-		
-		private String nombre;
-		private String descripcion;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="id_categoria")
+	private int idCategoria;
+	
+	private String nombre;
+	private String descripcion;
 
 }
