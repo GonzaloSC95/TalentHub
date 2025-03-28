@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,30 +26,28 @@ import lombok.NoArgsConstructor;
 @Table(name="empresas")
 public class Empresa implements Serializable {
 	
-				/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 
-				@Id
-				@GeneratedValue(strategy=GenerationType.IDENTITY)
-				@Column(name="id_empresa")
-				private int isEmpresa;
-				
-				private String cif;/* unique*/
-				
-				@Column(name="nombre_empresa") 
-				private String nombreEmpresa;
-				
-				@Column(name="direccion_fiscal") 
-				private String direccionFiscal;
-				
-			 
-				private String pais;
-				
-				@OneToMany
-				@JoinColumn(name="email")
-				private Usuario usuario;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="id_empresa")
+	private int isEmpresa;
+	
+	private String cif;/* unique*/
+	
+	@Column(name="nombre_empresa") 
+	private String nombreEmpresa;
+	
+	@Column(name="direccion_fiscal") 
+	private String direccionFiscal;
+	
+ 
+	private String pais;
+	
+	@OneToOne
+	@JoinColumn(name="email")
+	private Usuario usuario;
 
 
 }
