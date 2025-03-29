@@ -44,9 +44,9 @@ public class EmpresaController {
       @ApiResponse(responseCode = "200", description = "Información de la empresa obtenida"),
       @ApiResponse(responseCode = "404", description = "Empresa no encontrada")
    })
-   @GetMapping("/{idEmpresa}")
-   public ResponseEntity<Empresa> getEmpresa(@PathVariable int idEmpresa) {
-      Empresa empresa = empresaService.findByidEmpresa(idEmpresa);
+   @GetMapping("/{id}")
+   public ResponseEntity<Empresa> getEmpresa(@PathVariable int id) {
+      Empresa empresa = empresaService.findByidEmpresa(id);
       if (empresa == null) {
          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
       }
@@ -92,9 +92,9 @@ public class EmpresaController {
       @ApiResponse(responseCode = "200", description = "Empresa actualizada"),
       @ApiResponse(responseCode = "404", description = "Empresa no encontrada")
    })
-   @PutMapping("/actualizar/{idEmpresa}")
-   public ResponseEntity<Empresa> actualizarEmpresa(@PathVariable int idEmpresa, @RequestBody Empresa empresaActualizada) {
-      Empresa empresa = empresaService.findByidEmpresa(idEmpresa);
+   @PutMapping("/actualizar/{id}")
+   public ResponseEntity<Empresa> actualizarEmpresa(@PathVariable int id, @RequestBody Empresa empresaActualizada) {
+      Empresa empresa = empresaService.findByidEmpresa(id);
       if (empresa == null) {
          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
       }
@@ -113,9 +113,9 @@ public class EmpresaController {
       @ApiResponse(responseCode = "200", description = "Empresa eliminada"),
       @ApiResponse(responseCode = "404", description = "Empresa no encontrada")
    })
-   @DeleteMapping("/eliminar/{idEmpresa}")
-   public ResponseEntity<Empresa> eliminarEmpresa(@PathVariable int idEmpresa) {
-      Empresa empresa = empresaService.findByidEmpresa(idEmpresa);
+   @DeleteMapping("/eliminar/{id}")
+   public ResponseEntity<Empresa> eliminarEmpresa(@PathVariable int id) {
+      Empresa empresa = empresaService.findByidEmpresa(id);
       if (empresa == null) {
          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
       }
@@ -154,9 +154,9 @@ public class EmpresaController {
       @ApiResponse(responseCode = "200", description = "Vacante cancelada"),
       @ApiResponse(responseCode = "404", description = "Vacante no encontrada")
    })
-   @PutMapping("/cancelar/vacante/{idVacante}")
-   public ResponseEntity<Vacante> cancelarVacante(@PathVariable int idVacante) {
-      Vacante vacante = vacanteService.findByIdVacante(idVacante);
+   @PutMapping("/cancelar/vacante/{id}")
+   public ResponseEntity<Vacante> cancelarVacante(@PathVariable int id) {
+      Vacante vacante = vacanteService.findByIdVacante(id);
       if (vacante == null) {
          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
       }

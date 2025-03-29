@@ -25,7 +25,7 @@ public class CategoriaServiceImpl implements CategoriaService {
    }
 
    @Override
-   public List<Categoria> findByAll() {
+   public List<Categoria> findAll() {
       return categoriaRepository.findAll();
    }
 
