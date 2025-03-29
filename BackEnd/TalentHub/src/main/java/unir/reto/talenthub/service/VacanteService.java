@@ -3,6 +3,7 @@ package unir.reto.talenthub.service;
 import java.util.List;
 
 import unir.reto.talenthub.entity.Categoria;
+import unir.reto.talenthub.entity.Destacado;
 import unir.reto.talenthub.entity.Empresa;
 import unir.reto.talenthub.entity.Estatus;
 import unir.reto.talenthub.entity.Vacante;
@@ -10,7 +11,7 @@ import unir.reto.talenthub.entity.Vacante;
 public interface VacanteService {
 
    Vacante findByIdVacante(int idVacante);
-   List <Vacante> findByDestacado(int destacado);
+   List <Vacante> findByDestacado(Destacado destacado);
    List <Vacante> findByEstatus(Estatus estatus);
    List <Vacante> findByEstatusAndDestacado(Estatus estatus, int destacado);
 
