@@ -14,6 +14,7 @@ public interface UsuarioService {
    Usuario findByEmail(String email);
    Usuario findByNombreAndApellidos(String nombre, String apellidos);
 
+   List<Usuario> findAll();
    List <Usuario> findByNombre(String nombre);
    List <Usuario> findByApellidos(String apellidos);
    List <Usuario> findByFechaRegistro(Date fechaRegistro);

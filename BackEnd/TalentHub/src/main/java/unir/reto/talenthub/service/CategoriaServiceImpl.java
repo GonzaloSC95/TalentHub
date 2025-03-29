@@ -16,53 +16,63 @@ public class CategoriaServiceImpl implements CategoriaService {
 
    @Override
    public Categoria findByIdCategoria(int idCategoria) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findByIdCategoria'");
+      return categoriaRepository.findById(idCategoria).orElse(null);
    }
 
    @Override
    public Categoria findByNombre(String nombre) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findByNombre'");
+      return categoriaRepository.findByNombre(nombre);
    }
 
    @Override
-   public List<Categoria> findAllCategorias() {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findAllCategorias'");
+   public List<Categoria> findByAll() {
+      return categoriaRepository.findAll();
    }
 
    @Override
    public List<Categoria> findByNombreContaining(String nombre) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findByNombreContaining'");
+      return categoriaRepository.findByNombreContaining(nombre);
    }
 
    @Override
    public List<Categoria> findByDescripcionContaining(String descripcion) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findByDescripcionContaining'");
+      return categoriaRepository.findByDescripcionContaining(descripcion);
    }
 
    @Override
    public int save(Categoria categoria) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'save'");
+      try {
+         categoriaRepository.save(categoria);
+         return 1;
+      } catch (Exception e) {
+         e.printStackTrace();
+         return 0;
+      }
    }
 
    @Override
    public int update(Categoria categoria) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'update'");
+      try {
+         Categoria categoriaExistente = categoriaRepository.findById(categoria.getIdCategoria()).orElse(null);
+         if (categoriaExistente == null) {
+            return 0;
+         }
+         categoriaRepository.save(categoria);
+         return 1;
+      } catch (Exception e) {
+         e.printStackTrace();
+         return 0;
+      }
    }
 
    @Override
    public int delete(Categoria categoria) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'delete'");
+      try {
+         categoriaRepository.delete(categoria);
+         return 1;
+      } catch (Exception e) {
+         e.printStackTrace();
+         return 0;
+      }
    }
-   
-   
-
-
 }

@@ -10,7 +10,6 @@ import unir.reto.talenthub.entity.Vacante;
 
 public interface SolicitudRepository extends JpaRepository<Solicitud, Integer> {
    
-   Solicitud findByIdSolicitud(int idSolicitud);
    List<Solicitud> findByUsuario(Usuario objUsuario);
    List<Solicitud> findByVacante(Vacante vacante);
 

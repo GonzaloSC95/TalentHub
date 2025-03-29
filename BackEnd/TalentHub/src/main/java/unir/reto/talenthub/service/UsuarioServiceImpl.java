@@ -19,69 +19,81 @@ public class UsuarioServiceImpl implements UsuarioService {
    
    @Override
    public Usuario findByEmailAndPassword(String email, String password) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findByEmailAndPassword'");
+      return usuarioRepository.findByEmailAndPassword(email, password);
    }
 
    @Override
    public Usuario findByEmail(String email) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findByEmail'");
+      return usuarioRepository.findByEmail(email);
    }
 
    @Override
    public Usuario findByNombreAndApellidos(String nombre, String apellidos) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findByNombreAndApellidos'");
+      return usuarioRepository.findByNombreAndApellidos(nombre, apellidos);
+   }
+
+   @Override
+   public List<Usuario> findAll() {
+      return usuarioRepository.findAll();
    }
 
    @Override
    public List<Usuario> findByNombre(String nombre) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findByNombre'");
+      return usuarioRepository.findByNombre(nombre);
    }
 
    @Override
    public List<Usuario> findByApellidos(String apellidos) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findByApellidos'");
+      return usuarioRepository.findByApellidos(apellidos);
    }
 
    @Override
    public List<Usuario> findByFechaRegistro(Date fechaRegistro) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findByFechaRegistro'");
+      return usuarioRepository.findByFechaRegistro(fechaRegistro);
    }
 
    @Override
    public List<Usuario> findByEnabled(Enabled enabled) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findByEnabled'");
+      return usuarioRepository.findByEnabled(enabled);
    }
 
    @Override
    public List<Usuario> findByRol(Rol rol) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findByRol'");
+      return usuarioRepository.findByRol(rol);
    }
 
    @Override
    public int save(Usuario usuario) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'save'");
+      try {
+         usuarioRepository.save(usuario);
+         return 1;
+      } catch (Exception e) {
+         return 0;
+      }
    }
 
    @Override
    public int update(Usuario usuario) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'update'");
+      try{
+         Usuario usuarioExistente = usuarioRepository.findById(usuario.getEmail()).orElse(null);
+         if (usuarioExistente == null) {
+            return 0;
+         }
+         usuarioRepository.save(usuario);
+         return 1;
+      } catch (Exception e) {
+         return 0;
+      }
    }
 
    @Override
    public int delete(Usuario usuario) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'delete'");
+      try{
+         usuarioRepository.delete(usuario);
+         return 1;
+      } catch (Exception e) {
+         return 0;
+      }
    }
-    
 
 }

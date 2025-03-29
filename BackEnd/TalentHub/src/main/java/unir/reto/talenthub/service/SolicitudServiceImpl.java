@@ -18,39 +18,56 @@ public class SolicitudServiceImpl implements SolicitudService {
 
    @Override
    public Solicitud findByIdSolicitud(int idSolicitud) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findByIdSolicitud'");
+      return solicitudRepository.findById(idSolicitud).orElse(null);
+   }
+
+   @Override
+   public List<Solicitud> findAll() {
+      return solicitudRepository.findAll();
    }
 
    @Override
    public List<Solicitud> findByUsuario(Usuario objUsuario) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findByUsuario'");
+      return solicitudRepository.findByUsuario(objUsuario);
    }
 
    @Override
    public List<Solicitud> findByVacante(Vacante vacante) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findByVacante'");
+      return solicitudRepository.findByVacante(vacante);
    }
 
    @Override
    public int save(Solicitud solicitud) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'save'");
+      try {
+         solicitudRepository.save(solicitud);
+         return 1;
+      } catch (Exception e) {
+         return 0;
+      }
    }
 
    @Override
    public int update(Solicitud solicitud) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'update'");
+      try {
+         Solicitud solicitudExistente = solicitudRepository.findById(solicitud.getIdSolicitud()).orElse(null);
+         if (solicitudExistente == null) {
+            return 0;
+         }
+         solicitudRepository.save(solicitud);
+         return 1;
+      } catch (Exception e) {
+         return 0;
+      }
    }
 
    @Override
    public int delete(Solicitud solicitud) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'delete'");
+      try {
+         solicitudRepository.delete(solicitud);
+         return 1;
+      } catch (Exception e) {
+         return 0;
+      }
    }
-  
 
 }

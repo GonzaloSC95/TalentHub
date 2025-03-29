@@ -9,6 +9,8 @@ import unir.reto.talenthub.entity.Vacante;
 public interface SolicitudService {
 
    Solicitud findByIdSolicitud(int idSolicitud);
+
+   List<Solicitud> findAll();
    List<Solicitud> findByUsuario(Usuario objUsuario);
    List<Solicitud> findByVacante(Vacante vacante);
 

@@ -9,7 +9,7 @@ public interface CategoriaService {
    Categoria findByIdCategoria(int idCategoria);
    Categoria findByNombre(String nombre);
 
-   List<Categoria> findAllCategorias();
+   List<Categoria> findByAll();
    List<Categoria> findByNombreContaining(String nombre);
    List<Categoria> findByDescripcionContaining(String descripcion);
 
