@@ -37,12 +37,12 @@ public class EmpresaController {
    private VacanteService vacanteService;
 
    @Operation(
-      summary = "Obtener información de la empresa.",
-      description = "Devuelve la información de la empresa."
+      summary = "Obtener una empresa por su id.",
+      description = "Devuelve la empresa por su id."
    )
    @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Información de la empresa obtenida"),
-      @ApiResponse(responseCode = "404", description = "Empresa no encontrada")
+      @ApiResponse(responseCode = "200", description = "Empresa encontrada."),
+      @ApiResponse(responseCode = "404", description = "Empresa no encontrada.")
    })
    @GetMapping("/{id}")
    public ResponseEntity<Empresa> getEmpresa(@PathVariable int id) {
@@ -58,7 +58,7 @@ public class EmpresaController {
       description = "Devuelve todas las empresas."
    )
    @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Lista de empresas obtenida"),
+      @ApiResponse(responseCode = "200", description = "Lista de empresas obtenida."),
    })
    @GetMapping("/all")
    public ResponseEntity<List<Empresa>> getEmpresas() {
@@ -70,8 +70,8 @@ public class EmpresaController {
       description = "Devuelve la empresa creada."
    )
    @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Empresa creada"),
-      @ApiResponse(responseCode = "400", description = "Empresa no creada")
+      @ApiResponse(responseCode = "201", description = "Empresa creada."),
+      @ApiResponse(responseCode = "400", description = "Empresa no creada.")
    })
    @PostMapping("/crear")
    public ResponseEntity<Empresa> crearEmpresa(@RequestBody Empresa empresa) {
@@ -89,8 +89,8 @@ public class EmpresaController {
       description = "Devuelve la empresa actualizada."
    )
    @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Empresa actualizada"),
-      @ApiResponse(responseCode = "404", description = "Empresa no encontrada")
+      @ApiResponse(responseCode = "200", description = "Empresa actualizada."),
+      @ApiResponse(responseCode = "404", description = "Empresa no encontrada.")
    })
    @PutMapping("/actualizar/{id}")
    public ResponseEntity<Empresa> actualizarEmpresa(@PathVariable int id, @RequestBody Empresa empresaActualizada) {
@@ -110,8 +110,8 @@ public class EmpresaController {
       description = "Elimina la empresa."
    )
    @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Empresa eliminada"),
-      @ApiResponse(responseCode = "404", description = "Empresa no encontrada")
+      @ApiResponse(responseCode = "200", description = "Empresa eliminada."),
+      @ApiResponse(responseCode = "404", description = "Empresa no encontrada.")
    })
    @DeleteMapping("/eliminar/{id}")
    public ResponseEntity<Empresa> eliminarEmpresa(@PathVariable int id) {
