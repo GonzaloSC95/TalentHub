@@ -2,12 +2,17 @@ package unir.reto.talenthub.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -27,10 +32,12 @@ public class Usuario implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
+	@EqualsAndHashCode.Include
 	private String email;
 	
 	private String nombre;
 	private String apellidos;
+
 	private String password;
 	
 	@Enumerated(EnumType.ORDINAL)
@@ -42,6 +49,12 @@ public class Usuario implements Serializable{
 	
 	@Enumerated(EnumType.STRING)
 	private Rol rol;
+
+	@OneToOne(mappedBy = "usuario")
+   private Empresa empresa;
+
+	@OneToMany(mappedBy = "usuario")
+   private List<Solicitud> solicitudes;
 
 
 }
