@@ -24,6 +24,11 @@ public class VacanteServiceImpl implements VacanteService {
    }
 
    @Override
+   public List<Vacante> findAll() {
+      return vacanteRepository.findAll();
+   }
+
+   @Override
    public List<Vacante> findByDestacado(Destacado destacado) {
       return vacanteRepository.findByDestacado(destacado);
    }

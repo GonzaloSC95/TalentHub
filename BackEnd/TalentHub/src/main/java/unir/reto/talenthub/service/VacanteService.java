@@ -11,6 +11,8 @@ import unir.reto.talenthub.entity.Vacante;
 public interface VacanteService {
 
    Vacante findByIdVacante(int idVacante);
+   
+   List <Vacante> findAll();
    List <Vacante> findByDestacado(Destacado destacado);
    List <Vacante> findByEstatus(Estatus estatus);
    List <Vacante> findByEstatusAndDestacado(Estatus estatus, int destacado);

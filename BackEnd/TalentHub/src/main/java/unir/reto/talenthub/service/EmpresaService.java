@@ -13,6 +13,7 @@ public interface EmpresaService {
    Empresa findByUsuario(Usuario usuario);
 
 
+   List <Empresa> findAll();
    List <Empresa> findByPais(String pais);
    List <Empresa> findByNombreEmpresaContaining(String nombreEmpresa);
 

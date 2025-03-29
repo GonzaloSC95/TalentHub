@@ -17,58 +17,74 @@ public class EmpresaServiceImpl implements EmpresaService {
 
    @Override
    public Empresa findByidEmpresa(int idEmpresa) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findByidEmpresa'");
+      return empresaRepository.findById(idEmpresa).orElse(null);
+   }
+
+   @Override
+   public List<Empresa> findAll() {
+      return empresaRepository.findAll();
    }
 
    @Override
    public Empresa findByNombreEmpresa(String nombreEmpresa) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findByNombreEmpresa'");
+      return empresaRepository.findByNombreEmpresa(nombreEmpresa);
    }
 
    @Override
    public Empresa findByDireccionFiscal(String direccionFiscal) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findByDireccionFiscal'");
+      return empresaRepository.findByDireccionFiscal(direccionFiscal);
    }
 
    @Override
    public Empresa findByUsuario(Usuario usuario) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findByUsuario'");
+      return empresaRepository.findByUsuario(usuario);
    }
 
    @Override
    public List<Empresa> findByPais(String pais) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findByPais'");
+      return empresaRepository.findByPais(pais);
    }
 
    @Override
    public List<Empresa> findByNombreEmpresaContaining(String nombreEmpresa) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findByNombreEmpresaContaining'");
+      return empresaRepository.findByNombreEmpresaContaining(nombreEmpresa);
    }
 
    @Override
    public int save(Empresa empresa) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'save'");
+      try {
+         empresaRepository.save(empresa);
+         return 1;
+      } catch (Exception e) {
+         e.printStackTrace();
+         return 0;
+      }
    }
 
    @Override
    public int update(Empresa empresa) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'update'");
+      try {
+         Empresa empresaExistente = empresaRepository.findById(empresa.getIdEmpresa()).orElse(null);
+         if (empresaExistente == null) {
+            return 0;
+         }
+         empresaRepository.save(empresa);
+         return 1;
+      } catch (Exception e) {
+         e.printStackTrace();
+         return 0;
+      }
    }
 
    @Override
    public int delete(Empresa empresa) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'delete'");
+      try {
+         empresaRepository.delete(empresa);
+         return 1;
+      } catch (Exception e) {
+         e.printStackTrace();
+         return 0;
+      }
    }
-
-   
 
 }
