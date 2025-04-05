@@ -1,0 +1,5 @@
+.img-logo {
+  width: 10em;
+  height: 6em;
+  transition: transform 0.2s;
+}

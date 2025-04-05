@@ -1,1 +1,12 @@
-/* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap");
+
+.text-primary-custom {
+  color: #353d8d !important;
+}
+.title-primary-custom {
+  font-family: "Playfair Display", serif;
+  font-weight: bold;
+  color: #353d8d !important;
+}
+
+
