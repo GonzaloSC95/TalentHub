@@ -21,6 +21,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import unir.reto.talenthub.entity.Vacante;
 import unir.reto.talenthub.service.VacanteService;
 
+/**
+ * Controlador REST para gestionar las vacantes.
+ * http://localhost:8085/swagger-ui/index.html.
+ */
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("talenthub/api/vacante")

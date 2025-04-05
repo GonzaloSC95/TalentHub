@@ -20,6 +20,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import unir.reto.talenthub.entity.Solicitud;
 import unir.reto.talenthub.service.SolicitudService;
 
+/**
+ * Controlador REST para gestionar las solicitudes.
+ * http://localhost:8085/swagger-ui/index.html.
+ */
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("talenthub/api/solicitud")

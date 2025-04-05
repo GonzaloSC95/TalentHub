@@ -21,7 +21,10 @@ import unir.reto.talenthub.entity.Usuario;
 import unir.reto.talenthub.service.UsuarioService;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
+/**
+ * Controlador REST para gestionar los usuarios.
+ * http://localhost:8085/swagger-ui/index.html.
+ */
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("talenthub/api/usuario")

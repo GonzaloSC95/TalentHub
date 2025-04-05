@@ -21,6 +21,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import unir.reto.talenthub.entity.Categoria;
 import unir.reto.talenthub.service.CategoriaService;
 
+/**
+ * Controlador REST para gestionar las categorías.
+ * http://localhost:8085/swagger-ui/index.html.
+ */
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("talenthub/api/categoria")
