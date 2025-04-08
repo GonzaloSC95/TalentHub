@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import unir.reto.talenthub.dto.EmpresaDto;
+import unir.reto.talenthub.dto.VacanteDto;
 import unir.reto.talenthub.entity.Empresa;
 import unir.reto.talenthub.entity.Estatus;
 import unir.reto.talenthub.entity.Vacante;
@@ -48,12 +50,13 @@ public class EmpresaController {
       @ApiResponse(responseCode = "404", description = "Empresa no encontrada.")
    })
    @GetMapping("/{id}")
-   public ResponseEntity<Empresa> getEmpresa(@PathVariable int id) {
+   public ResponseEntity<EmpresaDto> getEmpresa(@PathVariable int id) {
       Empresa empresa = empresaService.findByidEmpresa(id);
+      EmpresaDto empresaDto = new EmpresaDto();
       if (empresa == null) {
          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
       }
-      return ResponseEntity.ok(empresa);
+      return ResponseEntity.ok(empresaDto.mapFromEntity(empresa));
    }
 
    @Operation(
@@ -64,8 +67,11 @@ public class EmpresaController {
       @ApiResponse(responseCode = "200", description = "Lista de empresas obtenida."),
    })
    @GetMapping("/all")
-   public ResponseEntity<List<Empresa>> getEmpresas() {
-      return ResponseEntity.ok(empresaService.findAll());
+   public ResponseEntity<List<EmpresaDto>> getEmpresas() {
+      List<EmpresaDto> empresasDto = empresaService.findAll().stream()
+            .map(empresa -> new EmpresaDto().mapFromEntity(empresa))
+            .toList();
+      return ResponseEntity.ok(empresasDto);
    }
 
    @Operation(
@@ -77,8 +83,8 @@ public class EmpresaController {
       @ApiResponse(responseCode = "400", description = "Empresa no creada.")
    })
    @PostMapping("/crear")
-   public ResponseEntity<Empresa> crearEmpresa(@RequestBody Empresa empresa) {
-      int empresaCreadaNm = empresaService.save(empresa);
+   public ResponseEntity<EmpresaDto> crearEmpresa(@RequestBody EmpresaDto empresa) {
+      int empresaCreadaNm = empresaService.save(empresa.mapToEntity(empresa));
       if (empresaCreadaNm == 0) {
          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
       }
@@ -95,17 +101,18 @@ public class EmpresaController {
       @ApiResponse(responseCode = "200", description = "Empresa actualizada."),
       @ApiResponse(responseCode = "404", description = "Empresa no encontrada.")
    })
-   @PutMapping("/actualizar/{id}")
-   public ResponseEntity<Empresa> actualizarEmpresa(@PathVariable int id, @RequestBody Empresa empresaActualizada) {
-      Empresa empresa = empresaService.findByidEmpresa(id);
-      if (empresa == null) {
+   @PutMapping("/actualizar")
+   public ResponseEntity<EmpresaDto> actualizarEmpresa(@RequestBody EmpresaDto empresa) {
+      Empresa empresaExist = empresaService.findByidEmpresa(empresa.getIdEmpresa());
+      if (empresaExist == null) {
          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
       }
-      int empresaActualizadaNm = empresaService.update(empresa);
+      // Actualizar la empresa
+      int empresaActualizadaNm = empresaService.update(empresa.mapToEntity(empresa));
       if (empresaActualizadaNm == 0) {
          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
       }
-      return ResponseEntity.ok(empresaActualizada);
+      return ResponseEntity.ok(empresa);
    }
 
    @Operation(
@@ -116,13 +123,13 @@ public class EmpresaController {
       @ApiResponse(responseCode = "200", description = "Empresa eliminada."),
       @ApiResponse(responseCode = "404", description = "Empresa no encontrada.")
    })
-   @DeleteMapping("/eliminar/{id}")
-   public ResponseEntity<Empresa> eliminarEmpresa(@PathVariable int id) {
-      Empresa empresa = empresaService.findByidEmpresa(id);
-      if (empresa == null) {
+   @DeleteMapping("/eliminar")
+   public ResponseEntity<EmpresaDto> eliminarEmpresa(@RequestBody EmpresaDto empresa) {
+      Empresa empresaExist = empresaService.findByidEmpresa(empresa.getIdEmpresa());
+      if (empresaExist == null) {
          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
       }
-      int empresaEliminadaNm = empresaService.delete(empresa);
+      int empresaEliminadaNm = empresaService.delete(empresa.mapToEntity(empresa));
       if (empresaEliminadaNm == 0) {
          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
       }
@@ -138,9 +145,10 @@ public class EmpresaController {
       @ApiResponse(responseCode = "400", description = "Solicitud inválida")
    })
    @PostMapping("/publicar/vacante")
-   public ResponseEntity<Vacante> publicarVacante(@RequestBody Vacante vacante) {
-      vacante.setEstatus(Estatus.CREADA);
-      int vacanteCreadaNm = vacanteService.save(vacante);
+   public ResponseEntity<VacanteDto> publicarVacante(@RequestBody VacanteDto vacante) {
+      Vacante objVacante = vacante.mapToEntity(vacante);
+      objVacante.setEstatus(Estatus.CREADA);
+      int vacanteCreadaNm = vacanteService.save(objVacante);
       if (vacanteCreadaNm == 0) {
          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
       }
@@ -158,13 +166,13 @@ public class EmpresaController {
       @ApiResponse(responseCode = "404", description = "Vacante no encontrada")
    })
    @PutMapping("/cancelar/vacante/{id}")
-   public ResponseEntity<Vacante> cancelarVacante(@PathVariable int id) {
-      Vacante vacante = vacanteService.findByIdVacante(id);
-      if (vacante == null) {
+   public ResponseEntity<VacanteDto> cancelarVacante(@RequestBody VacanteDto vacante) {
+      Vacante objVacante = vacanteService.findByIdVacante(vacante.getIdVacante());
+      if (objVacante == null) {
          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
       }
-      vacante.setEstatus(Estatus.CANCELADA);
-      vacanteService.update(vacante);
+      objVacante.setEstatus(Estatus.CANCELADA);
+      vacanteService.update(objVacante);
       return ResponseEntity.ok(vacante);
    }
 

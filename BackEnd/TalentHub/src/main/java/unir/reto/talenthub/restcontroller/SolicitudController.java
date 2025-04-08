@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import unir.reto.talenthub.dto.SolicitudDto;
 import unir.reto.talenthub.entity.Solicitud;
 import unir.reto.talenthub.service.SolicitudService;
 
@@ -41,10 +42,11 @@ public class SolicitudController {
       @ApiResponse(responseCode = "404", description = "Solicitud no encontrada")
    })
    @GetMapping("/{id}")
-   public ResponseEntity<Solicitud> getSolicitudById(int id) {
+   public ResponseEntity<SolicitudDto> getSolicitudById(int id) {
+      SolicitudDto solicitudDto = new SolicitudDto();
       Solicitud solicitud = solicitudService.findByIdSolicitud(id);
       if (solicitud != null) {
-         return ResponseEntity.ok(solicitud);
+         return ResponseEntity.ok(solicitudDto.mapFromEntity(solicitud));
       } else {
          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
       }
@@ -58,8 +60,11 @@ public class SolicitudController {
       @ApiResponse(responseCode = "200", description = "Solicitudes encontradas")
    })
    @GetMapping("/all")
-   public ResponseEntity<List<Solicitud>> getAllSolicitudes() {
-      return ResponseEntity.ok(solicitudService.findAll());
+   public ResponseEntity<List<SolicitudDto>> getAllSolicitudes() {
+      List<SolicitudDto> solicitudesDto = solicitudService.findAll().stream()
+            .map(solicitud -> new SolicitudDto().mapFromEntity(solicitud))
+            .toList();
+      return ResponseEntity.ok(solicitudesDto);
    }
 
    @Operation(
@@ -71,8 +76,8 @@ public class SolicitudController {
       @ApiResponse(responseCode = "400", description = "Error al crear la solicitud")
    })
    @PostMapping("/crear")
-   public ResponseEntity<Solicitud> crearSolicitud(@RequestBody Solicitud solicitud) {
-      int result = solicitudService.save(solicitud);
+   public ResponseEntity<SolicitudDto> crearSolicitud(@RequestBody SolicitudDto solicitud) {
+      int result = solicitudService.save(solicitud.mapToEntity(solicitud));
       if (result != 0) {
          return ResponseEntity.status(HttpStatus.CREATED).body(solicitud);
       } else {
@@ -89,8 +94,8 @@ public class SolicitudController {
       @ApiResponse(responseCode = "404", description = "Solicitud no encontrada")
    })
    @PutMapping("/actualizar")
-   public ResponseEntity<Solicitud> actualizarSolicitud(@RequestBody Solicitud solicitud) {
-      int result = solicitudService.update(solicitud);
+   public ResponseEntity<SolicitudDto> actualizarSolicitud(@RequestBody SolicitudDto solicitud) {
+      int result = solicitudService.update(solicitud.mapToEntity(solicitud));
       if (result != 0) {
          return ResponseEntity.ok(solicitud);
       } else {
@@ -107,8 +112,8 @@ public class SolicitudController {
       @ApiResponse(responseCode = "404", description = "Solicitud no encontrada")
    })
    @DeleteMapping("/eliminar")
-   public ResponseEntity<Solicitud> eliminarSolicitud(@RequestBody Solicitud solicitud) {
-      int result = solicitudService.delete(solicitud);
+   public ResponseEntity<SolicitudDto> eliminarSolicitud(@RequestBody SolicitudDto solicitud) {
+      int result = solicitudService.delete(solicitud.mapToEntity(solicitud));
       if (result != 0) {
          return ResponseEntity.ok(solicitud);
       } else {

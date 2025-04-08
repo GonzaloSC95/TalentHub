@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import unir.reto.talenthub.dto.VacanteDto;
 import unir.reto.talenthub.entity.Vacante;
 import unir.reto.talenthub.service.VacanteService;
 
@@ -42,10 +43,11 @@ public class VacanteController {
       @ApiResponse(responseCode = "404", description = "Vacante no encontrada")
    })
    @GetMapping("/{id}")
-   public ResponseEntity<Vacante> getVacanteById(@PathVariable int id) {
+   public ResponseEntity<VacanteDto> getVacanteById(@PathVariable int id) {
+      VacanteDto vacanteDto = new VacanteDto();
       Vacante vacante = vacanteService.findByIdVacante(id);
       if (vacante != null) {
-         return ResponseEntity.status(HttpStatus.OK).body(vacante);
+         return ResponseEntity.status(HttpStatus.OK).body(vacanteDto.mapFromEntity(vacante));
       } else {
          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
       }
@@ -59,8 +61,11 @@ public class VacanteController {
       @ApiResponse(responseCode = "200", description = "Vacantes obtenidas")
    })
    @GetMapping("/all")
-   public ResponseEntity<List<Vacante>> getAllVacantes() {
-      return ResponseEntity.ok(vacanteService.findAll());
+   public ResponseEntity<List<VacanteDto>> getAllVacantes() {
+      List<VacanteDto> vacantes = vacanteService.findAll().stream()
+            .map(vacante -> new VacanteDto().mapFromEntity(vacante))
+            .toList();
+      return ResponseEntity.ok(vacantes);
    }
 
    @Operation(
@@ -72,8 +77,8 @@ public class VacanteController {
       @ApiResponse(responseCode = "400", description = "Error al crear la vacante")
    })
    @PostMapping("/crear")
-   public ResponseEntity<Vacante> crearVacante(@RequestBody Vacante vacante) {
-      int result = vacanteService.save(vacante);
+   public ResponseEntity<VacanteDto> crearVacante(@RequestBody VacanteDto vacante) {
+      int result = vacanteService.save(vacante.mapToEntity(vacante));
       if (result == 1) {
          return ResponseEntity.status(HttpStatus.CREATED).body(vacante);
       } else {
@@ -90,8 +95,8 @@ public class VacanteController {
       @ApiResponse(responseCode = "400", description = "Error al actualizar la vacante")
    })
    @PutMapping("/actualizar")
-   public ResponseEntity<Vacante> updateVacante(@RequestBody Vacante vacante) {
-      int result = vacanteService.update(vacante);
+   public ResponseEntity<VacanteDto> updateVacante(@RequestBody VacanteDto vacante) {
+      int result = vacanteService.update(vacante.mapToEntity(vacante));
       if (result == 1) {
          return ResponseEntity.status(HttpStatus.OK).body(vacante);
       } else {
@@ -108,8 +113,8 @@ public class VacanteController {
       @ApiResponse(responseCode = "400", description = "Error al eliminar la vacante")
    })
    @DeleteMapping("/eliminar")
-   public ResponseEntity<Vacante> deleteVacante(@RequestBody Vacante vacante) {
-      int result = vacanteService.delete(vacante);
+   public ResponseEntity<VacanteDto> deleteVacante(@RequestBody VacanteDto vacante) {
+      int result = vacanteService.delete(vacante.mapToEntity(vacante));
       if (result == 1) {
          return ResponseEntity.status(HttpStatus.OK).body(vacante);
       } else {

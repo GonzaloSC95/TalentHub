@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import unir.reto.talenthub.dto.CategoriaDto;
 import unir.reto.talenthub.entity.Categoria;
 import unir.reto.talenthub.service.CategoriaService;
 
@@ -42,10 +43,11 @@ public class CategoriaController {
       @ApiResponse(responseCode = "404", description = "Categoría no encontrada")
    })
    @GetMapping("/{id}")
-   public ResponseEntity <Categoria> getCategoriaById(@PathVariable int id) {
+   public ResponseEntity <CategoriaDto> getCategoriaById(@PathVariable int id) {
       Categoria categoria = categoriaService.findByIdCategoria(id);
+      CategoriaDto categoriaDto = new CategoriaDto();
       if (categoria != null) {
-         return ResponseEntity.status(HttpStatus.OK).body(categoria);
+         return ResponseEntity.status(HttpStatus.OK).body(categoriaDto.mapFromEntity(categoria));
       } else {
          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
       }
@@ -59,8 +61,11 @@ public class CategoriaController {
       @ApiResponse(responseCode = "200", description = "Categorías obtenidas")
    })
    @GetMapping("/all")
-   public ResponseEntity <List<Categoria>> getAllCategorias() {
-      return ResponseEntity.ok(categoriaService.findAll());
+   public ResponseEntity <List<CategoriaDto>> getAllCategorias() {
+      List<CategoriaDto> categorias = categoriaService.findAll().stream()
+            .map(categoria -> new CategoriaDto().mapFromEntity(categoria))
+            .toList();
+      return ResponseEntity.ok(categorias);
    }
 
    @Operation(
@@ -72,8 +77,8 @@ public class CategoriaController {
       @ApiResponse(responseCode = "400", description = "Error al crear la categoría")
    })
    @PostMapping("/crear")
-   public ResponseEntity <Categoria> crearCategoria(@RequestBody Categoria categoria) {
-      int result = categoriaService.save(categoria);
+   public ResponseEntity <CategoriaDto> crearCategoria(@RequestBody CategoriaDto categoria) {
+      int result = categoriaService.save(categoria.mapToEntity(categoria));
       if (result == 0) {
          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
       }
@@ -89,8 +94,8 @@ public class CategoriaController {
       @ApiResponse(responseCode = "400", description = "Error al actualizar la categoría")
    })
    @PutMapping("/actualizar")
-   public ResponseEntity <Categoria> actualizarCategoria(@RequestBody Categoria categoria) {
-      int result = categoriaService.update(categoria);
+   public ResponseEntity <CategoriaDto> actualizarCategoria(@RequestBody CategoriaDto categoria) {
+      int result = categoriaService.update(categoria.mapToEntity(categoria));
       if (result == 0) {
          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
       }
@@ -106,8 +111,8 @@ public class CategoriaController {
       @ApiResponse(responseCode = "400", description = "Error al eliminar la categoría")
    })
    @DeleteMapping("/eliminar")
-   public ResponseEntity <Categoria> eliminarCategoria(@RequestBody Categoria categoria) {
-      int result = categoriaService.delete(categoria);
+   public ResponseEntity <CategoriaDto> eliminarCategoria(@RequestBody CategoriaDto categoria) {
+      int result = categoriaService.delete(categoria.mapToEntity(categoria));
       if (result == 0) {
          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
       }
