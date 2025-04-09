@@ -3,8 +3,8 @@ export interface Usuario {
   nombre: string;
   apellidos: string;
   password: string;
-  enabled: string;
+  enabled: number;
   fechaRegistro: Date;
   rol: string;
-  empresa: string;
+  empresa?: string;
 }

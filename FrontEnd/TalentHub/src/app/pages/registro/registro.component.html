@@ -21,41 +21,85 @@
                <form [formGroup]="reactiveForm" (ngSubmit)="onSubmit()">
 
                   <div class="mb-3">
-                     <label for="empresa" class="form-label">Empresa</label>
-                     <input type="text" class="form-control" id="empresa" formControlName="empresa" />
-                     <div class="invalid-feedback">Este campo es obligatorio.</div>
+                     <label class="form-label">Email</label>
+                     <input type="email" class="form-control" formControlName="email" />
+                     @if(checkControl('email', 'required')){
+                     <p class="text-danger my-2">Campo obligatorio</p>
+                     }
                   </div>
 
                   <div class="mb-3">
-                     <label for="email" class="form-label">Email Empresa</label>
-                     <input type="email" class="form-control" id="email" formControlName="email" />
-                     <div class="invalid-feedback">Introduce un email válido.</div>
+                     <label class="form-label">Password</label>
+                     <input type="password" class="form-control" formControlName="password" />
+                     @if(checkControl('password', 'required')){
+                     <p class="text-danger my-2">Campo obligatorio</p>
+                     }
                   </div>
 
                   <div class="mb-3">
-                     <label for="cif" class="form-label">CIF</label>
-                     <input type="text" class="form-control" id="cif" formControlName="cif" />
-                     <div class="invalid-feedback">Este campo es obligatorio.</div>
+                     <label class="form-label">Nombre</label>
+                     <input type="text" class="form-control" formControlName="nombre" />
+                     @if(checkControl('nombre', 'required')){
+                     <p class="text-danger my-2">Campo obligatorio</p>
+                     }
                   </div>
 
                   <div class="mb-3">
-                     <label for="direccion" class="form-label">Dirección</label>
-                     <input type="text" class="form-control" id="direccion" formControlName="direccion" />
-                     <div class="invalid-feedback">Este campo es obligatorio.</div>
+                     <label class="form-label">Apellidos</label>
+                     <input type="text" class="form-control" formControlName="apellidos" />
+                     @if(checkControl('apellidos', 'required')){
+                     <p class="text-danger my-2">Campo obligatorio</p>
+                     }
+                  </div>
+
+                  @if(isRolEmpresa())
+                  {
+                  <div class="mb-3">
+                     <label class="form-label">Empresa</label>
+                     <input type="text" class="form-control" formControlName="empresa" />
+                     @if(checkControl('empresa', 'required')){
+                     <p class="text-danger my-2">Campo obligatorio</p>
+                     }
                   </div>
 
                   <div class="mb-3">
-                     <label for="pais" class="form-label">País</label>
-                     <input type="text" class="form-control" id="pais" formControlName="pais" />
-                     <div class="invalid-feedback">Este campo es obligatorio.</div>
+                     <label class="form-label">CIF</label>
+                     <input type="text" class="form-control" formControlName="cif" />
+                     @if(checkControl('cif', 'required')){
+                     <p class="text-danger my-2">Campo obligatorio</p>
+                     }
                   </div>
 
-                  <div class="form-check mb-3">
-                     <input class="form-check-input" type="checkbox" id="politica" formControlName="politica" />
-                     <label class="form-check-label" for="politica">
-                        Acepto la Política de Privacidad
-                     </label>
-                     <div class="invalid-feedback">Debes aceptar la política.</div>
+                  <div class="mb-3">
+                     <label class="form-label">Dirección</label>
+                     <input type="text" class="form-control" formControlName="direccion" />
+                     @if(checkControl('direccion', 'required')){
+                     <p class="text-danger my-2">Campo obligatorio</p>
+                     }
+                  </div>
+
+                  <div class="mb-3">
+                     <label class="form-label">País</label>
+                     <input type="text" class="form-control" formControlName="pais" />
+                     @if(checkControl('pais', 'required')){
+                     <p class="text-danger my-2">Campo obligatorio</p>
+                     }
+                  </div>
+                  }
+
+                  <div class="mb-3">
+                     <label class="form-label me-3">Rol:</label>
+                     <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" formControlName="rol" value="EMPRESA" />
+                        <label class="form-check-label">Empresa</label>
+                     </div>
+                     <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" formControlName="rol" value="CLIENTE" />
+                        <label class="form-check-label">Cliente</label>
+                     </div>
+                     @if(checkControl('rol', 'required')){
+                     <p class="text-danger my-2">Campo obligatorio</p>
+                     }
                   </div>
 
                   <button type="submit" class="btn btn-primary rounded-pill w-100" [disabled]="reactiveForm.invalid">
