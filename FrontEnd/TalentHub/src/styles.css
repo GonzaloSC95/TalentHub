@@ -10,6 +10,7 @@
   --primary-color3: #6269b2;
   --primary-color4: #7c82bf;
   --primary-color5: #8f94cc;
+  --primary-color6: #e7ebff;
   /* Secondary Colors */
   --secondary-color: #ff6c1d;
   --secondary-color1: #ff6c1d;
@@ -93,6 +94,13 @@ main {
   min-height: 70vh;
   padding-top: 1rem;
   padding-bottom: 1rem;
+}
+
+.form-login {
+  min-width: 50% !important;
+  background-color: var(--primary-color6) !important;
+  border: 1px solid var(--primary-color2) !important;
+  border-radius: 12px !important;
 }
 
 /* Media Queries */

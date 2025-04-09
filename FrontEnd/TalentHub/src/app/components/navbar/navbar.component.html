@@ -42,8 +42,9 @@
          </ul>
          <div class="d-lg-flex col-lg-3 justify-content-lg-end">
             <!-- TODO: Bucle for con diferentes opciones en función de si el usuario se ha logueado o no -->
-            <button class="btn btn-primary me-2">Regístrate</button>
-            <button class="btn btn-primary">Mi cuenta</button>
+            @for(btn of arrNavBarButtons;track btn.route){
+            <a class="btn btn-primary me-2" [routerLink]="[btn.route]" routerLinkActive="active">{{btn.text}}</a>
+            }
          </div>
       </div>
    </div>

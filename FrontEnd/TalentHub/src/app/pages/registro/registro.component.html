@@ -1,0 +1,69 @@
+<div class="container py-4">
+   <div class="row">
+      <!-- Sección izquierda -->
+      <div class="col-md-5 mb-4">
+         <h2 class="fw-bold title-primary mb-3">Regístrate y disfruta de nuestros servicios !!!!</h2>
+         <ul class="mt-4 list-unstyled">
+            <li><i class="fa-solid fa-check me-2"></i> Publicación de Vacantes.</li>
+            <li><i class="fa-solid fa-check me-2"></i>Gestión de Vacantes por categoría.</li>
+            <li><i class="fa-solid fa-check me-2"></i> Recepción de solicitud al instante.</li>
+         </ul>
+         <!-- <a class="btn btn-primary rounded-pill mt-4" href="#">Inicio Session</a> -->
+         <p><b class="fw-bold">¿Ya tienes cuenta? </b><a [routerLink]="['/login']" routerLinkActive="active">Inicia
+               sesión</a>😊
+         </p>
+      </div>
+
+      <!-- Formulario -->
+      <div class="col-md-7">
+         <div class="card shadow-sm">
+            <div class="card-body">
+               <form [formGroup]="reactiveForm" (ngSubmit)="onSubmit()">
+
+                  <div class="mb-3">
+                     <label for="empresa" class="form-label">Empresa</label>
+                     <input type="text" class="form-control" id="empresa" formControlName="empresa" />
+                     <div class="invalid-feedback">Este campo es obligatorio.</div>
+                  </div>
+
+                  <div class="mb-3">
+                     <label for="email" class="form-label">Email Empresa</label>
+                     <input type="email" class="form-control" id="email" formControlName="email" />
+                     <div class="invalid-feedback">Introduce un email válido.</div>
+                  </div>
+
+                  <div class="mb-3">
+                     <label for="cif" class="form-label">CIF</label>
+                     <input type="text" class="form-control" id="cif" formControlName="cif" />
+                     <div class="invalid-feedback">Este campo es obligatorio.</div>
+                  </div>
+
+                  <div class="mb-3">
+                     <label for="direccion" class="form-label">Dirección</label>
+                     <input type="text" class="form-control" id="direccion" formControlName="direccion" />
+                     <div class="invalid-feedback">Este campo es obligatorio.</div>
+                  </div>
+
+                  <div class="mb-3">
+                     <label for="pais" class="form-label">País</label>
+                     <input type="text" class="form-control" id="pais" formControlName="pais" />
+                     <div class="invalid-feedback">Este campo es obligatorio.</div>
+                  </div>
+
+                  <div class="form-check mb-3">
+                     <input class="form-check-input" type="checkbox" id="politica" formControlName="politica" />
+                     <label class="form-check-label" for="politica">
+                        Acepto la Política de Privacidad
+                     </label>
+                     <div class="invalid-feedback">Debes aceptar la política.</div>
+                  </div>
+
+                  <button type="submit" class="btn btn-primary rounded-pill w-100" [disabled]="reactiveForm.invalid">
+                     Registrar
+                  </button>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
