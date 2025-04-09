@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import {
   AbstractControl,
@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { Usuario } from '../../interfaces/usuario';
 import { Empresa } from '../../interfaces/empresa';
+import { PaisesService } from '../../service/paises.service';
 
 @Component({
   selector: 'app-registro',
@@ -18,6 +19,10 @@ import { Empresa } from '../../interfaces/empresa';
   styleUrl: './registro.component.css',
 })
 export class RegistroComponent {
+  //Inyección de dependencias
+  paisesService = inject(PaisesService);
+
+  // Propiedades
   usuario!: Usuario;
   empresa!: Empresa;
   reactiveForm!: FormGroup;
@@ -25,10 +30,18 @@ export class RegistroComponent {
   constructor() {}
 
   ngOnInit(): void {
+    // Inicializamos el formulario reactivo
     this.reactiveForm = new FormGroup(
       {
-        email: new FormControl(null, [Validators.required]),
-        password: new FormControl(null, [Validators.required]),
+        email: new FormControl(null, [
+          Validators.required,
+          Validators.pattern(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/),
+        ]),
+        password: new FormControl(null, [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(15),
+        ]),
         nombre: new FormControl(null, [Validators.required]),
         apellidos: new FormControl(null, [Validators.required]),
         empresa: new FormControl(null, []),

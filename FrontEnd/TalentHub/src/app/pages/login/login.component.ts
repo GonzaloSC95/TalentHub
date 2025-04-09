@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import {
-  AbstractControl,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Usuario } from '../../interfaces/usuario';
 
 @Component({
   selector: 'app-login',
@@ -15,18 +15,17 @@ import {
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
+  usuario!: Usuario;
   reactiveForm!: FormGroup;
 
-  constructor() {
-    this.reactiveForm = new FormGroup({
-      email: new FormControl(null, [Validators.required]),
-      password: new FormControl(null, [Validators.required]),
-    });
-  }
+  constructor() {}
 
   ngOnInit(): void {
     this.reactiveForm = new FormGroup({
-      email: new FormControl(null, [Validators.required]),
+      email: new FormControl(null, [
+        Validators.required,
+        Validators.pattern(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/),
+      ]),
       password: new FormControl(null, [Validators.required]),
     });
   }
@@ -45,6 +44,10 @@ export class LoginComponent {
     if (this.reactiveForm.valid) {
       console.log('Formulario enviado:', this.reactiveForm.value);
       // Aquí puedes enviar los datos al backend
+      this.usuario = {
+        email: this.reactiveForm.get('email')?.value,
+        password: this.reactiveForm.get('password')?.value,
+      };
     } else {
       this.reactiveForm.markAllAsTouched();
     }

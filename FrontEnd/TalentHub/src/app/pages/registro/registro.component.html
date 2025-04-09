@@ -26,6 +26,9 @@
                      @if(checkControl('email', 'required')){
                      <p class="text-danger my-2">Campo obligatorio</p>
                      }
+                     @if(checkControl('email', 'pattern')){
+                     <p class="text-danger my-2">El email no tiene un formato válido</p>
+                     }
                   </div>
 
                   <div class="mb-3">
@@ -33,6 +36,12 @@
                      <input type="password" class="form-control" formControlName="password" />
                      @if(checkControl('password', 'required')){
                      <p class="text-danger my-2">Campo obligatorio</p>
+                     }
+                     @if(checkControl('password', 'minlength')){
+                     <p class="text-danger my-2">La contraseña debe tener al menos 10 caracteres</p>
+                     }
+                     @if(checkControl('password', 'maxlength')){
+                     <p class="text-danger my-2">La contraseña no puede tener más de 15 caracteres</p>
                      }
                   </div>
 
@@ -80,7 +89,15 @@
 
                   <div class="mb-3">
                      <label class="form-label">País</label>
-                     <input type="text" class="form-control" formControlName="pais" />
+                     <select class="form-control" formControlName="pais">
+                        <option value="" disabled selected>Seleccione un país</option>
+                        @for(pais of paisesService.nombres; track pais;)
+                        {
+                        <option [value]="pais">
+                           {{ pais }}
+                        </option>
+                        }
+                     </select>
                      @if(checkControl('pais', 'required')){
                      <p class="text-danger my-2">Campo obligatorio</p>
                      }
