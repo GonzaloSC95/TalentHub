@@ -38,9 +38,6 @@ public class EmpresaController {
    @Autowired
    private EmpresaService empresaService;
 
-   @Autowired
-   private VacanteService vacanteService;
-
    @Operation(
       summary = "Obtener una empresa por su id.",
       description = "Devuelve la empresa por su id."
@@ -57,21 +54,6 @@ public class EmpresaController {
          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
       }
       return ResponseEntity.ok(empresaDto.mapFromEntity(empresa));
-   }
-
-   @Operation(
-      summary = "Obtener empresas.",
-      description = "Devuelve todas las empresas."
-   )
-   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Lista de empresas obtenida."),
-   })
-   @GetMapping("/all")
-   public ResponseEntity<List<EmpresaDto>> getEmpresas() {
-      List<EmpresaDto> empresasDto = empresaService.findAll().stream()
-            .map(empresa -> new EmpresaDto().mapFromEntity(empresa))
-            .toList();
-      return ResponseEntity.ok(empresasDto);
    }
 
    @Operation(
@@ -135,45 +117,20 @@ public class EmpresaController {
       }
       return ResponseEntity.ok(empresa);
    }
-   
-   @Operation(
-      summary = "Publicar una nueva vacante",
-      description = "Crea una nueva vacante con estado 'CREADA'."
-   )
-   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Vacante creada"),
-      @ApiResponse(responseCode = "400", description = "Solicitud inválida")
-   })
-   @PostMapping("/publicar/vacante")
-   public ResponseEntity<VacanteDto> publicarVacante(@RequestBody VacanteDto vacante) {
-      Vacante objVacante = vacante.mapToEntity(vacante);
-      objVacante.setEstatus(Estatus.CREADA);
-      int vacanteCreadaNm = vacanteService.save(objVacante);
-      if (vacanteCreadaNm == 0) {
-         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-      }
-      else{
-         return ResponseEntity.status(HttpStatus.CREATED).body(vacante);
-      }
-   }
 
    @Operation(
-      summary = "Gestionar una vacante",
-      description = "Permite cancelar una vacante (estado 'CANCELADA'), sin eliminarla de la base de datos."
+      summary = "Obtener empresas.",
+      description = "Devuelve todas las empresas."
    )
    @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Vacante cancelada"),
-      @ApiResponse(responseCode = "404", description = "Vacante no encontrada")
+      @ApiResponse(responseCode = "200", description = "Lista de empresas obtenida."),
    })
-   @PutMapping("/cancelar/vacante/{id}")
-   public ResponseEntity<VacanteDto> cancelarVacante(@RequestBody VacanteDto vacante) {
-      Vacante objVacante = vacanteService.findByIdVacante(vacante.getIdVacante());
-      if (objVacante == null) {
-         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-      }
-      objVacante.setEstatus(Estatus.CANCELADA);
-      vacanteService.update(objVacante);
-      return ResponseEntity.ok(vacante);
+   @GetMapping("/all")
+   public ResponseEntity<List<EmpresaDto>> getEmpresas() {
+      List<EmpresaDto> empresasDto = empresaService.findAll().stream()
+            .map(empresa -> new EmpresaDto().mapFromEntity(empresa))
+            .toList();
+      return ResponseEntity.ok(empresasDto);
    }
 
 }

@@ -12,5 +12,5 @@ public interface SolicitudRepository extends JpaRepository<Solicitud, Integer> {
    
    List<Solicitud> findByUsuario(Usuario objUsuario);
    List<Solicitud> findByVacante(Vacante vacante);
-
+   Solicitud findByVacanteAndUsuario(Vacante vacante, Usuario usuario);
 }

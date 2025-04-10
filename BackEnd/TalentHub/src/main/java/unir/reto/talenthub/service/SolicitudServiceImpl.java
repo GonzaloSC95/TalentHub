@@ -70,4 +70,9 @@ public class SolicitudServiceImpl implements SolicitudService {
       }
    }
 
+   @Override
+   public Solicitud findByVacanteAndUsuario(Vacante vacante, Usuario usuario) {
+      return solicitudRepository.findByVacanteAndUsuario(vacante, usuario);
+   }
+
 }

@@ -61,21 +61,6 @@ public class UsuarioController {
    }
 
    @Operation(
-      summary = "Obtener todos los usuarios.",
-      description = "Devuelve todos los usuarios."
-   )
-   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Usuarios obtenidos")
-   })
-   @GetMapping("/all")
-   public ResponseEntity<List<UsuarioDto>> getAllUsuarios() {
-      List<UsuarioDto> usuarios = usuarioService.findAll().stream()
-            .map(usuario -> new UsuarioDto().mapFromEntity(usuario))
-            .toList();
-      return ResponseEntity.ok(usuarios);
-   }
-
-   @Operation(
       summary = "Crear usurio.",
       description = "Crea un nuevo usuario."
    )
@@ -127,5 +112,20 @@ public class UsuarioController {
       } else {
          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
       }
+   }
+
+   @Operation(
+      summary = "Obtener todos los usuarios.",
+      description = "Devuelve todos los usuarios."
+   )
+   @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Usuarios obtenidos")
+   })
+   @GetMapping("/all")
+   public ResponseEntity<List<UsuarioDto>> getAllUsuarios() {
+      List<UsuarioDto> usuarios = usuarioService.findAll().stream()
+            .map(usuario -> new UsuarioDto().mapFromEntity(usuario))
+            .toList();
+      return ResponseEntity.ok(usuarios);
    }
 }

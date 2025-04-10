@@ -13,6 +13,7 @@ public interface SolicitudService {
    List<Solicitud> findAll();
    List<Solicitud> findByUsuario(Usuario objUsuario);
    List<Solicitud> findByVacante(Vacante vacante);
+   Solicitud findByVacanteAndUsuario(Vacante vacante, Usuario usuario);
 
    int save(Solicitud solicitud);
    int update(Solicitud solicitud);
