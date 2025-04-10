@@ -29,13 +29,11 @@ public class EmpresaDto implements Serializable{
    private String nombreEmpresa;
    private String direccionFiscal;
    private String pais;
-   private String usuario;
+   private String email; 
 
    //Metodo para convertir de Empresa a EmpresaDto
    public EmpresaDto mapFromEntity(Empresa empresa) {
       modelMapper = new ModelMapper();
-      modelMapper.typeMap(Empresa.class, EmpresaDto.class)
-      .addMapping(src -> src.getUsuario().getEmail(), EmpresaDto::setUsuario);
       return modelMapper.map(empresa, EmpresaDto.class);
    }
    //Metodo para convertir de EmpresaDto a Empresa

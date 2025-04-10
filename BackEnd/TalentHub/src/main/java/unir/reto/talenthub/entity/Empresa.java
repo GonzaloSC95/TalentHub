@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -50,6 +51,7 @@ public class Empresa implements Serializable {
 	@JoinColumn(name="email")
 	private Usuario usuario;
 
+	@ToString.Exclude
 	@OneToMany(mappedBy = "empresa")
 	private List<Vacante> vacantes;
 

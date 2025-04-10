@@ -32,14 +32,10 @@ public class Usuario implements Serializable{
 	@Id
 	@EqualsAndHashCode.Include
 	private String email;
-	
 	private String nombre;
 	private String apellidos;
-
 	private String password;
-	
-	@Enumerated(EnumType.ORDINAL)
-	private Enabled enabled = Enabled.ENABLED;
+	private int enabled = 1;
 	
 	@Column(name="fecha_Registro")
 	@Temporal(TemporalType.DATE)
@@ -47,12 +43,4 @@ public class Usuario implements Serializable{
 	
 	@Enumerated(EnumType.STRING)
 	private Rol rol;
-
-	@OneToOne(mappedBy = "usuario")
-   private Empresa empresa;
-
-	@OneToMany(mappedBy = "usuario")
-   private List<Solicitud> solicitudes;
-
-
 }

@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import unir.reto.talenthub.dto.UsuarioDto;
@@ -41,11 +44,17 @@ public class UsuarioController {
       @ApiResponse(responseCode = "200", description = "Usuario obtenido"),
       @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
    })
-   @GetMapping("/")
-   public ResponseEntity<UsuarioDto> getUsuarioByLogin(@RequestBody UsuarioDto usuarioDto) {
-      Usuario usuario = usuarioService.findByEmailAndPassword(usuarioDto.getEmail(), usuarioDto.getPassword());
+   @Parameters({
+      @Parameter(name = "email", description = "Email del usuario"),
+      @Parameter(name = "password", description = "Password del usuario")
+   })
+   @GetMapping("/login")
+   public ResponseEntity<UsuarioDto> getUsuarioByLogin(@RequestParam String email, @RequestParam String password) {
+      UsuarioDto usuarioDto = new UsuarioDto();
+      Usuario usuario = usuarioService.findByEmailAndPassword(email, password);
+      System.out.println(usuario);
       if (usuario != null) {
-         return ResponseEntity.status(HttpStatus.OK).body(usuarioDto);
+         return ResponseEntity.status(HttpStatus.OK).body(usuarioDto.mapFromEntity(usuario));
       } else {
          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
       }

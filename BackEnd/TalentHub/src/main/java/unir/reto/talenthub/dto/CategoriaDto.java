@@ -26,9 +26,8 @@ public class CategoriaDto implements Serializable{
 
    @EqualsAndHashCode.Include
    private int idCategoria;
-
-	private String nombre;
-	private String descripcion;
+   private String nombre;
+   private String descripcion;
 
    //Metodo para convertir de Categoria a CategoriaDto
    public CategoriaDto mapFromEntity(Categoria categoria) {

@@ -32,14 +32,10 @@ public class UsuarioDto implements Serializable{
    private int enabled;
    private Date fechaRegistro;
    private String rol;
-   private String empresa;
 
    //Metodo para convertir de Usuario a UsuarioDto
    public UsuarioDto mapFromEntity(Usuario usuario) {
       modelMapper = new ModelMapper();
-      modelMapper.typeMap(Usuario.class, UsuarioDto.class)
-      .addMapping(src -> src.getEmpresa().getNombreEmpresa(), UsuarioDto::setEmpresa)
-      .addMapping(src -> src.getEnabled().getValue(), UsuarioDto::setEnabled);
       return modelMapper.map(usuario, UsuarioDto.class);
    }
    //Metodo para convertir de UsuarioDto a Usuario

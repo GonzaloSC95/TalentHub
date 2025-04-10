@@ -37,21 +37,15 @@ public class Vacante implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id_vacante")
 	private int idVacante;
-	
 	private String nombre;
-	private String descripcion;
-	
+   private String descripcion;
 	@Temporal(TemporalType.DATE)
 	private Date  fecha;
-	
 	private double salario;
-
 	@Enumerated(EnumType.STRING)
 	private Estatus estatus;
-	
 	@Enumerated(EnumType.ORDINAL)
 	private Destacado destacado = Destacado.NO;
-
 	private String  imagen;
 	private String  detalles;
 	
@@ -62,7 +56,4 @@ public class Vacante implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="id_empresa")
 	private Empresa empresa;
-
-	@OneToMany(mappedBy = "vacante")
-	private List<Solicitud> solicitudes;
 }

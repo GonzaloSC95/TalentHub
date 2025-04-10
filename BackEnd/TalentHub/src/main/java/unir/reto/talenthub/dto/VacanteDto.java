@@ -31,18 +31,15 @@ public class VacanteDto implements Serializable{
    private Date fecha;
    private double salario;
    private String estatus;
-   private String destacado;
+   private boolean destacado;
    private String imagen;
    private String detalles;
-   private String categoria;
-   private String empresa;
+   private int idCategoria;
+   private int idEmpresa;
 
    //Metodo para convertir de Vacante a VacanteDto
    public VacanteDto mapFromEntity(Vacante vacante) {
       modelMapper = new ModelMapper();
-      modelMapper.typeMap(Vacante.class, VacanteDto.class)
-      .addMapping(src -> src.getCategoria().getNombre(), VacanteDto::setCategoria)
-      .addMapping(src -> src.getEmpresa().getNombreEmpresa(), VacanteDto::setEmpresa);
       return modelMapper.map(vacante, VacanteDto.class);
    }
    //Metodo para convertir de VacanteDto a Vacante

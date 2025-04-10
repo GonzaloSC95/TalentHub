@@ -35,16 +35,11 @@ public class Solicitud implements Serializable{
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id_solicitud")
 	private int idSolicitud;
-	
 	@Temporal(TemporalType.DATE)
 	private Date fecha;
-	
 	private String archivo;
 	private String comentarios;
-	
-	@Enumerated(EnumType.ORDINAL)
-	private Estado estado = Estado.PRESENTADA;
-	
+	private int estado = 1;
 	private String curriculum;
 	
 	@ManyToOne

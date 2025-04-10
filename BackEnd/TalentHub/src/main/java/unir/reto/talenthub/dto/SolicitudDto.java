@@ -31,15 +31,12 @@ public class SolicitudDto implements Serializable{
    private String comentarios;
    private String estado;
    private String curriculum;
-   private String vacante;
-   private String candidato;
+   private int idVacante;
+   private String emailUsuario;
 
    //Metodo para convertir de Solicitud a SolicitudDto
    public SolicitudDto mapFromEntity(Solicitud solicitud) {
       modelMapper = new ModelMapper();
-      modelMapper.typeMap(Solicitud.class, SolicitudDto.class)
-      .addMapping(src -> src.getVacante().getNombre(), SolicitudDto::setVacante)
-      .addMapping(src -> src.getUsuario().getEmail(), SolicitudDto::setCandidato);
       return modelMapper.map(solicitud, SolicitudDto.class);
    }
    //Metodo para convertir de SolicitudDto a Solicitud
