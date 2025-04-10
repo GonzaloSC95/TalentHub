@@ -14,7 +14,7 @@ export class UsuarioService {
   private apiUrl: string = environment.baseUrl + 'talenthub/api/usuario';
   constructor() {}
 
-  async getUsuarioByLogin(usuario: Usuario): Promise<Usuario> {
+  async getUsuarioByLogin(usuario: Usuario): Promise<Usuario | undefined> {
     const params = {
       email: usuario.email,
       password: usuario.password,
@@ -23,7 +23,7 @@ export class UsuarioService {
       this.httpClient.get<Usuario>(`${this.apiUrl}/login`, { params }).pipe(
         catchError((error) => {
           console.error('Error al obtener el usuario:', error);
-          return of({} as Usuario);
+          return of(undefined);
         })
       )
     );

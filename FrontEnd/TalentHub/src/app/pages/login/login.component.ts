@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { Usuario } from '../../interfaces/usuario';
 import { UsuarioService } from '../../service/usuario.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -55,8 +56,44 @@ export class LoginComponent {
       const response = await this.usuarioService.getUsuarioByLogin(
         this.usuario //ana.martinez@example.com passana3
       );
-      console.log(response);
+      console.log('Respuesta del backend:', response);
+      if (response) {
+        this.usuario = response as Usuario;
+        Swal.fire({
+          title: '¡Bienvenid@!😊',
+          text: `Has iniciado sesión correctamente: ${this.usuario.nombre} ${this.usuario.apellidos}`,
+          icon: 'success',
+          showCancelButton: false,
+          showCloseButton: true,
+          confirmButtonColor: getComputedStyle(document.documentElement)
+            .getPropertyValue('--primary-color')
+            .trim(),
+          confirmButtonText: 'Continuar',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            //TODO: redirigir al usuario a otra página o realizar otras acciones
+            this.reactiveForm.reset();
+          }
+        });
+      } else {
+        Swal.fire({
+          title: 'Error al iniciar sesión',
+          text: 'Usuario o contraseña incorrectos.',
+          icon: 'error',
+          showCancelButton: false,
+          showCloseButton: true,
+          confirmButtonColor: getComputedStyle(document.documentElement)
+            .getPropertyValue('--primary-color')
+            .trim(),
+          confirmButtonText: 'Continuar',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.reactiveForm.reset();
+          }
+        });
+      }
     } else {
+      //Marcan todos los controles del formulario como "tocados" (touched), para que aparezcan los mensajes de validación.
       this.reactiveForm.markAllAsTouched();
     }
   }

@@ -97,7 +97,7 @@ export class RegistroComponent {
     return null;
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.reactiveForm.valid) {
       console.log('Formulario enviado:', this.reactiveForm.value);
       // Creamos las interfaces de usuario y empresa
@@ -119,7 +119,7 @@ export class RegistroComponent {
           usuario: this.reactiveForm.get('email')?.value,
         };
       }
-      // Aquí puedes enviar los datos al backend
+      //TODO: enviar los datos al backend
     } else {
       this.reactiveForm.markAllAsTouched();
     }

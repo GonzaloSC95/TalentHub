@@ -4,7 +4,7 @@
 
          <div class="mb-3">
             <label for="email" class="form-label text-primary">Email</label>
-            <input type="email" class="form-control" id="email" formControlName="email" />
+            <input type="email" class="form-control" id="email" autocomplete="email" formControlName="email" />
             @if(checkControl('email', 'required')){
             <p class="text-danger my-2">Campo obligatorio</p>
             }
@@ -15,13 +15,14 @@
 
          <div class="mb-4">
             <label for="password" class="form-label text-primary">Contraseña</label>
-            <input type="password" class="form-control" id="password" formControlName="password" />
+            <input type="password" class="form-control" id="password" autocomplete="current-password"
+               formControlName="password" />
             @if(checkControl('password', 'required')){
             <p class="text-danger my-2">Campo obligatorio</p>
             }
          </div>
 
-         <button type="submit" class="btn btn-primary rounded-pill w-100 fw-bold">
+         <button type="submit" class="btn btn-primary rounded-pill w-100 fw-bold" [disabled]="reactiveForm.invalid">
             Inicio Session
          </button>
 
