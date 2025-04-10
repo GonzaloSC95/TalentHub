@@ -9,7 +9,7 @@ export class PaisesService {
   //Inyección de dependencias
   httpClient = inject(HttpClient);
   // URL de la API de países (https://gitlab.com/restcountries)
-  private baseUrl = 'https://restcountries.com/v3.1/all'; //'/api/v3.1/all';
+  private apiUrl = 'https://restcountries.com/v3.1/all'; //'/api/v3.1/all';
   // Lista de países
   nombres: any[] = [];
 
@@ -23,7 +23,7 @@ export class PaisesService {
 
   private async getPaises(): Promise<any[]> {
     return lastValueFrom(
-      this.httpClient.get<any[]>(this.baseUrl).pipe(
+      this.httpClient.get<any[]>(this.apiUrl).pipe(
         catchError((error) => {
           console.error('Error al obtener los países:', error);
           return of([]);

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -6,6 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Usuario } from '../../interfaces/usuario';
+import { UsuarioService } from '../../service/usuario.service';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +16,9 @@ import { Usuario } from '../../interfaces/usuario';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
+  //Inyección de dependencias
+  usuarioService = inject(UsuarioService);
+  // Propiedades
   usuario!: Usuario;
   reactiveForm!: FormGroup;
 
@@ -40,7 +44,7 @@ export class LoginComponent {
     );
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.reactiveForm.valid) {
       console.log('Formulario enviado:', this.reactiveForm.value);
       // Aquí puedes enviar los datos al backend
@@ -48,6 +52,10 @@ export class LoginComponent {
         email: this.reactiveForm.get('email')?.value,
         password: this.reactiveForm.get('password')?.value,
       };
+      const response = await this.usuarioService.getUsuarioByLogin(
+        this.usuario //ana.martinez@example.com passana3
+      );
+      console.log(response);
     } else {
       this.reactiveForm.markAllAsTouched();
     }
