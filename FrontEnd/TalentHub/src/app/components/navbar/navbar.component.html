@@ -72,14 +72,20 @@
                   <li><a class="dropdown-item" href="#">Opcion 2</a></li>
                   <li><a class="dropdown-item" href="#">Opcion 3</a></li>
                </ul>
-            </li>}
+            </li>
+            }
          </ul>
+         @if(!usuario){
          <div class="d-lg-flex col-lg-3 justify-content-lg-end">
             <!-- TODO: Bucle for con diferentes opciones en función de si el usuario se ha logueado o no -->
             @for(btn of arrNavBarButtons;track btn.route){
             <a class="btn btn-primary me-2 identidad" [routerLink]="[btn.route]" routerLinkActive="active">{{btn.text}}</a>
             }
          </div>
+      }
+      @else {
+         <a class="btn btn-primary me-2 identidad" (click)="logout()" routerLinkActive="active">{{logOutBtn.text}}</a>
+      }
       </div>
    </div>
 </nav>

@@ -63,4 +63,12 @@ export class NavbarComponent {
         }
       });
   }
+    // Método para hacer logout
+    logout(): void {
+      // Llamamos al servicio para limpiar la sesión
+      this.usuarioService.clearUsuario();
+      
+      // Redirigimos a la página de inicio o login
+      this.router.navigate(['/home']);
+    }
 }
