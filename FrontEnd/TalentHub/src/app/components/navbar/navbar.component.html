@@ -22,6 +22,29 @@
          </a>
          <ul class="navbar-nav col-lg-6 justify-content-lg-center">
             <!-- TODO: Bucle for con las opciones del menú en base al rol del usuario (Admin,Empresa,Usuario) -->
+            @if(usuario?.rol === 'candidato'){
+               <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="#">Buscar Ofertas</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link disabled" aria-disabled="true" href="#">Mis solicitudes</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link disabled" aria-disabled="true">Mi perfil</a>
+               </li>
+            }
+            @else if (usuario?.rol === 'empresa') {
+               <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="#">Mis ofertas</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link disabled" aria-disabled="true" href="#">Publicar ofertas</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link disabled" aria-disabled="true">Mi perfil</a>
+               </li>
+            }
+            @else {
             <li class="nav-item">
                <a class="nav-link active" aria-current="page" href="#">Home</a>
             </li>
@@ -38,7 +61,7 @@
                   <li><a class="dropdown-item" href="#">Opcion 2</a></li>
                   <li><a class="dropdown-item" href="#">Opcion 3</a></li>
                </ul>
-            </li>
+            </li>}
          </ul>
          <div class="d-lg-flex col-lg-3 justify-content-lg-end">
             <!-- TODO: Bucle for con diferentes opciones en función de si el usuario se ha logueado o no -->

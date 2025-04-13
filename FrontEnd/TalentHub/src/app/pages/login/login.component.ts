@@ -5,9 +5,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 import { Usuario } from '../../interfaces/usuario';
 import { UsuarioService } from '../../service/usuario.service';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,7 @@ import Swal from 'sweetalert2';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
+  router = inject(Router)
   //Inyección de dependencias
   usuarioService = inject(UsuarioService);
   // Propiedades
@@ -53,12 +55,12 @@ export class LoginComponent {
         email: this.reactiveForm.get('email')?.value,
         password: this.reactiveForm.get('password')?.value,
       };
-      const response = await this.usuarioService.getUsuarioByLogin(
-        this.usuario //ana.martinez@example.com passana3
-      );
+      const response = await this.usuarioService.getUsuarioByLogin(this.usuario)//ana.martinez@example.com passana3 
+
       console.log('Respuesta del backend:', response);
       if (response) {
         this.usuario = response as Usuario;
+        this.usuarioService.setUsuario(this.usuario);
         Swal.fire({
           title: '¡Bienvenid@!😊',
           text: `Has iniciado sesión correctamente: ${this.usuario.nombre} ${this.usuario.apellidos}`,
@@ -73,6 +75,7 @@ export class LoginComponent {
           if (result.isConfirmed) {
             //TODO: redirigir al usuario a otra página o realizar otras acciones
             this.reactiveForm.reset();
+            this.router.navigate(['/home'])
           }
         });
       } else {

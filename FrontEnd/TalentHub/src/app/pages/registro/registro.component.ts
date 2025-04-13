@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
 import {
   AbstractControl,
   FormControl,
@@ -7,8 +6,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Usuario } from '../../interfaces/usuario';
+import { RouterLink } from '@angular/router';
 import { Empresa } from '../../interfaces/empresa';
+import { Usuario } from '../../interfaces/usuario';
 import { PaisesService } from '../../service/paises.service';
 
 @Component({
@@ -49,6 +49,7 @@ export class RegistroComponent {
         direccion: new FormControl(null, []),
         pais: new FormControl(null, []),
         rol: new FormControl('CLIENTE', [Validators.required]),
+        lopd: new FormControl(false, [Validators.requiredTrue]),
       },
       [this.empresaValidator]
     );
