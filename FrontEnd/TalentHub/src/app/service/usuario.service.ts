@@ -10,7 +10,7 @@ import { Usuario } from '../interfaces/usuario';
 })
 export class UsuarioService {
 
-    // 🔥 NUEVO: BehaviorSubject para mantener usuario actual
+    // BehaviorSubject para mantener usuario actual
     private usuarioSubject = new BehaviorSubject<Usuario | null>(null);
     usuario$ = this.usuarioSubject.asObservable(); // observable para componentes
   //Inyección de dependencias
@@ -19,17 +19,17 @@ export class UsuarioService {
   private apiUrl: string = environment.baseUrl + 'talenthub/api/usuario';
   constructor() {}
 
-    // ✅ NUEVO: Guarda usuario logueado
+    // Guarda usuario logueado
     setUsuario(usuario: Usuario): void {
       this.usuarioSubject.next(usuario);
     }
   
-    // ✅ NUEVO: Borra usuario logueado (logout)
+    // Borra usuario logueado (logout)
     clearUsuario(): void {
       this.usuarioSubject.next(null);
     }
   
-    // ✅ NUEVO: Getter para usuario actual (ej: desde navbar)
+    // Getter para usuario actual (ej: desde navbar)
     getUsuario(): Usuario | null {
       return this.usuarioSubject.value;
 
@@ -48,7 +48,7 @@ export class UsuarioService {
   //     )
   //   );
   // }
-    // usamos mock
+
       // Obtener usuario con mock
   async getUsuarioByLogin(usuario: Usuario): Promise<Usuario | null> {
     // Simula la validación del login con el mock de usuarios
