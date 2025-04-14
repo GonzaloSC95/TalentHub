@@ -22,7 +22,7 @@
          </a>
          <ul class="navbar-nav col-lg-6 justify-content-lg-center">
             <!-- TODO: Bucle for con las opciones del menú en base al rol del usuario (Admin,Empresa,Usuario) -->
-            @if(usuario?.rol === 'candidato'){
+            @if(usuario?.rol === 'CLIENTE'){
                <li class="nav-item">
                   <a class="nav-link active" aria-current="page" href="#">Buscar Ofertas</a>
                </li>
@@ -33,7 +33,7 @@
                   <a class="nav-link disabled" aria-disabled="true">Mi perfil</a>
                </li>
             }
-            @else if (usuario?.rol === 'empresa') {
+            @else if (usuario?.rol === 'EMPRESA') {
                <li class="nav-item">
                   <a class="nav-link active" aria-current="page" href="#">Mis ofertas</a>
                </li>
@@ -44,7 +44,7 @@
                   <a class="nav-link disabled" aria-disabled="true">Mi perfil</a>
                </li>
             }
-            @else if (usuario?.rol === 'admin') {
+            @else if (usuario?.rol === 'ADMON') {
                <li class="nav-item">
                   <a class="nav-link active" aria-current="page" href="#">Empresas</a>
                </li>
