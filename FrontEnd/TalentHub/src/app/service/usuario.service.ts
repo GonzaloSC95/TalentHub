@@ -33,6 +33,21 @@ export class UsuarioService {
       return this.usuarioSubject.value;
 
     }
+
+async deleteUsuario(usuario: Usuario): Promise<boolean> { 
+  const body = { usuario }; 
+  return lastValueFrom(
+    this.httpClient.delete<boolean>(`${this.apiUrl}/eliminar`, {
+      body,  // Enviamos el usuario completo en el cuerpo
+    }).pipe(
+      catchError(error => {
+        console.error('Error al eliminar el usuario:', error);
+        return of(false);  // error
+      })
+    )
+  );
+}
+    
       async getUsuarioByLogin(usuario: Usuario): Promise<Usuario | undefined> {
     const params = {
       email: usuario.email,

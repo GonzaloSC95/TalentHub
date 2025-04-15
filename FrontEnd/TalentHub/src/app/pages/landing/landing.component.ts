@@ -19,6 +19,7 @@ export class LandingComponent {
 
   usuario: Usuario | null = null;
   email: string | null = null;
+  type!: string;
 
   config = {
     columns: [] as { key: string; label: string }[]
@@ -26,7 +27,9 @@ export class LandingComponent {
 
   data: any[] = [];
 
+
   ngOnInit(): void {
+    this.type='usuario'
     this.email = this.route.snapshot.paramMap.get('email');
     this.usuario = this.usuarioService.getUsuario();
 
