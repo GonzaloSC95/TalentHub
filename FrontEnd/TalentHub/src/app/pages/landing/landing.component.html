@@ -1,0 +1,26 @@
+<table class="table table-bordered table-striped mt-4">
+    <thead>
+        <tr>
+            @for (col of config.columns; track col) {
+            <th>
+                {{ col.label }}
+            </th>
+            }
+            <th>Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (item of data; track item) {
+        <tr>
+            @for (col of config.columns; track col) {
+            <td>
+                {{ item[col.key] }}
+            </td>
+            }
+            <td>
+                <app-botonera></app-botonera>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

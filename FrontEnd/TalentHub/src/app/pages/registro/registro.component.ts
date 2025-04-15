@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Empresa } from '../../interfaces/empresa';
 import { Usuario } from '../../interfaces/usuario';
 import { PaisesService } from '../../service/paises.service';
@@ -21,6 +21,7 @@ import { PaisesService } from '../../service/paises.service';
 export class RegistroComponent {
   //Inyección de dependencias
   paisesService = inject(PaisesService);
+  router = inject(Router);
 
   // Propiedades
   usuario!: Usuario;
@@ -120,6 +121,7 @@ export class RegistroComponent {
           usuario: this.reactiveForm.get('email')?.value,
         };
       }
+      this.router.navigate(['/landing', this.usuario.email]);
       //TODO: enviar los datos al backend
     } else {
       this.reactiveForm.markAllAsTouched();

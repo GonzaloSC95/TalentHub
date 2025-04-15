@@ -75,7 +75,7 @@ export class LoginComponent {
           if (result.isConfirmed) {
             //TODO: redirigir al usuario a otra página o realizar otras acciones
             this.reactiveForm.reset();
-            this.router.navigate(['/home'])
+            this.router.navigate([`/landing/${this.usuario.email}`])
           }
         });
       } else {
