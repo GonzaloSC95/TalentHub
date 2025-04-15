@@ -1,0 +1,39 @@
+.horizontal-menu {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  
+  .menu-button {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #37384f;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .menu-button:hover {
+    background-color: #6610f2;
+  }
+  
+  .menu-options {
+    display: flex;
+    gap: 5px;
+    margin-left: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  
+  .menu-options.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+  }
+  

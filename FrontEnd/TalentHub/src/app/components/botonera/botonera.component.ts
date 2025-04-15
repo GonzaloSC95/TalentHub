@@ -12,12 +12,18 @@ import { UsuarioService } from '../../service/usuario.service';
 })
 export class BotoneraComponent {
 
+  menuOpen = false;
+
   @Input() item: any;           // El objeto actual 
   @Input() type: string = '';  // Tipo de entidad 
 
   usuarioService = inject(UsuarioService);
 
   constructor(private router: Router) {}
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
 
   async eliminar() {
     const result = await Swal.fire({
