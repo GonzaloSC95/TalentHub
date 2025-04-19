@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import unir.reto.talenthub.configuration.EmpresaMapper;
 import unir.reto.talenthub.dto.EmpresaDto;
-import unir.reto.talenthub.dto.VacanteDto;
+
 import unir.reto.talenthub.entity.Empresa;
-import unir.reto.talenthub.entity.Estatus;
-import unir.reto.talenthub.entity.Vacante;
+
 import unir.reto.talenthub.service.EmpresaService;
-import unir.reto.talenthub.service.VacanteService;
+
 
 /*
  * Controlador REST para gestionar las empresas y vacantes.
@@ -37,100 +37,104 @@ public class EmpresaController {
 
    @Autowired
    private EmpresaService empresaService;
+   
+   @Autowired
+   private EmpresaMapper empresaMapper;
+   
 
    @Operation(
-      summary = "Obtener una empresa por su id.",
-      description = "Devuelve la empresa por su id."
-   )
-   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Empresa encontrada."),
-      @ApiResponse(responseCode = "404", description = "Empresa no encontrada.")
-   })
-   @GetMapping("/{id}")
-   public ResponseEntity<EmpresaDto> getEmpresa(@PathVariable int id) {
-      Empresa empresa = empresaService.findByidEmpresa(id);
-      EmpresaDto empresaDto = new EmpresaDto();
-      if (empresa == null) {
-         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-      }
-      return ResponseEntity.ok(empresaDto.mapFromEntity(empresa));
-   }
+	        summary = "Obtener una empresa por su id.",
+	        description = "Devuelve la empresa por su id."
+	    )
+	    @ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "Empresa encontrada."),
+	        @ApiResponse(responseCode = "404", description = "Empresa no encontrada.")
+	    })
+	    @GetMapping("/{id}")
+	    public ResponseEntity<EmpresaDto> getEmpresa(@PathVariable int id) {
+	        Empresa empresa = empresaService.findByidEmpresa(id);
+	        if (empresa == null) {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+	        }
+	        return ResponseEntity.ok(empresaMapper.mapToDto(empresa));
+	    }
 
-   @Operation(
-      summary = "Crear empresa.",
-      description = "Devuelve la empresa creada."
-   )
-   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Empresa creada."),
-      @ApiResponse(responseCode = "400", description = "Empresa no creada.")
-   })
-   @PostMapping("/crear")
-   public ResponseEntity<EmpresaDto> crearEmpresa(@RequestBody EmpresaDto empresa) {
-      int empresaCreadaNm = empresaService.save(empresa.mapToEntity(empresa));
-      if (empresaCreadaNm == 0) {
-         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-      }
-      else{
-         return ResponseEntity.status(HttpStatus.CREATED).body(empresa);
-      }
-   }
+	    @Operation(
+	        summary = "Crear empresa.",
+	        description = "Devuelve la empresa creada."
+	    )
+	    @ApiResponses(value = {
+	        @ApiResponse(responseCode = "201", description = "Empresa creada."),
+	        @ApiResponse(responseCode = "400", description = "Empresa no creada.")
+	    })
+	    @PostMapping("/crear")
+	    public ResponseEntity<EmpresaDto> crearEmpresa(@RequestBody EmpresaDto empresaDto) {
+	        Empresa empresa = empresaMapper.mapToEntity(empresaDto);
+	        int result = empresaService.save(empresa);
+	        if (result == 0) {
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+	        }
+	        return ResponseEntity.status(HttpStatus.CREATED).body(empresaDto);
+	    }
 
-   @Operation(
-      summary = "Actualizar empresa.",
-      description = "Devuelve la empresa actualizada."
-   )
-   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Empresa actualizada."),
-      @ApiResponse(responseCode = "404", description = "Empresa no encontrada.")
-   })
-   @PutMapping("/actualizar")
-   public ResponseEntity<EmpresaDto> actualizarEmpresa(@RequestBody EmpresaDto empresa) {
-      Empresa empresaExist = empresaService.findByidEmpresa(empresa.getIdEmpresa());
-      if (empresaExist == null) {
-         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-      }
-      // Actualizar la empresa
-      int empresaActualizadaNm = empresaService.update(empresa.mapToEntity(empresa));
-      if (empresaActualizadaNm == 0) {
-         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-      }
-      return ResponseEntity.ok(empresa);
-   }
+	    @Operation(
+	        summary = "Actualizar empresa.",
+	        description = "Devuelve la empresa actualizada."
+	    )
+	    @ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "Empresa actualizada."),
+	        @ApiResponse(responseCode = "404", description = "Empresa no encontrada.")
+	    })
+	    @PutMapping("/actualizar")
+	    public ResponseEntity<EmpresaDto> actualizarEmpresa(@RequestBody EmpresaDto empresaDto) {
+	        Empresa empresaExistente = empresaService.findByidEmpresa(empresaDto.getIdEmpresa());
+	        if (empresaExistente == null) {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+	        }
+	        Empresa empresa = empresaMapper.mapToEntity(empresaDto);
+	        int result = empresaService.update(empresa);
+	        if (result == 0) {
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+	        }
+	        return ResponseEntity.ok(empresaDto);
+	    }
 
-   @Operation(
-      summary = "Eliminar empresa.",
-      description = "Elimina la empresa."
-   )
-   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Empresa eliminada."),
-      @ApiResponse(responseCode = "404", description = "Empresa no encontrada.")
-   })
-   @DeleteMapping("/eliminar")
-   public ResponseEntity<EmpresaDto> eliminarEmpresa(@RequestBody EmpresaDto empresa) {
-      Empresa empresaExist = empresaService.findByidEmpresa(empresa.getIdEmpresa());
-      if (empresaExist == null) {
-         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-      }
-      int empresaEliminadaNm = empresaService.delete(empresa.mapToEntity(empresa));
-      if (empresaEliminadaNm == 0) {
-         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-      }
-      return ResponseEntity.ok(empresa);
-   }
+	    @Operation(
+	        summary = "Eliminar empresa.",
+	        description = "Elimina la empresa."
+	    )
+	    @ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "Empresa eliminada."),
+	        @ApiResponse(responseCode = "404", description = "Empresa no encontrada.")
+	    })
+	    @DeleteMapping("/eliminar")
+	    public ResponseEntity<EmpresaDto> eliminarEmpresa(@RequestBody EmpresaDto empresaDto) {
+	        Empresa empresaExistente = empresaService.findByidEmpresa(empresaDto.getIdEmpresa());
+	        if (empresaExistente == null) {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+	        }
+	        Empresa empresa = empresaMapper.mapToEntity(empresaDto);
+	        int result = empresaService.delete(empresa);
+	        if (result == 0) {
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+	        }
+	        return ResponseEntity.ok(empresaDto);
+	    }
 
-   @Operation(
-      summary = "Obtener empresas.",
-      description = "Devuelve todas las empresas."
-   )
-   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Lista de empresas obtenida."),
-   })
-   @GetMapping("/all")
-   public ResponseEntity<List<EmpresaDto>> getEmpresas() {
-      List<EmpresaDto> empresasDto = empresaService.findAll().stream()
-            .map(empresa -> new EmpresaDto().mapFromEntity(empresa))
-            .toList();
-      return ResponseEntity.ok(empresasDto);
-   }
+	    @Operation(
+	        summary = "Obtener empresas.",
+	        description = "Devuelve todas las empresas."
+	    )
+	    @ApiResponses(value = {
+	        @ApiResponse(responseCode = "200", description = "Lista de empresas obtenida.")
+	    })
+	    @GetMapping("/all")
+	    public ResponseEntity<List<EmpresaDto>> getEmpresas() {
+	        List<EmpresaDto> empresasDto = empresaService.findAll().stream()
+	                .map(empresaMapper::mapToDto)
+	                .toList();
+	        return ResponseEntity.ok(empresasDto);
+	    }
+	
 
 }

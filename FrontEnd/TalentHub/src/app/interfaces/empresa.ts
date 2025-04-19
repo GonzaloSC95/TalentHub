@@ -4,5 +4,5 @@ export interface Empresa {
   nombreEmpresa: string;
   direccionFiscal: string;
   pais: string;
-  usuario: string;
+  email: string;
 }

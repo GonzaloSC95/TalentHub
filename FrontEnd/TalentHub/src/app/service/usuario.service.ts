@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, lastValueFrom, of } from 'rxjs';
+import { BehaviorSubject, catchError, lastValueFrom, Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Usuario } from '../interfaces/usuario';
 
@@ -17,6 +17,15 @@ export class UsuarioService {
   // URL de la API
   private apiUrl: string = environment.baseUrl + 'talenthub/api/usuario';
   constructor() {}
+
+  getAllUsuarios():Observable<Usuario[]>{
+    const url = `${this.apiUrl}/all`;
+        // Llama al endpoint GET /all que devuelve List<UsuarioDto>
+    
+    return this.httpClient.get<Usuario[]>(url).pipe(
+      catchError(this.handleError<Usuario[]>('getAllUsuarios', [])) // Manejo de errores
+    );
+  }
 
     // Guarda usuario logueado
     setUsuario(usuario: Usuario): void {
@@ -48,7 +57,7 @@ async deleteUsuario(usuario: Usuario): Promise<boolean> {
   );
 }
     
-      async getUsuarioByLogin(usuario: Usuario): Promise<Usuario | undefined> {
+  async getUsuarioByLogin(usuario: Usuario): Promise<Usuario | undefined> {
     const params = {
       email: usuario.email,
       password: usuario.password,
@@ -61,6 +70,12 @@ async deleteUsuario(usuario: Usuario): Promise<boolean> {
         })
       )
     );
+  }
+  private handleError<T> (operation= 'operation', result?:T){
+    return (error: any): Observable<T> =>{
+      console.error(`${operation} falló: ${error.message}`, error)
+      return of (result as T);
+    }
   }
 
   //     // Obtener usuario con mock

@@ -46,13 +46,13 @@
             }
             @else if (usuario?.rol === 'ADMON') {
                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="#">Empresas</a>
+                  <a class="nav-link active" aria-current="page"routerLink="/admin/list/empresas" routerLinkActive="active">Empresas</a>
                </li>
                <li class="nav-item">
-                  <a class="nav-link disabled" aria-disabled="true" href="#">Usuarios</a>
+                  <a class="nav-link active" aria-current="page" routerLink="/admin/list/usuarios"routerLinkActive="active">Usuarios</a>
                </li>
                <li class="nav-item">
-                  <a class="nav-link disabled" aria-disabled="true">Vacantes</a>
+                  <a class="nav-link active" aria-current="page"routerLink="/admin/list/vacantes" routerLinkActive="active">Vacantes</a>
                </li>
             }
             @else {

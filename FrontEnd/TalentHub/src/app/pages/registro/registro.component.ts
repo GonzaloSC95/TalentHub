@@ -118,7 +118,7 @@ export class RegistroComponent {
           nombreEmpresa: this.reactiveForm.get('empresa')?.value,
           direccionFiscal: this.reactiveForm.get('direccion')?.value,
           pais: this.reactiveForm.get('pais')?.value,
-          usuario: this.reactiveForm.get('email')?.value,
+          email: this.reactiveForm.get('email')?.value,
         };
       }
       this.router.navigate(['/landing', this.usuario.email]);
