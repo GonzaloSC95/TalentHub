@@ -46,12 +46,19 @@
 
 /* Botones */
 .btn-primary {
-  background-color: var(--primary-color) !important;
-  border-color: var(--primary-color) !important;
+  font-weight: bold !important;
+  color: var(--neutral-color5) !important;
+  text-shadow: 1px 1px 2px #000 !important;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--primary-color5)
+  ) !important;
+  border: none !important;
+  transition: all 0.3s ease-in-out !important;
 }
 .btn-primary:hover {
-  background-color: var(--primary-color1) !important;
-  border-color: var(--primary-color1) !important;
+  transform: scale(1.05) !important;
 }
 
 /* navbar */

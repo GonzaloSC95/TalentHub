@@ -121,8 +121,8 @@ export class RegistroComponent {
           email: this.reactiveForm.get('email')?.value,
         };
       }
-      this.router.navigate(['/landing', this.usuario.email]);
       //TODO: enviar los datos al backend
+      this.router.navigate(['/landing', this.usuario.email]);
     } else {
       this.reactiveForm.markAllAsTouched();
     }

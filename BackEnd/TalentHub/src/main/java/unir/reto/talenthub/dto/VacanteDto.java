@@ -3,14 +3,11 @@ package unir.reto.talenthub.dto;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.modelmapper.ModelMapper;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import unir.reto.talenthub.entity.Vacante;
 
 @AllArgsConstructor
 @NoArgsConstructor
