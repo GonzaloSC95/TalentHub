@@ -16,15 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import unir.reto.talenthub.dto.EmpresaDto;
-import unir.reto.talenthub.dto.VacanteDto;
 import unir.reto.talenthub.entity.Empresa;
-import unir.reto.talenthub.entity.Estatus;
-import unir.reto.talenthub.entity.Vacante;
 import unir.reto.talenthub.service.EmpresaService;
-import unir.reto.talenthub.service.VacanteService;
 
 /*
  * Controlador REST para gestionar las empresas y vacantes.
