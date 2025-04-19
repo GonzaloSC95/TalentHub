@@ -89,7 +89,7 @@ public class UsuarioServiceImpl implements UsuarioService {
    @Override
    public int delete(Usuario usuario) {
       try{
-         usuarioRepository.delete(usuario);
+         usuarioRepository.delete(usuario);;
          return 1;
       } catch (Exception e) {
          return 0;

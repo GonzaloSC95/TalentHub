@@ -1,6 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter } from 'rxjs';
+import { Usuario } from '../../interfaces/usuario';
+import { UsuarioService } from '../../service/usuario.service';
 
 @Component({
   selector: 'app-navbar',
@@ -12,6 +14,8 @@ import { filter } from 'rxjs';
 export class NavbarComponent {
   //Router para la navegación
   router = inject(Router);
+  usuarioService= inject (UsuarioService);
+  usuario :Usuario | null = null;
 
   //Arrays dinámicos para los botones de la barra de navegación
   arrNavBarButtons: { text: string; route: string }[] = [];
@@ -36,6 +40,10 @@ export class NavbarComponent {
 
   ngOnInit(): void {
     //Rellenamos el array de botones de la barra de navegación
+    this.usuario = this.usuarioService.getUsuario();
+    this.usuarioService.usuario$.subscribe(usuario => {
+      this.usuario = usuario!;
+    });
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
@@ -55,4 +63,12 @@ export class NavbarComponent {
         }
       });
   }
+    // Método para hacer logout
+    logout(): void {
+      // Llamamos al servicio para limpiar la sesión
+      this.usuarioService.clearUsuario();
+      
+      // Redirigimos a la página de inicio o login
+      this.router.navigate(['/home']);
+    }
 }

@@ -19,8 +19,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import unir.reto.talenthub.configuration.UsuarioMapper;
 import unir.reto.talenthub.dto.UsuarioDto;
+import unir.reto.talenthub.entity.Empresa;
 import unir.reto.talenthub.entity.Usuario;
+import unir.reto.talenthub.service.EmpresaService;
 import unir.reto.talenthub.service.UsuarioService;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -33,99 +36,91 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RequestMapping("talenthub/api/usuario")
 public class UsuarioController {
 
+
    @Autowired
    private UsuarioService usuarioService;
 
-   @Operation(
-      summary = "Obtener usuario por ID.",
-      description = "Devuelve un usuario por su ID."
-   )
-   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Usuario obtenido"),
-      @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
+   @Autowired
+   private EmpresaService empresaService;
+
+   @Autowired
+   private UsuarioMapper usuarioMapper;
+
+   @Operation(summary = "Obtener usuario por login", description = "Devuelve un usuario por email y contraseña.")
+   @ApiResponses({
+       @ApiResponse(responseCode = "200", description = "Usuario obtenido"),
+       @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
    })
    @Parameters({
-      @Parameter(name = "email", description = "Email del usuario"),
-      @Parameter(name = "password", description = "Password del usuario")
+       @Parameter(name = "email", description = "Email del usuario"),
+       @Parameter(name = "password", description = "Password del usuario")
    })
    @GetMapping("/login")
    public ResponseEntity<UsuarioDto> getUsuarioByLogin(@RequestParam String email, @RequestParam String password) {
-      UsuarioDto usuarioDto = new UsuarioDto();
-      Usuario usuario = usuarioService.findByEmailAndPassword(email, password);
-      System.out.println(usuario);
-      if (usuario != null) {
-         return ResponseEntity.status(HttpStatus.OK).body(usuarioDto.mapFromEntity(usuario));
-      } else {
-         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-      }
+       Usuario usuario = usuarioService.findByEmailAndPassword(email, password);
+       if (usuario != null) {
+           UsuarioDto dto = usuarioMapper.mapWithEmpresa(usuario);
+           return ResponseEntity.ok(dto);
+       }
+       return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
    }
 
-   @Operation(
-      summary = "Crear usurio.",
-      description = "Crea un nuevo usuario."
-   )
-   @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Usuario creado"),
-      @ApiResponse(responseCode = "400", description = "Error al crear el usuario")
+   @Operation(summary = "Crear usuario", description = "Crea un nuevo usuario.")
+   @ApiResponses({
+       @ApiResponse(responseCode = "201", description = "Usuario creado"),
+       @ApiResponse(responseCode = "400", description = "Error al crear el usuario")
    })
    @PostMapping("/crear")
-   public ResponseEntity<UsuarioDto> createUsuario(@RequestBody UsuarioDto usuario) {
-      int result = usuarioService.save(usuario.mapToEntity(usuario));
-      if (result == 1) {
-         return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
-      } else {
-         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-      }
+   public ResponseEntity<UsuarioDto> createUsuario(@RequestBody UsuarioDto usuarioDto) {
+       Usuario usuario = usuarioMapper.mapToEntity(usuarioDto);
+       int result = usuarioService.save(usuario);
+
+       if (result == 1) {
+           if (usuarioDto.getEmpresaId() != null) {
+               Empresa empresa = empresaService.findByidEmpresa(usuarioDto.getEmpresaId());
+               if (empresa != null) {
+                   empresa.setUsuario(usuario);
+                   empresaService.update(empresa);
+               }
+           }
+           return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDto);
+       } else {
+           return ResponseEntity.badRequest().build();
+       }
    }
 
-   @Operation(
-      summary = "Actualizar usuario.",
-      description = "Actualiza un usuario existente."
-   )
-   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Usuario actualizado"),
-      @ApiResponse(responseCode = "400", description = "Usuario no encontrado")
+   @Operation(summary = "Actualizar usuario", description = "Actualiza un usuario existente.")
+   @ApiResponses({
+       @ApiResponse(responseCode = "200", description = "Usuario actualizado"),
+       @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
    })
    @PutMapping("/actualizar")
-   public ResponseEntity<UsuarioDto> updateUsuario(@RequestBody UsuarioDto usuario) {
-      int result = usuarioService.update(usuario.mapToEntity(usuario));
-      if (result == 1) {
-         return ResponseEntity.status(HttpStatus.OK).body(usuario);
-      } else {
-         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-      }
+   public ResponseEntity<UsuarioDto> updateUsuario(@RequestBody UsuarioDto usuarioDto) {
+       Usuario usuario = usuarioMapper.mapToEntity(usuarioDto);
+       int result = usuarioService.update(usuario);
+       return result == 1 ? ResponseEntity.ok(usuarioDto) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
    }
 
-   @Operation(
-      summary = "Eliminar usuario.",
-      description = "Elimina un usuario existente."
-   )
-   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Usuario eliminado"),
-      @ApiResponse(responseCode = "400", description = "Usuario no encontrado")
+   @Operation(summary = "Eliminar usuario", description = "Elimina un usuario existente.")
+   @ApiResponses({
+       @ApiResponse(responseCode = "200", description = "Usuario eliminado"),
+       @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
    })
    @DeleteMapping("/eliminar")
-   public ResponseEntity<UsuarioDto> deleteUsuario(@RequestBody UsuarioDto usuario) {
-      int result = usuarioService.delete(usuario.mapToEntity(usuario));
-      if (result == 1) {
-         return ResponseEntity.status(HttpStatus.OK).body(usuario);
-      } else {
-         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-      }
+   public ResponseEntity<UsuarioDto> deleteUsuario(@RequestBody UsuarioDto usuarioDto) {
+       Usuario usuario = usuarioMapper.mapToEntity(usuarioDto);
+       int result = usuarioService.delete(usuario);
+       return result == 1 ? ResponseEntity.ok(usuarioDto) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
    }
 
-   @Operation(
-      summary = "Obtener todos los usuarios.",
-      description = "Devuelve todos los usuarios."
-   )
-   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Usuarios obtenidos")
-   })
+   @Operation(summary = "Obtener todos los usuarios", description = "Devuelve todos los usuarios.")
+   @ApiResponse(responseCode = "200", description = "Usuarios obtenidos")
    @GetMapping("/all")
    public ResponseEntity<List<UsuarioDto>> getAllUsuarios() {
-      List<UsuarioDto> usuarios = usuarioService.findAll().stream()
-            .map(usuario -> new UsuarioDto().mapFromEntity(usuario))
-            .toList();
-      return ResponseEntity.ok(usuarios);
+       List<Usuario> usuarios = usuarioService.findAll();
+       List<UsuarioDto> usuariosDto = usuarios.stream()
+               .map(usuarioMapper::mapWithEmpresa)
+               .toList();
+       return ResponseEntity.ok(usuariosDto);
    }
 }

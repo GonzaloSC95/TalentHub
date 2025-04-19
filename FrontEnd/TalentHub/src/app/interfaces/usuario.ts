@@ -6,5 +6,6 @@ export interface Usuario {
   enabled?: number;
   fechaRegistro?: Date;
   rol?: string;
-  empresa?: string;
+  empresaId?: number;
+  nombreEmpresa?: string;
 }

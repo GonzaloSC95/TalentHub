@@ -21,8 +21,7 @@ public class VacanteDto implements Serializable{
    //SerialVersionUID
 	private static final long serialVersionUID = 1L;
 
-   //ModelMapper
-	private static ModelMapper modelMapper;
+
 
    @EqualsAndHashCode.Include
    private int idVacante;
@@ -36,15 +35,7 @@ public class VacanteDto implements Serializable{
    private String detalles;
    private int idCategoria;
    private int idEmpresa;
+   private String nombreEmpresa; 
 
-   //Metodo para convertir de Vacante a VacanteDto
-   public VacanteDto mapFromEntity(Vacante vacante) {
-      modelMapper = new ModelMapper();
-      return modelMapper.map(vacante, VacanteDto.class);
-   }
-   //Metodo para convertir de VacanteDto a Vacante
-   public Vacante mapToEntity(VacanteDto vacanteDto) {
-      modelMapper = new ModelMapper();
-      return modelMapper.map(vacanteDto, Vacante.class);
-   }
+
 }

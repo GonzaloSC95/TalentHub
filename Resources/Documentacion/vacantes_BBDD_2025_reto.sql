@@ -98,7 +98,13 @@ VALUES
 ('maria.perez@example.com', 'María', 'Pérez Gutiérrez', 'passmaria', 1, '2025-01-15', 'EMPRESA'),
 ('luis.lopez@example.com', 'Luis', 'López Martínez', 'passluis2', 1, '2025-02-01', 'EMPRESA'),
 ('ana.martinez@example.com', 'Ana', 'Martínez Díaz', 'passana3', 1, '2025-02-05', 'EMPRESA'),
-('carmen.rodriguez@example.com', 'Carmen', 'Rodríguez Silva', 'passcarmen', 1, '2025-03-01', 'EMPRESA');
+('carmen.rodriguez@example.com', 'Carmen', 'Rodríguez Silva', 'passcarmen', 1, '2025-03-01', 'EMPRESA'),
+('eloctavo@hotmail.com', 'Pepe', 'Ruiz Santana', 'alcalacrece',1,'2025-01-27' , 'ADMON'),
+('elseptimo@hotmail.com', 'Pilar', 'Ruiz', 'alcalacrece',1,'2025-01-28', 'CLIENTE'),
+('elquinto@hotmail.com', 'Marcos', 'Loyola Méndez', 'alcalacrece',1, '2025-01-28','CLIENTE'),
+('eltercero@hotmail.com', 'Adolfo', 'Rubio Flores', 'alcalacrece',1,'2025-01-27', 'ADMON'),
+('elprimero@hotmail.com', 'Aarón', 'Rivero Gómez', 'alcalacrece',1,'2025-01-27' ,'CLIENTE');
+
 
 -- Empresas
 INSERT INTO Empresas (cif, nombre_empresa, direccion_fiscal, pais, email)

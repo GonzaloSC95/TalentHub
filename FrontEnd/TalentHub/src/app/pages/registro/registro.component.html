@@ -113,12 +113,19 @@
                      </div>
                      <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" formControlName="rol" value="CLIENTE" />
-                        <label class="form-check-label">Cliente</label>
+                        <label class="form-check-label">Candidato</label>
                      </div>
                      @if(checkControl('rol', 'required')){
                      <p class="text-danger my-2">Campo obligatorio</p>
                      }
                   </div>
+               <div class="form-check mb-3">
+                     <input class="form-check-input" type="checkbox" formControlName="lopd" id="lopd" />
+                     <label class="form-check-label" for="lopd">Acepto la política de privacidad</label>
+                        @if(checkControl('lopd', 'requiredTrue')){
+                        <p class="text-danger my-2">Es obligatorio aceptar la política de protección de datos</p>
+                        }
+               </div>
 
                   <button type="submit" class="btn btn-primary rounded-pill w-100" [disabled]="reactiveForm.invalid">
                      Registrar

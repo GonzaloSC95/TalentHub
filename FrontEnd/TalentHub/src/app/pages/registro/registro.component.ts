@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
 import {
   AbstractControl,
   FormControl,
@@ -7,8 +6,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Usuario } from '../../interfaces/usuario';
+import { Router, RouterLink } from '@angular/router';
 import { Empresa } from '../../interfaces/empresa';
+import { Usuario } from '../../interfaces/usuario';
 import { PaisesService } from '../../service/paises.service';
 
 @Component({
@@ -21,6 +21,7 @@ import { PaisesService } from '../../service/paises.service';
 export class RegistroComponent {
   //Inyección de dependencias
   paisesService = inject(PaisesService);
+  router = inject(Router);
 
   // Propiedades
   usuario!: Usuario;
@@ -49,6 +50,7 @@ export class RegistroComponent {
         direccion: new FormControl(null, []),
         pais: new FormControl(null, []),
         rol: new FormControl('CLIENTE', [Validators.required]),
+        lopd: new FormControl(false, [Validators.requiredTrue]),
       },
       [this.empresaValidator]
     );
@@ -116,9 +118,10 @@ export class RegistroComponent {
           nombreEmpresa: this.reactiveForm.get('empresa')?.value,
           direccionFiscal: this.reactiveForm.get('direccion')?.value,
           pais: this.reactiveForm.get('pais')?.value,
-          usuario: this.reactiveForm.get('email')?.value,
+          email: this.reactiveForm.get('email')?.value,
         };
       }
+      this.router.navigate(['/landing', this.usuario.email]);
       //TODO: enviar los datos al backend
     } else {
       this.reactiveForm.markAllAsTouched();

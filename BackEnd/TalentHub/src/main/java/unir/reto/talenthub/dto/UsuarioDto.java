@@ -21,8 +21,7 @@ public class UsuarioDto implements Serializable{
    //SerialVersionUID
 	private static final long serialVersionUID = 1L;
 
-   //ModelMapper
-	private static ModelMapper modelMapper;
+	
 
    @EqualsAndHashCode.Include
    private String email;
@@ -32,15 +31,44 @@ public class UsuarioDto implements Serializable{
    private int enabled;
    private Date fechaRegistro;
    private String rol;
+   private Integer empresaId;     // Para envío y persistencia
+   private String nombreEmpresa;  // Solo para mostrar
+   
 
-   //Metodo para convertir de Usuario a UsuarioDto
+   // Métodos getter y setter para empresa
+   public Integer getEmpresaId() {
+       return empresaId;
+   }
+
+   public void setEmpresaId(Integer empresaId) {
+       this.empresaId = empresaId;
+   }
+
+   public String getNombreEmpresa() {
+       return nombreEmpresa;
+   }
+
+   public void setNombreEmpresa(String nombreEmpresa) {
+       this.nombreEmpresa = nombreEmpresa;
+   }
+
+   // Método para mapear desde Usuario a UsuarioDto
    public UsuarioDto mapFromEntity(Usuario usuario) {
-      modelMapper = new ModelMapper();
-      return modelMapper.map(usuario, UsuarioDto.class);
+       ModelMapper modelMapper = new ModelMapper();
+       return modelMapper.map(usuario, UsuarioDto.class);
    }
-   //Metodo para convertir de UsuarioDto a Usuario
    public Usuario mapToEntity(UsuarioDto usuarioDto) {
-      modelMapper = new ModelMapper();
-      return modelMapper.map(usuarioDto, Usuario.class);
-   }
+	    ModelMapper modelMapper = new ModelMapper();
+	    Usuario usuario = modelMapper.map(usuarioDto, Usuario.class);
+	    
+	    // porque Usuario no tiene una referencia a Empresa en la entidad.
+
+	    return usuario;
+	}
+
+
+
+
+
+
 }

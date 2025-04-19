@@ -22,30 +22,70 @@
          </a>
          <ul class="navbar-nav col-lg-6 justify-content-lg-center">
             <!-- TODO: Bucle for con las opciones del menú en base al rol del usuario (Admin,Empresa,Usuario) -->
+            @if(usuario?.rol === 'CLIENTE'){
+               <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="#">Buscar Ofertas</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link disabled" aria-disabled="true" href="#">Mis solicitudes</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link disabled" aria-disabled="true">Mi perfil</a>
+               </li>
+            }
+            @else if (usuario?.rol === 'EMPRESA') {
+               <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="#">Mis ofertas</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link disabled" aria-disabled="true" href="#">Publicar ofertas</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link disabled" aria-disabled="true">Mi perfil</a>
+               </li>
+            }
+            @else if (usuario?.rol === 'ADMON') {
+               <li class="nav-item">
+                  <a class="nav-link active" aria-current="page"routerLink="/admin/list/empresas" routerLinkActive="active">Empresas</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" routerLink="/admin/list/usuarios"routerLinkActive="active">Usuarios</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link active" aria-current="page"routerLink="/admin/list/vacantes" routerLinkActive="active">Vacantes</a>
+               </li>
+            }
+            @else {
             <li class="nav-item">
                <a class="nav-link active" aria-current="page" href="#">Home</a>
             </li>
             <li class="nav-item">
-               <a class="nav-link disabled" aria-disabled="true" href="#">Candidato</a>
+               <a class="nav-link active" aria-disabled="true" href="login">Candidato</a>
             </li>
             <li class="nav-item">
-               <a class="nav-link disabled" aria-disabled="true">Empresa</a>
+               <a class="nav-link active" aria-disabled="true" href="login">Empresa</a>
             </li>
             <li class="nav-item dropdown">
-               <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>
+               <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Invitado</a>
                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Opcion 1</a></li>
-                  <li><a class="dropdown-item" href="#">Opcion 2</a></li>
-                  <li><a class="dropdown-item" href="#">Opcion 3</a></li>
+                  <li><a class="dropdown-item" href="#">Ofertas</a></li>
+                  <li><a class="dropdown-item" href="#">Empresas</a></li>
+                  <li><a class="dropdown-item" href="registro">Registro</a></li>
                </ul>
             </li>
+            }
          </ul>
+         @if(!usuario){
          <div class="d-lg-flex col-lg-3 justify-content-lg-end">
             <!-- TODO: Bucle for con diferentes opciones en función de si el usuario se ha logueado o no -->
             @for(btn of arrNavBarButtons;track btn.route){
-            <a class="btn btn-primary me-2" [routerLink]="[btn.route]" routerLinkActive="active">{{btn.text}}</a>
+            <a class="btn btn-primary me-2 identidad" [routerLink]="[btn.route]" routerLinkActive="active">{{btn.text}}</a>
             }
          </div>
+      }
+      @else {
+         <a class="btn btn-primary me-2 identidad" (click)="logout()" routerLinkActive="active">{{logOutBtn.text}}</a>
+      }
       </div>
    </div>
 </nav>

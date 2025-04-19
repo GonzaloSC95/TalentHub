@@ -1,0 +1,29 @@
+<!-- <div class="btn-group" role="group">
+    <button class="btn btn-outline-primary btn-sm" (click)="verDetalle()">
+      <i class="fa fa-eye"></i>
+    </button>
+    <button class="btn btn-outline-secondary btn-sm" (click)="editar()">
+      <i class="fa fa-edit"></i>
+    </button>
+    <button class="btn btn-outline-danger btn-sm" (click)="eliminar()">
+      <i class="fa fa-trash"></i>
+    </button>
+  </div> -->
+  <div class="horizontal-menu">
+    <div class="menu-button" (click)="toggleMenu()">
+      <i [class]="menuOpen ? 'fa fa-times' : 'fa fa-ellipsis-h'"></i>
+    </div>
+  
+    <div class="menu-options" [class.active]="menuOpen">
+      <button class="btn btn-outline-primary btn-sm" (click)="verDetalle()">
+        <i class="fa fa-eye"></i>
+      </button>
+      <button class="btn btn-outline-secondary btn-sm" (click)="editar()">
+        <i class="fa fa-edit"></i>
+      </button>
+      <button class="btn btn-outline-danger btn-sm" (click)="eliminar()">
+        <i class="fa fa-trash"></i>
+      </button>
+    </div>
+  </div>
+

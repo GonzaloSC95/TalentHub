@@ -9,5 +9,6 @@ export interface Vacante {
   imagen: string;
   detalles: string;
   categoria: string;
-  empresa: string;
+  idEmpresa: number;
+  nombreEmpresa: string;
 }
