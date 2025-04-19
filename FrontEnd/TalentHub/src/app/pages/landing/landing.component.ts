@@ -46,7 +46,7 @@ export class LandingComponent {
           { key: 'nombre', label: 'Nombre' },
           { key: 'apellidos', label: 'Apellidos' },
           { key: 'email', label: 'Email' },
-          { key: 'empresa', label: 'Empresa' },
+          { key: 'nombreEmpresa', label: 'Empresa' },
 
         ];
       } else if (this.usuario.rol ==='ADMON'){

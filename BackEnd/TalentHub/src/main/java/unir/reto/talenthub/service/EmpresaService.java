@@ -11,6 +11,7 @@ public interface EmpresaService {
    Empresa findByNombreEmpresa(String nombreEmpresa);
    Empresa findByDireccionFiscal(String direccionFiscal);
    Empresa findByUsuario(Usuario usuario);
+   Empresa findByUsuarioEmail(String email);
 
 
    List <Empresa> findAll();

@@ -87,4 +87,10 @@ public class EmpresaServiceImpl implements EmpresaService {
       }
    }
 
+@Override
+public Empresa findByUsuarioEmail(String email) {
+	// TODO Auto-generated method stub
+	return empresaRepository.findByUsuarioEmail(email);
+}
+
 }

@@ -17,5 +17,7 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Integer> {
    List <Empresa> findByPais(String pais);
    List <Empresa> findByNombreEmpresaContaining(String nombreEmpresa);
    
+   Empresa findByUsuarioEmail(String email);
+   
 
 }
