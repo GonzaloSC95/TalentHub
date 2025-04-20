@@ -10,6 +10,8 @@ import { Router, RouterLink } from '@angular/router';
 import { Empresa } from '../../interfaces/empresa';
 import { Usuario } from '../../interfaces/usuario';
 import { PaisesService } from '../../service/paises.service';
+import { UsuarioService } from '../../service/usuario.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-registro',
@@ -20,6 +22,7 @@ import { PaisesService } from '../../service/paises.service';
 })
 export class RegistroComponent {
   //Inyección de dependencias
+  usuarioService = inject(UsuarioService);
   paisesService = inject(PaisesService);
   router = inject(Router);
 
@@ -101,6 +104,7 @@ export class RegistroComponent {
 
   async onSubmit(): Promise<void> {
     if (this.reactiveForm.valid) {
+      let response = undefined;
       console.log('Formulario enviado:', this.reactiveForm.value);
       // Creamos las interfaces de usuario y empresa
       if (this.isRolEmpresa()) {
@@ -120,10 +124,67 @@ export class RegistroComponent {
           pais: this.reactiveForm.get('pais')?.value,
           email: this.reactiveForm.get('email')?.value,
         };
+        //Enviamos los datos al backend
+        response = await this.usuarioService.registrarUsuarioEmpresa(
+          this.usuario,
+          this.empresa
+        );
+      } else {
+        this.usuario = {
+          email: this.reactiveForm.get('email')?.value,
+          nombre: this.reactiveForm.get('nombre')?.value,
+          apellidos: this.reactiveForm.get('apellidos')?.value,
+          password: this.reactiveForm.get('password')?.value,
+          enabled: 1,
+          fechaRegistro: new Date(),
+          rol: this.reactiveForm.get('rol')?.value,
+        };
+        //Enviamos los datos al backend
+        response = await this.usuarioService.registrarUsuario(this.usuario);
       }
-      //TODO: enviar los datos al backend
-      this.router.navigate(['/landing', this.usuario.email]);
+      //Comprobamos la respuesta del backend
+      console.log('Respuesta del backend:', response);
+      if (response) {
+        this.usuario = response as Usuario;
+        this.usuarioService.setUsuario(this.usuario);
+        Swal.fire({
+          title: '¡Bienvenid@!😊',
+          text: `Te has registrado correctamente: ${this.usuario.nombre} ${this.usuario.apellidos}`,
+          icon: 'success',
+          showCancelButton: false,
+          showCloseButton: true,
+          confirmButtonColor: getComputedStyle(document.documentElement)
+            .getPropertyValue('--primary-color')
+            .trim(),
+          confirmButtonText: 'Continuar',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            //TODO: redirigir al usuario a otra página o realizar otras acciones
+            this.reactiveForm.reset();
+            this.router.navigate([`/landing/${this.usuario.email}`]);
+          }
+        });
+      }
+      //Si no se ha podido registrar el usuario, mostramos un mensaje de error.
+      else {
+        Swal.fire({
+          title: 'Error en el registro',
+          text: 'No se ha podido registrar el usuario.',
+          icon: 'error',
+          showCancelButton: false,
+          showCloseButton: true,
+          confirmButtonColor: getComputedStyle(document.documentElement)
+            .getPropertyValue('--primary-color')
+            .trim(),
+          confirmButtonText: 'Continuar',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.reactiveForm.reset();
+          }
+        });
+      }
     } else {
+      //Marcan todos los controles del formulario como "tocados" (touched), para que aparezcan los mensajes de validación.
       this.reactiveForm.markAllAsTouched();
     }
   }

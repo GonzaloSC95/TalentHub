@@ -18,7 +18,7 @@ import { UsuarioService } from '../../service/usuario.service';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  router = inject(Router)
+  router = inject(Router);
   //Inyección de dependencias
   usuarioService = inject(UsuarioService);
   // Propiedades
@@ -55,8 +55,9 @@ export class LoginComponent {
         email: this.reactiveForm.get('email')?.value,
         password: this.reactiveForm.get('password')?.value,
       };
-      const response = await this.usuarioService.getUsuarioByLogin(this.usuario)//ana.martinez@example.com passana3 
-
+      const response = await this.usuarioService.getUsuarioByLogin(
+        this.usuario
+      );
       console.log('Respuesta del backend:', response);
       if (response) {
         this.usuario = response as Usuario;
@@ -75,12 +76,12 @@ export class LoginComponent {
           if (result.isConfirmed) {
             //TODO: redirigir al usuario a otra página o realizar otras acciones
             this.reactiveForm.reset();
-            this.router.navigate([`/landing/${this.usuario.email}`])
+            this.router.navigate([`/landing/${this.usuario.email}`]);
           }
         });
       } else {
         Swal.fire({
-          title: 'Error al iniciar sesión',
+          title: 'Error en el inicio de sesión',
           text: 'Usuario o contraseña incorrectos.',
           icon: 'error',
           showCancelButton: false,
