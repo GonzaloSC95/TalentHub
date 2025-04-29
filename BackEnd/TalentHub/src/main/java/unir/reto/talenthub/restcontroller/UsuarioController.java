@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.PutMapping;
  */
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("talenthub/api/usuario")
+@RequestMapping("/talenthub/api/usuario")
 public class UsuarioController {
 
     @Autowired
@@ -58,7 +58,7 @@ public class UsuarioController {
     })
     @GetMapping("/login")
     public ResponseEntity<UsuarioDto> getUsuarioByLogin(@RequestParam String email, @RequestParam String password) {
-        Usuario usuario = usuarioService.findByEmailAndPassword(email, password);
+        Usuario usuario = usuarioService.findByEmailAndPassword(email, "{noop}" + password);
         if (usuario != null) {
             UsuarioDto dto = usuarioMapper.mapWithEmpresa(usuario);
             return ResponseEntity.ok(dto);

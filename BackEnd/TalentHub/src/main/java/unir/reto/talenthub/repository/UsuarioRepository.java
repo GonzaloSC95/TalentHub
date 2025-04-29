@@ -13,6 +13,7 @@ import unir.reto.talenthub.entity.Usuario;
 public interface UsuarioRepository extends JpaRepository<Usuario, String> {
 
    Usuario findByEmailAndPassword(String email, String password);
+   
    Usuario findByEmail(String email);
    Usuario findByNombreAndApellidos(String nombre, String apellidos);
 

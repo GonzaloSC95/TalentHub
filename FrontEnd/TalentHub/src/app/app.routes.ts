@@ -3,6 +3,10 @@ import { HomeComponent } from './pages/home/home.component';
 import { LandingComponent } from './pages/landing/landing.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegistroComponent } from './pages/registro/registro.component';
+import { VacanteDetalleComponent } from './components/vacante-detalle/vacante-detalle.component';
+import { vacanteModificarComponent } from './components/vacante-modificar/vacante-modificar.component';
+
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -11,4 +15,9 @@ export const routes: Routes = [
   { path: 'registro', component: RegistroComponent },
   { path: 'landing/:email', component: LandingComponent},
   { path: 'admin/list/:type', component :LandingComponent},
+  { path: 'user/list/:type', component :LandingComponent},
+  //{ path: 'vacante/detalle/:id', component: VacanteDetalleComponent },
+  { path: 'detalle/:type/:id', component: VacanteDetalleComponent },
+  { path: 'modificar/:tipo/:id', component: vacanteModificarComponent  }
+  
 ];

@@ -212,4 +212,21 @@ public class VacanteController {
 	            .collect(Collectors.toList());
 	      return ResponseEntity.ok(vacantes);
 	   }
+	   
+	   @Operation(
+			      summary = "Obtener todas las vacantes creadas.",
+			      description = "Devuelve todas las vacantes creadas."
+			   )
+			   @ApiResponses(value = {
+			      @ApiResponse(responseCode = "200", description = "Vacantes creadas obtenidas")
+			   })
+	   @GetMapping("/creadas")
+	   public ResponseEntity<List<VacanteDto>> getAllCreadas() {
+	      List<VacanteDto> vacantes = vacanteService.findByEstatus(Estatus.CREADA).stream()
+	            .map(vacanteMapper::mapToDto)
+	            .collect(Collectors.toList());
+	      return ResponseEntity.ok(vacantes);
+	   }
+	   
+	 
 	}

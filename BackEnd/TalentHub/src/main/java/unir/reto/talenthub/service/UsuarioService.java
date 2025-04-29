@@ -20,7 +20,8 @@ public interface UsuarioService {
    List <Usuario> findByFechaRegistro(Date fechaRegistro);
    List <Usuario> findByEnabled(Enabled enabled);
    List <Usuario> findByRol(Rol rol);
-
+   
+   
    int save(Usuario usuario);
    int update(Usuario usuario);
    int delete(Usuario usuario);

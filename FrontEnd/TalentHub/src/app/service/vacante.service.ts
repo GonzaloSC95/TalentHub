@@ -8,6 +8,9 @@ import { Vacante } from '../interfaces/vacante';
   providedIn: 'root',
 })
 export class VacanteService {
+
+
+  
   httpClient = inject(HttpClient)
   private apiUrl: string = environment.baseUrl + 'talenthub/api/vacante';
 
@@ -28,4 +31,27 @@ export class VacanteService {
           return of (result as T);
         }
       }
+      getVacantesCreadas():Observable<Vacante[]>{
+        const url = `${this.apiUrl}/creadas`;
+            // Llama al endpoint GET /creadas que devuelve una lista de vacantes con estatus CREADA
+        
+        return this.httpClient.get<Vacante[]>(url).pipe(
+          catchError(this.handleError<Vacante[]>('getAllVacantes', [])) // Manejo de errores
+        );
+      }
+      
+      getVacanteById(id: number):Observable<Vacante>{
+        const url = `${this.apiUrl}/${id}`;
+               
+        return this.httpClient.get<Vacante>(url).pipe(
+          catchError(this.handleError<Vacante>('getAllVacantes')) // Manejo de errores
+        );
+      }
+
+      actualizarVacante(vacante: any): Observable<any> {
+        return this.httpClient.put(`${this.apiUrl}/actualizar`, vacante);
+      }
 }
+
+
+

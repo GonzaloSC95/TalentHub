@@ -13,4 +13,9 @@ public interface SolicitudRepository extends JpaRepository<Solicitud, Integer> {
    List<Solicitud> findByUsuario(Usuario objUsuario);
    List<Solicitud> findByVacante(Vacante vacante);
    Solicitud findByVacanteAndUsuario(Vacante vacante, Usuario usuario);
+   List<Solicitud> findByEstado(int estado);
+   
+// Nuevo método para filtrar por estado y por el email del usuario
+   List<Solicitud> findByEstadoAndUsuarioEmail(int estado, String email);
+   
 }

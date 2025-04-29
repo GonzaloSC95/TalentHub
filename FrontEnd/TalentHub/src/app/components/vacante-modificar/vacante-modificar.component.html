@@ -1,0 +1,148 @@
+<h2>Modificar {{ tipo | titlecase }}</h2>
+
+@if (formSolicitud) {
+  <form [formGroup]="formSolicitud" (ngSubmit)="actualizar()" novalidate>
+
+    @if (tipo === 'vacante') {
+      <input type="hidden" formControlName="idVacante" />
+
+      <div>
+        <label for="nombre">Nombre</label>
+        <input id="nombre" formControlName="nombre" />
+        @if (formSolicitud.get('nombre')?.invalid && formSolicitud.get('nombre')?.touched) {
+          <div class="error">El nombre es obligatorio.</div>
+        }
+      </div>
+
+      <div>
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" formControlName="descripcion"></textarea>
+        @if (formSolicitud.get('descripcion')?.invalid && formSolicitud.get('descripcion')?.touched) {
+          <div class="error">La descripción es obligatoria.</div>
+        }
+      </div>
+
+      <div>
+        <label for="fecha">Fecha</label>
+        <input id="fecha" type="date" formControlName="fecha" />
+        @if (formSolicitud.get('fecha')?.invalid && formSolicitud.get('fecha')?.touched) {
+          <div class="error">La fecha es obligatoria.</div>
+        }
+      </div>
+
+      <div>
+        <label for="salario">Salario</label>
+        <input id="salario" type="number" formControlName="salario" />
+        @if (formSolicitud.get('salario')?.invalid && formSolicitud.get('salario')?.touched) {
+          <div class="error">El salario es obligatorio y debe ser positivo.</div>
+        }
+      </div>
+
+      <div>
+        <label for="estatus">Estatus</label>
+        <input id="estatus" formControlName="estatus" />
+        @if (formSolicitud.get('estatus')?.invalid && formSolicitud.get('estatus')?.touched) {
+          <div class="error">El estatus es obligatorio.</div>
+        }
+      </div>
+
+      <div>
+        <label for="destacado">Destacado</label>
+        <input id="destacado" formControlName="destacado" />
+      </div>
+
+      <div>
+        <label for="imagen">Imagen</label>
+        <input id="imagen" formControlName="imagen" />
+      </div>
+
+      <div>
+        <label for="detalles">Detalles</label>
+        <textarea id="detalles" formControlName="detalles"></textarea>
+      </div>
+
+      <div>
+        <label for="categoria">Categoría</label>
+        <input id="categoria" formControlName="categoria" />
+      </div>
+
+      <div>
+        <label for="idEmpresa">ID Empresa</label>
+        <input id="idEmpresa" type="number" formControlName="idEmpresa" />
+        @if (formSolicitud.get('idEmpresa')?.invalid && formSolicitud.get('idEmpresa')?.touched) {
+          <div class="error">El ID de la empresa es obligatorio.</div>
+        }
+      </div>
+
+      <div>
+        <label for="nombreEmpresa">Nombre Empresa</label>
+        <input id="nombreEmpresa" formControlName="nombreEmpresa" />
+        @if (formSolicitud.get('nombreEmpresa')?.invalid && formSolicitud.get('nombreEmpresa')?.touched) {
+          <div class="error">El nombre de la empresa es obligatorio.</div>
+        }
+      </div>
+    }
+
+    @if (tipo === 'solicitud') {
+      <input type="hidden" formControlName="idSolicitud" />
+
+      <div>
+        <label for="fecha">Fecha</label>
+        <input id="fecha" type="date" formControlName="fecha" />
+        @if (formSolicitud.get('fecha')?.invalid && formSolicitud.get('fecha')?.touched) {
+          <div class="error">La fecha es obligatoria.</div>
+        }
+      </div>
+
+      <div>
+        <label for="archivo">Archivo</label>
+        <input id="archivo" formControlName="archivo" />
+      </div>
+
+      <div>
+        <label for="comentarios">Comentarios</label>
+        <textarea id="comentarios" formControlName="comentarios"></textarea>
+      </div>
+
+      <div>
+        <label for="estado">Estado</label>
+        <input id="estado" formControlName="estado" />
+        @if (formSolicitud.get('estado')?.invalid && formSolicitud.get('estado')?.touched) {
+          <div class="error">El estado es obligatorio.</div>
+        }
+      </div>
+
+      <div>
+        <label for="curriculum">Curriculum</label>
+        <input id="curriculum" formControlName="curriculum" />
+      </div>
+
+      <div>
+        <label for="vacante">Vacante</label>
+        <!-- Vacante es un objeto, aquí muestra sólo un texto o id -->
+        <input id="vacante" formControlName="vacante" readonly />
+        @if (formSolicitud.get('vacante')?.invalid && formSolicitud.get('vacante')?.touched) {
+          <div class="error">La vacante es obligatoria.</div>
+        }
+      </div>
+
+      <div>
+        <label for="candidato">Candidato</label>
+        <!-- Igual para candidato -->
+        <input id="candidato" formControlName="candidato" readonly />
+        @if (formSolicitud.get('candidato')?.invalid && formSolicitud.get('candidato')?.touched) {
+          <div class="error">El candidato es obligatorio.</div>
+        }
+      </div>
+    }
+
+    <button type="submit" [disabled]="formSolicitud.invalid">
+      Actualizar {{ tipo }}
+    </button>
+
+    <div class="card-footer text-center">
+      <button type="button" class="btn btn-secondary" (click)="volver()">Volver</button>
+    </div>
+
+  </form>
+}

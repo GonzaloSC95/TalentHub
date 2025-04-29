@@ -1,4 +1,4 @@
-<div class="container p-4">
+    <div class="container p-4">
     <h2>{{ pageTitle }}</h2>
     <table class="table table-bordered table-striped mt-4 m-2">
         <thead>
@@ -20,8 +20,8 @@
                 </td>
                 }
                 <td>
-                    @if(listType) {
-                    <app-botonera [item]="item" [type]="listType"></app-botonera>
+                    @if(typeForBotonera) {
+                    <app-botonera [item]="item" [type]="typeForBotonera"></app-botonera>
                     } @else {
                     <!-- Opcional: Mostrar algo si no hay tipo (ej. un guión o nada) -->
                     <span>-</span>
@@ -31,4 +31,35 @@
             }
         </tbody>
     </table>
+    <br><br><br><br>
+    <!-- Segunda tabla SOLO!!!! para 'mis solicitudes' -->
+  @if(listType === 'mis solicitudes') {
+    <h3>Solicitudes Asignadas</h3>
+    <table class="table table-bordered table-striped mt-4 m-2">
+      <thead>
+        <tr>
+          @for (col of config.columns; track col) {
+            <th>{{ col.label }}</th>
+          }
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of solicitudesAdjudicadas; track item) {
+          <tr>
+            @for (col of config.columns; track col) {
+              <td>{{ item[col.key] }}</td>
+            }
+            <td>
+              
+                <!-- Aquí pasamos 'solicitud' siempre para que no haya líos-->
+                <app-botonera [item]="item" [type]="'solicitud'"></app-botonera>
+              
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
 </div>
+

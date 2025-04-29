@@ -1,0 +1,99 @@
+<div class="container mt-5">
+  <h1 class="mb-4 text-center">
+    @if(tipo === 'vacante'|| tipo=== 'buscar ofertas') {
+      Detalles de la Vacante
+    } @else if (tipo === 'solicitud' || tipo === 'mis solicitudes') {
+      Detalles de la Solicitud
+    } @else {
+      Detalles
+    }
+  </h1>
+
+  <!-- Detalle Vacante -->
+  @if((tipo === 'vacante' || tipo === 'buscar ofertas') && vacante) {
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">{{ vacante.nombre }}</h3>
+      </div>
+      <div class="card-body">
+        @if (vacante.descripcion) {
+          <p><strong>Descripción:</strong> {{ vacante.descripcion }}</p>
+        }
+        @if (vacante.fecha) {
+          <p><strong>Fecha:</strong> {{ vacante.fecha}}</p>
+        }
+        @if (vacante.salario) {
+          <p><strong>Salario:</strong> {{ vacante.salario }}</p>
+        }
+        @if (vacante.status) {
+          <p><strong>Estado:</strong> {{ vacante.status }}</p>
+        }
+        @if (vacante.destacado) {
+          <p><strong>Destacado:</strong> {{ vacante.destacado }}</p>
+        }
+        @if (vacante.detalles) {
+          <p><strong>Detalles adicionales:</strong> {{ vacante.detalles }}</p>
+        }
+        @if (vacante.categoria) {
+          <p><strong>Categoría:</strong> {{ vacante.categoria }}</p>
+        }
+        @if (vacante.nombreEmpresa) {
+          <p><strong>Empresa:</strong> {{ vacante.nombreEmpresa }}</p>
+        }
+      </div>
+      <div class="card-footer text-center">
+        <button class="btn btn-secondary" (click)="volver()">Volver</button>
+      </div>
+    </div>
+  }
+
+  <!-- Detalle Solicitud -->
+  @if((tipo === 'solicitud' || tipo === 'mis solicitudes') && solicitud) {
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"> Detalle de la Solicitud #{{ solicitud.idSolicitud }}</h3>
+      </div>
+      <div class="card-body">
+        @if(solicitud.fecha) {
+          <p><strong>Fecha:</strong> {{ solicitud.fecha }}</p>
+        }
+        @if(solicitud.estado) {
+          <p><strong>Estado:</strong> {{ solicitud.estado }}</p>
+        }
+        @if(solicitud.candidato) {
+          <p><strong>Candidato:</strong> {{ solicitud.candidato }}</p>
+        }
+        @if(solicitud.vacante) {
+          <p><strong>Vacante:</strong> {{ solicitud.vacante }}</p>
+        }
+        @if(solicitud.comentarios) {
+          <p><strong>Comentarios:</strong> {{ solicitud.comentarios }}</p>
+        }
+        @if(solicitud.curriculum) {
+          <p><strong>Currículum:</strong> 
+            <a [href]="solicitud.curriculum" target="_blank" rel="noopener noreferrer">
+              Ver currículum
+            </a>
+          </p>
+        }
+        @if(solicitud.archivo) {
+          <p><strong>Archivo adjunto:</strong> 
+            <a [href]="solicitud.archivo" target="_blank" rel="noopener noreferrer">
+              Descargar archivo
+            </a>
+          </p>
+        }
+      </div>
+      <div class="card-footer text-center">
+        <button class="btn btn-secondary" (click)="volver()">Volver</button>
+      </div>
+    </div>
+  }
+
+  <!-- Cargando si no hay datos aún -->
+  @if(!vacante && !solicitud) {
+    <div class="alert alert-warning text-center">
+      Cargando detalles...
+    </div>
+  }
+</div>

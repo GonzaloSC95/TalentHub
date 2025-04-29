@@ -75,4 +75,21 @@ public class SolicitudServiceImpl implements SolicitudService {
       return solicitudRepository.findByVacanteAndUsuario(vacante, usuario);
    }
 
+   @Override
+   public List<Solicitud> findByEstadoPresentado(int estado) {
+	  return solicitudRepository.findByEstado(0);
+}
+
+   @Override
+   public List<Solicitud> findByEstadoAdjudicado(int estado) {
+	  return solicitudRepository.findByEstado(1);
+}
+
+   @Override
+   public List<Solicitud> findByEstadoAndUsuarioEmail(int estado, String email) {
+       return solicitudRepository.findByEstadoAndUsuarioEmail(estado, email);
+   }
+
+ 
+
 }

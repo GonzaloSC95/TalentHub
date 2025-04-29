@@ -61,11 +61,78 @@ export class BotoneraComponent {
   }
   
 
-  editar() {
-    this.router.navigate([`/${this.type}/editar`, this.item?.id || this.item?.email]);
+  modificar() {
+    
+    const tipo = this.type.toLowerCase().replace(/\s+/g, '');
+    let id = this.getId();
+  
+    switch (this.type) {
+      case 'vacante':
+        id = this.item?.idVacante;
+        break;
+      case 'usuario':
+        id = this.item?.email;
+        break;
+      case 'solicitud':
+        id = this.item?.idSolicitud;
+        break;
+      default:
+        id = this.item?.id || this.item?.email; // fallback
+    }
+  
+    if (!id) {
+      console.error('No se pudo obtener el id para modificar:', this.item);
+      return;
+    }
+  
+    this.router.navigate(['modificar', tipo, id]);
+  }
+  
+  
+  // el ver detalles evalua id y se queda con la primera y toma siempre ese
+  //método para cada cosa y su id, se puede meter más
+
+  private getId(): number | string | null {
+    if (!this.item) return null;
+  
+    switch (this.type.toLowerCase()) {
+      case 'solicitud':
+        return this.item.idSolicitud ?? null;
+      case 'vacante':
+        return this.item.idVacante ?? null;
+      case 'usuario':
+        return this.item.id ?? this.item.email ?? null;
+      case 'empresa':
+        return this.item.idEmpresa ?? null;
+      default:
+        return this.item.id ?? null;
+    }
+  }
+  
+
+  //verDetalle() {
+   // this.router.navigate([`vacante/detalle`, this.item?.id || this.item?.idVacante]);}
+   verDetalle() {
+  const tipo = this.type.toLowerCase().replace(/\s+/g, ''); //para espacios
+  const id = this.getId();
+
+  if (!id) {
+    console.error('No se pudo obtener el id para el item:', this.item);
+    return;
   }
 
-  verDetalle() {
-    this.router.navigate([`/${this.type}/detalle`, this.item?.id || this.item?.email]);
-  }
+  this.router.navigate(['detalle', tipo, id]);
 }
+
+//modificar() {
+//  const tipo = this.type.toLowerCase().replace(/\s+/g, '');
+//const id = this.getId();
+
+// if (!id) {
+//    console.error('No se pudo obtener el id para modificar:', this.item);
+//    return;
+//  }
+
+//  this.router.navigate(['modificar', tipo, id]);
+}
+

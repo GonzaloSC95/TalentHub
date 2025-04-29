@@ -1,9 +1,12 @@
+
+import { SolicitudService } from './../../service/solicitud.service';
+import { Usuario } from './../../interfaces/usuario';
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { map, Observable, of, Subscription } from 'rxjs';
 import { BotoneraComponent } from '../../components/botonera/botonera.component';
-import { Usuario } from '../../interfaces/usuario';
+
 import { EmpresaService } from '../../service/empresa.service';
 import { UsuarioService } from '../../service/usuario.service';
 import { VacanteService } from '../../service/vacante.service';
@@ -21,6 +24,7 @@ export class LandingComponent implements OnInit, OnDestroy {
   usuarioService = inject(UsuarioService);
   empresaService = inject(EmpresaService);
   vacanteService = inject(VacanteService);
+  solicitudService = inject(SolicitudService); 
 
   // Propiedades
   usuarioLogueado: Usuario | null = null;
@@ -28,14 +32,20 @@ export class LandingComponent implements OnInit, OnDestroy {
   listType: string | null = null;
   config = { columns: [] as { key: string; label: string }[] };
   data: any[] = [];
+  typeForBotonera: string = ''; // para los diferentes type
 
-  // Variable para guardar la suscripción a la ruta
+
+  // Nueva propiedad para solicitudes adjudicadas
+  solicitudesAdjudicadas: any[] = [];
+
+  // Variables para manejar suscripciones
   private routeSubscription: Subscription | null = null;
-  // Variable para guardar la suscripción a la carga de datos (opcional pero bueno)
   private dataSubscription: Subscription | null = null;
+  private adjudicadasSubscription: Subscription | null = null;
+
+  
 
   private getPageTitle(name: string | undefined, type: string): string {
-    // Devuelve el título de la página según el tipo de vista
     switch (type.toUpperCase()) {
       case 'USUARIOS':
         return `Gestión de Usuarios`;
@@ -44,49 +54,78 @@ export class LandingComponent implements OnInit, OnDestroy {
       case 'VACANTES':
         return `Gestión de Vacantes`;
       case 'USER':
-        return `Bienvenido/a ${name} 😊`;
+        return `Bienvenido/a ${name} ?`;
+      case 'MI PERFIL':
+        return `Mi Perfil`;
+      case 'MIS SOLICITUDES':
+        return `Mis Solicitudes`;
+      case 'BUSCAR OFERTAS':
+        return `Buscar Ofertas`;
       case 'UNDEFINED':
         return `Error`;
       default:
         return `Error`;
     }
   }
+    //en la lista de adjudicadas habia problemas con el tipo, asignamos y se pueden poner todos
+  private mapListTypeToBotoneraType(type: string | null): string {
+    if (!type) return '';
 
+    const lowerType = type.toLowerCase();
+
+    switch (lowerType) {
+      case 'usuarios':
+        return 'usuario';
+      case 'empresas':
+        return 'empresa';
+      case 'vacantes':
+        return 'vacante';
+      case 'mis solicitudes':
+        return 'solicitud'; // pos si acaso hay problema con el espacio
+      case 'mi perfil':
+        return 'usuario';
+      case 'buscar ofertas':
+        return 'vacante';
+      default:
+        return lowerType.replace(/\s+/g, ''); // para los espacios
+    }
+  }
   ngOnInit(): void {
-    // Obtenemos el usuario logueado (esto puede hacerse una vez)
     this.usuarioLogueado = this.usuarioService.getUsuario();
 
-    // --- SUSCRIBIRSE A CAMBIOS EN PARÁMETROS ---
     this.routeSubscription = this.route.paramMap.subscribe((params) => {
-      // ESTA LÓGICA SE EJECUTA CADA VEZ QUE CAMBIAN LOS PARÁMETROS
-
-      // Cancelar carga de datos anterior si estaba en progreso
       this.dataSubscription?.unsubscribe();
+      this.adjudicadasSubscription?.unsubscribe();
 
-      // Limpiamos estado previo simple ANTES de procesar los nuevos params
       this.data = [];
+      this.solicitudesAdjudicadas = [];
       this.config.columns = [];
-      this.listType = null; // Reiniciar listType
+      this.listType = null;
+      this.typeForBotonera = '';
 
-      const typeParam = params.get('type'); // Leemos el parámetro 'type' ACTUAL
-      const emailParam = params.get('email'); // Leemos el parámetro 'email' ACTUAL
+      const typeParam = params.get('type');
+      const emailParam = params.get('email');
 
-      if (typeParam) {
-        // --- CASO 1: Vista de Lista de Admin ---
+      const urlSegments = this.route.snapshot.url.map(segment => segment.path);
+      const urlPath = urlSegments.join('/');
+
+      if (typeParam && urlPath.startsWith('admin/list')) {
         this.listType = typeParam;
-        this.configureAdminListView(typeParam); // Llamamos a configurar con el NUEVO type
+        this.typeForBotonera = this.mapListTypeToBotoneraType(typeParam);
+        this.configureAdminListView(typeParam);
+      } else if (typeParam && urlPath.startsWith('user/list')) {
+        this.listType = typeParam;
+        this.typeForBotonera = this.mapListTypeToBotoneraType(typeParam);
+        this.configureUserListView(typeParam);
       } else if (emailParam && this.usuarioLogueado) {
-        // --- CASO 2: Vista de Detalles Post-Login ---
         this.listType = this.usuarioLogueado.rol ?? null;
-        // Solo configura si hay rol, si no, listType queda null
+        this.typeForBotonera = this.mapListTypeToBotoneraType(this.listType);
+
         if (this.listType !== null) {
           this.configurePostLoginView(this.usuarioLogueado);
         } else {
           console.warn('Usuario logueado no tiene un rol definido.');
-          this.pageTitle = `${this.getPageTitle(
-            this.usuarioLogueado.nombre,
-            'USER'
-          )} (Rol no definido)`;
+          this.pageTitle = `${this.getPageTitle(this.usuarioLogueado.nombre, 'USER')} (Rol no definido)`;
           this.config.columns = [
             { key: 'nombre', label: 'Nombre' },
             { key: 'email', label: 'Email' },
@@ -94,7 +133,6 @@ export class LandingComponent implements OnInit, OnDestroy {
           this.data = [this.usuarioLogueado];
         }
       } else {
-        // --- CASO 3: Ruta inesperada o usuario no disponible ---
         console.error('Parámetros de ruta inválidos o usuario no encontrado.');
         this.pageTitle = this.getPageTitle(undefined, 'ERROR');
       }
@@ -103,14 +141,12 @@ export class LandingComponent implements OnInit, OnDestroy {
 
   // --- Lógica para la Vista de Lista de Admin ---
   configureAdminListView(type: string): void {
-    let serviceCall: Observable<any[]>; // Asume que los servicios devuelven Observable
+    let serviceCall: Observable<any[]>;
 
     switch (type) {
       case 'usuarios':
         this.pageTitle = this.getPageTitle(undefined, type);
         this.config.columns = [
-          /* ... Columnas Usuarios ... */
-          //{ key: 'id', label: 'ID' },
           { key: 'nombre', label: 'Nombre' },
           { key: 'apellidos', label: 'Apellidos' },
           { key: 'email', label: 'Email' },
@@ -122,7 +158,7 @@ export class LandingComponent implements OnInit, OnDestroy {
       case 'empresas':
         this.pageTitle = this.getPageTitle(undefined, type);
         this.config.columns = [
-          /* ... Columnas Empresas ... */ { key: 'idEmpresa', label: 'ID' },
+          { key: 'idEmpresa', label: 'ID' },
           { key: 'nombreEmpresa', label: 'Nombre Empresa' },
           { key: 'cif', label: 'CIF' },
           { key: 'direccionFiscal', label: 'Dirección' },
@@ -134,7 +170,7 @@ export class LandingComponent implements OnInit, OnDestroy {
       case 'vacantes':
         this.pageTitle = this.getPageTitle(undefined, type);
         this.config.columns = [
-          /* ... Columnas Vacantes ... */ { key: 'idVacante', label: 'ID' },
+          { key: 'idVacante', label: 'ID' },
           { key: 'nombre', label: 'Título' },
           { key: 'descripcion', label: 'Descripción Breve' },
           { key: 'idEmpresa', label: 'Empresa' },
@@ -149,15 +185,13 @@ export class LandingComponent implements OnInit, OnDestroy {
         return;
     }
 
-    // Llamada directa al servicio y suscripción simple
     serviceCall.subscribe({
       next: (response) => {
-        this.data = response; // Asigna los datos recibidos
+        this.data = response;
       },
       error: (err) => {
         console.error(`Error al cargar ${type}:`, err);
-        // No mostramos mensaje en UI, solo consola
-        this.data = []; // Asegurar que data esté vacía en caso de error
+        this.data = [];
       },
     });
   }
@@ -166,7 +200,6 @@ export class LandingComponent implements OnInit, OnDestroy {
   configurePostLoginView(usuario: Usuario): void {
     this.pageTitle = this.getPageTitle(usuario.nombre, 'USER');
 
-    // Configurar columnas según el rol (igual que antes)
     if (usuario.rol === 'CLIENTE') {
       this.config.columns = [
         { key: 'nombre', label: 'Nombre' },
@@ -182,7 +215,6 @@ export class LandingComponent implements OnInit, OnDestroy {
       ];
     } else if (usuario.rol === 'ADMON') {
       this.config.columns = [
-        // Datos básicos del admin
         { key: 'nombre', label: 'Nombre Admin' },
         { key: 'email', label: 'Email Admin' },
         { key: 'rol', label: 'Rol' },
@@ -191,11 +223,116 @@ export class LandingComponent implements OnInit, OnDestroy {
       this.config.columns = [{ key: 'info', label: 'Info Usuario' }];
     }
 
-    this.data = [usuario]; // Los datos son solo el usuario logueado
+    this.data = [usuario];
   }
+
+  // --- Lógica para la Vista de Lista de User ---
+  configureUserListView(type: string): void {
+    let serviceCall: Observable<any[]> | null = null;
+
+    switch (type) {
+      case 'mi perfil':
+        this.pageTitle = this.getPageTitle(undefined, type);
+        this.config.columns = [
+          { key: 'nombre', label: 'Nombre' },
+          { key: 'apellidos', label: 'Apellidos' },
+          { key: 'email', label: 'Email' },
+          { key: 'rol', label: 'Rol' },
+          { key: 'nombreEmpresa', label: 'Empresa' },
+        ];
+        if (this.usuarioLogueado) {
+          this.data = [this.usuarioLogueado];
+        } else {
+          this.data = [];
+        }
+        return;
+
+      case 'mis solicitudes':
+        this.pageTitle = this.getPageTitle(undefined, type);
+        this.config.columns = [
+          { key: 'idSolicitud', label: 'ID' },
+          // { key: 'vacante', label: 'Título' },
+          { key: 'comentarios', label: 'Comentarios' },
+          { key: 'estado', label: 'Estado' },
+          { key: 'fecha', label: 'Fecha' },
+          // { key: 'candidato', label: 'Candidato' },
+          { key: 'archivo', label: 'Archivo' },
+          { key: 'curriculum', label: 'Currículum' }
+        ];
+
+        if (this.usuarioLogueado?.email) {
+          // Cancelamos suscripciones previas
+          this.dataSubscription?.unsubscribe();
+          this.adjudicadasSubscription?.unsubscribe();
+
+          // Cargamos solicitudes presentadas filtradas por email
+          serviceCall = this.solicitudService.getSolicitudesPresentadas().pipe(
+            map((solicitudes: any[]) =>
+              solicitudes.filter((s: any) => s.emailUsuario === this.usuarioLogueado?.email)
+            )
+          );
+
+          // Cargamos solicitudes adjudicadas filtradas por email igual que en presentadas pero en otro observable
+          this.adjudicadasSubscription = this.solicitudService.getSolicitudesAdjudicadas().pipe(
+            map((solicitudes: any[]) =>
+              solicitudes.filter((s: any) => s.emailUsuario === this.usuarioLogueado?.email)
+            )
+          ).subscribe({
+            next: (adjudicadas) => {
+              this.solicitudesAdjudicadas = adjudicadas;
+            },
+            error: (error) => {
+              console.error('Error cargando solicitudes adjudicadas:', error);
+              this.solicitudesAdjudicadas = [];
+            }
+          });
+
+        } else {
+          console.warn('Usuario no logueado, no se puede filtrar solicitudes');
+          serviceCall = of([]);
+          this.solicitudesAdjudicadas = [];
+        }
+        break;
+
+      case 'buscar ofertas':
+        this.pageTitle = this.getPageTitle(undefined, type);
+        this.config.columns = [
+          { key: 'idVacante', label: 'ID' },
+          { key: 'nombre', label: 'Título' },
+          { key: 'descripcion', label: 'Descripción Breve' },
+          { key: 'idEmpresa', label: 'Empresa' },
+          { key: 'nombreEmpresa', label: 'Empresa' },
+          { key: 'estatus', label: 'Estado' },
+        ];
+        serviceCall = this.vacanteService.getVacantesCreadas();
+        break;
+
+      default:
+        this.pageTitle = this.getPageTitle(undefined, 'UNDEFINED');
+        this.config.columns = [];
+        this.data = [];
+        return;
+    }
+
+    if (serviceCall) {
+      this.dataSubscription?.unsubscribe();
+      this.dataSubscription = serviceCall.subscribe({
+        next: (response) => {
+          this.data = response;
+        },
+        error: (error) => {
+          console.error(`Error cargando datos para ${type}:`, error);
+          this.data = [];
+        }
+      });
+    }
+  }
+
+
+
   ngOnDestroy(): void {
-    // Es MUY importante desuscribirse para evitar fugas de memoria
     this.routeSubscription?.unsubscribe();
-    this.dataSubscription?.unsubscribe(); // También limpia la de datos
+    this.dataSubscription?.unsubscribe();
+    this.adjudicadasSubscription?.unsubscribe();
   }
 }

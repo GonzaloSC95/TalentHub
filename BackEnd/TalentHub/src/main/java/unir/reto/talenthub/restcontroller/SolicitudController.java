@@ -8,10 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,15 +44,16 @@ public class SolicitudController {
       @ApiResponse(responseCode = "404", description = "Solicitud no encontrada")
    })
    @GetMapping("/{id}")
-   public ResponseEntity<SolicitudDto> getSolicitudById(int id) {
-      SolicitudDto solicitudDto = new SolicitudDto();
-      Solicitud solicitud = solicitudService.findByIdSolicitud(id);
-      if (solicitud != null) {
-         return ResponseEntity.ok(solicitudDto.mapFromEntity(solicitud));
-      } else {
-         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-      }
+   public ResponseEntity<SolicitudDto> getSolicitudById(@PathVariable("id") Integer id) {
+       Solicitud solicitud = solicitudService.findByIdSolicitud(id);
+       if (solicitud != null) {
+           SolicitudDto solicitudDto = new SolicitudDto();
+           return ResponseEntity.ok(solicitudDto.mapFromEntity(solicitud));
+       } else {
+           return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+       }
    }
+
 
    @Operation(
       summary = "Listar todas las solicitudes",
@@ -120,5 +123,54 @@ public class SolicitudController {
          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
       }
    }
+   
+   @Operation(
+		      summary = "Listar todas las solicitudes presentadas, estado 0",
+		      description = "Este endpoint permite listar todas las solicitudes presentadas, estado 0."
+		   )
+		   @ApiResponses({
+		      @ApiResponse(responseCode = "200", description = "Solicitudes encontradas")
+		   })
+		   @GetMapping("/presentadas")
+		   public ResponseEntity<List<SolicitudDto>> getSolicitudesPresentadas() {
+		      List<SolicitudDto> solicitudesDto = solicitudService.findByEstadoPresentado(0).stream()
+		            .map(solicitud -> new SolicitudDto().mapFromEntity(solicitud))
+		            .toList();
+		      return ResponseEntity.ok(solicitudesDto);
+		   }
+   
+   @Operation(
+		      summary = "Listar todas las solicitudes adjudicadas, estado 1",
+		      description = "Este endpoint permite listar todas las solicitudes adjudicadas, estado 1."
+		   )
+		   @ApiResponses({
+		      @ApiResponse(responseCode = "200", description = "Solicitudes encontradas")
+		   })
+		   @GetMapping("/adjudicadas")
+		   public ResponseEntity<List<SolicitudDto>> getSolicitudesAdjudicadas() {
+		      List<SolicitudDto> solicitudesDto = solicitudService.findByEstadoAdjudicado(1).stream()
+		            .map(solicitud -> new SolicitudDto().mapFromEntity(solicitud))
+		            .toList();
+		      return ResponseEntity.ok(solicitudesDto);
+		   }
+   @Operation(
+		   summary = "Listar solicitudes presentadas por usuario (estado 0)",
+		   description = "Este endpoint permite listar todas las solicitudes con estado 0 (presentadas) filtrando por email de usuario."
+		 )
+		 @ApiResponses({
+		   @ApiResponse(responseCode = "200", description = "Solicitudes encontradas"),
+		   @ApiResponse(responseCode = "400", description = "Email inválido o no proporcionado")
+		 })
+		 @GetMapping("/presentadas/usuario")
+		 public ResponseEntity<List<SolicitudDto>> getSolicitudesPresentadasPorUsuario(@RequestParam String email) {
+		     if (email == null || email.isBlank()) {
+		         return ResponseEntity.badRequest().build();
+		     }
+		     
+		     List<SolicitudDto> solicitudesDto = solicitudService.findByEstadoAndUsuarioEmail(0, email).stream()
+		         .map(solicitud -> new SolicitudDto().mapFromEntity(solicitud))
+		         .toList();
+		     return ResponseEntity.ok(solicitudesDto);
+		 }
 
 }
