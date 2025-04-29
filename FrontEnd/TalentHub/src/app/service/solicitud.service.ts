@@ -51,7 +51,15 @@ export class SolicitudService {
     actualizarSolicitud(solicitud: Solicitud): Observable<Solicitud> {
       return this.httpClient.put<Solicitud>(`${this.apiUrl}/actualizar`, solicitud);
     }
-  }
+    crearSolicitud(solicitud: Solicitud): Observable<Solicitud> {
+      return this.httpClient.post<Solicitud>(`${this.apiUrl}/crear`, solicitud);
+    }
+    
+    
+}
+    
+
+  
   
 
 

@@ -1,0 +1,58 @@
+<div class="container mt-5">
+    <h2 class="mb-3">{{ vacante.nombre }}</h2>
+    <div class="mb-4">
+      <p><strong>Descripción:</strong> {{ vacante.descripcion }}</p>
+      <p><strong>Salario:</strong> {{ vacante.salario | currency }}</p>
+      <p><strong>Empresa:</strong> {{ vacante.nombreEmpresa }}</p>
+      <p><strong>Detalles:</strong> {{ vacante.detalles }}</p>
+    </div>
+  
+    <form [formGroup]="formSolicitud" (ngSubmit)="getDataSolicitud()">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="fecha" class="form-label">Fecha</label>
+          <input type="date" id="fecha" class="form-control" formControlName="fecha">
+        </div>
+        <div class="col-md-6">
+          <label for="estado" class="form-label">Estado</label>
+          <input type="text" id="estado" class="form-control" formControlName="estado">
+        </div>
+      </div>
+  
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="archivo" class="form-label">Archivo</label>
+          <input type="text" id="archivo" class="form-control" formControlName="archivo">
+        </div>
+        <div class="col-md-6">
+          <label for="curriculum" class="form-label">Curriculum</label>
+          <input type="text" id="curriculum" class="form-control" formControlName="curriculum">
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label for="comentarios" class="form-label">Comentarios</label>
+        <textarea id="comentarios" rows="4" class="form-control" formControlName="comentarios"></textarea>
+      </div>
+      
+     <div class="mb-3">
+        <label for="emailUsuario" class="form-label">Email</label>
+        <input type="email" id="emailUsuario" class="form-control" formControlName="emailUsuario">
+      </div>
+  
+    <input type="hidden" formControlName="idVacante" [value]="vacante.idVacante">
+
+    <!--Añadido  pero se deberia añadir pero no aparece en pantalla 
+    <input type="hidden" formControlName="emailUsuario" [value]=" solicitud.candidato">
+  --> 
+    
+    <button type="submit" class="btn btn-primary" [disabled]="formSolicitud.invalid">
+        Enviar Solicitud
+    </button>
+    
+    </form>
+
+    <div class="card-footer text-center">
+        <button class="btn btn-secondary" (click)="volver()">Volver</button>
+    </div>
+</div>

@@ -85,7 +85,7 @@ export class BotoneraComponent {
       return;
     }
   
-    this.router.navigate(['modificar', tipo, id]);
+    this.router.navigate(['modificar2', tipo, id]);
   }
   
   
