@@ -132,7 +132,8 @@
           @if (usuario.enabled) {
             <p><strong>Estado:</strong>{{ usuario.enabled === 1 ? 'Activo' : 'Inactivo' }}</p>
           }
-          @if (usuario.fechaRegistro) {
+          
+           @if (usuario.fechaRegistro) {
             <p><strong>Fecha registro:</strong> {{ usuario.fechaRegistro }}</p>
           }
         </div>

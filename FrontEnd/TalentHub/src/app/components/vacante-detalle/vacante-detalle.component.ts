@@ -12,7 +12,7 @@ import { VacanteService } from '../../service/vacante.service';
   templateUrl: './vacante-detalle.component.html',
   styleUrls: ['./vacante-detalle.component.css']
 })
-export class VacanteDetalleComponent implements OnInit {
+export class VacanteDetalleComponent {
   tipo!: string;
   id!: number;
   email!:string;

@@ -1,58 +1,139 @@
 <div class="container mt-5">
-    <h2 class="mb-3">{{ vacante.nombre }}</h2>
-    <div class="mb-4">
-      <p><strong>Descripción:</strong> {{ vacante.descripcion }}</p>
-      <p><strong>Salario:</strong> {{ vacante.salario | currency }}</p>
-      <p><strong>Empresa:</strong> {{ vacante.nombreEmpresa }}</p>
-      <p><strong>Detalles:</strong> {{ vacante.detalles }}</p>
+  <h1 class="mb-4 text-center">
+    @if(tipo === 'vacante' || tipo === 'buscar ofertas') {
+      Detalles de la Vacante
+    } @else if(tipo === 'solicitud' || tipo === 'mis solicitudes') {
+      Detalles de la Solicitud
+    } @else {
+      Detalles
+    }
+  </h1>
+
+  <!-- Mostrar detalles Vacante -->
+  @if((tipo === 'vacante' || tipo === 'buscar ofertas') && vacante) {
+    <div class="card mb-4">
+      <div class="card-header">
+        <h3>{{ vacante.nombre }}</h3>
+      </div>
+      <div class="card-body">
+        <p><strong>Descripción:</strong> {{ vacante.descripcion }}</p>
+        <p><strong>Fecha:</strong> {{ vacante.fecha }}</p>
+        <p><strong>Salario:</strong> {{ vacante.salario | currency }}</p>
+        <p><strong>Estado:</strong> {{ vacante.estatus }}</p>
+        <!-- <p><strong>Destacado:</strong> {{ vacante.destacado }}</p> -->
+        <p><strong>Detalles adicionales:</strong> {{ vacante.detalles }}</p>
+        <!-- <p><strong>Categoría:</strong> {{ vacante.categoria }}</p> -->
+        <p><strong>Empresa:</strong> {{ vacante.nombreEmpresa }}</p>
+      </div>
     </div>
-  
+
+    <!-- Formulario para crear Solicitud -->
     <form [formGroup]="formSolicitud" (ngSubmit)="getDataSolicitud()">
       <div class="row mb-3">
         <div class="col-md-6">
           <label for="fecha" class="form-label">Fecha</label>
-          <input type="date" id="fecha" class="form-control" formControlName="fecha">
+          <input type="date" id="fecha" class="form-control" formControlName="fecha" disableb />
         </div>
         <div class="col-md-6">
           <label for="estado" class="form-label">Estado</label>
-          <input type="text" id="estado" class="form-control" formControlName="estado">
+          <input type="text" id="estado" class="form-control" formControlName="estado" readonly />
         </div>
       </div>
-  
+
       <div class="row mb-3">
         <div class="col-md-6">
           <label for="archivo" class="form-label">Archivo</label>
-          <input type="text" id="archivo" class="form-control" formControlName="archivo">
+          <input type="text" id="archivo" class="form-control" formControlName="archivo" />
         </div>
         <div class="col-md-6">
-          <label for="curriculum" class="form-label">Curriculum</label>
-          <input type="text" id="curriculum" class="form-control" formControlName="curriculum">
+          <label for="curriculum" class="form-label">Currículum</label>
+          <input type="text" id="curriculum" class="form-control" formControlName="curriculum" />
         </div>
       </div>
-  
+
       <div class="mb-3">
         <label for="comentarios" class="form-label">Comentarios</label>
-        <textarea id="comentarios" rows="4" class="form-control" formControlName="comentarios"></textarea>
+        <textarea id="comentarios" rows="3" class="form-control" formControlName="comentarios"></textarea>
       </div>
-      
-     <div class="mb-3">
+
+      <div class="mb-3">
         <label for="emailUsuario" class="form-label">Email</label>
-        <input type="email" id="emailUsuario" class="form-control" formControlName="emailUsuario">
+        <input type="email" id="emailUsuario" class="form-control" formControlName="emailUsuario" />
       </div>
-  
-    <input type="hidden" formControlName="idVacante" [value]="vacante.idVacante">
 
-    <!--Añadido  pero se deberia añadir pero no aparece en pantalla 
-    <input type="hidden" formControlName="emailUsuario" [value]=" solicitud.candidato">
-  --> 
-    
-    <button type="submit" class="btn btn-primary" [disabled]="formSolicitud.invalid">
+      <input type="hidden" formControlName="idVacante" />
+
+      <button type="submit" class="btn btn-primary" [disabled]="formSolicitud.invalid">
         Enviar Solicitud
-    </button>
-    
+      </button>
     </form>
+  }
 
-    <div class="card-footer text-center">
-        <button class="btn btn-secondary" (click)="volver()">Volver</button>
+  <!-- Mostrar detalles Solicitud -->
+  @if((tipo === 'solicitud' || tipo === 'mis solicitudes') && solicitud) {
+    <div class="card mb-4">
+      <div class="card-header">
+        <h3>Solicitud #{{ solicitud.idSolicitud }}</h3>
+      </div>
+      <div class="card-body">
+        <p><strong>Fecha:</strong> {{ solicitud.fecha }}</p>
+        <p><strong>Estado:</strong> {{ solicitud.estado }}</p>
+        <p><strong>Candidato:</strong> {{ solicitud.candidato }}</p>
+        <p><strong>Vacante:</strong> {{ solicitud.vacante }}</p>
+        
+      </div>
     </div>
+
+    <!-- Formulario para editar Solicitud -->
+    <form [formGroup]="formSolicitud" (ngSubmit)="getDataSolicitud()">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="fecha" class="form-label">Fecha</label>
+          <input type="date" id="fecha" class="form-control" formControlName="fecha" disable />
+        </div>
+        <div class="col-md-6">
+          <label for="estado" class="form-label">Estado</label>
+          <input type="text" id="estado" class="form-control" formControlName="estado" readonly />
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="archivo" class="form-label">Archivo</label>
+          <input type="text" id="archivo" class="form-control" formControlName="archivo" />
+        </div>
+        <div class="col-md-6">
+          <label for="curriculum" class="form-label">Currículum</label>
+          <input type="text" id="curriculum" class="form-control" formControlName="curriculum" />
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="comentarios" class="form-label">Comentarios</label>
+        <textarea id="comentarios" rows="3" class="form-control" formControlName="comentarios"></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label for="emailUsuario" class="form-label">Email</label>
+        <input type="email" id="emailUsuario" class="form-control" formControlName="emailUsuario" readonly />
+      </div>
+
+      <input type="hidden" formControlName="idVacante" />
+
+      <button type="submit" class="btn btn-primary" [disabled]="formSolicitud.invalid">
+        Actualizar Solicitud
+      </button>
+    </form>
+  }
+
+  <!-- Mostrar mensaje de carga, por si aca -->
+  @if(!vacante && !solicitud) {
+    <div class="alert alert-warning text-center">
+      Cargando detalles...
+    </div>
+  }
+
+  <div class="text-center mt-3">
+    <button class="btn btn-secondary" (click)="volver()">Volver</button>
+  </div>
 </div>

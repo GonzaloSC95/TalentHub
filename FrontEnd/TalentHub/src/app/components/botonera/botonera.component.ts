@@ -32,9 +32,36 @@ export class BotoneraComponent {
   }
 
   async eliminar() {
+    const usuario = this.usuarioService.getUsuario();
+    
+
+    //si no lo compruebo el usuario podría ser null y no deja hacer usuario.rol
+    if (!usuario) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No hay usuario logueado.',
+        confirmButtonText: 'Aceptar'
+      });
+      return;
+    }
+  
+    const rol = (usuario.rol ?? '').toLowerCase();
+  
+    if (this.type === 'vacante' && rol === 'cliente') {
+      await Swal.fire({
+        icon: 'warning',
+        title: 'Acción no permitida',
+        text: 'Como eres un usuario no puedes eliminar vacante, solo tu solicitud!!!.',
+        confirmButtonText: 'Aceptar'
+      });
+      return;
+    }
+
+
     const result = await Swal.fire({
       title: '¿Estás seguro?',
-      text: `Esta acción eliminará el ${this.type}`,
+      text: `Esta acción eliminará su ${this.type}`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',

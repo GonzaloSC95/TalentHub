@@ -5,6 +5,6 @@ export interface Solicitud {
   comentarios: string;
   estado: string;
   curriculum: string;
-  vacante: string;
-  candidato: string;
+  vacante: string; // seria el idVacante
+  candidato: string; // es el mail del usuario
 }
