@@ -94,16 +94,16 @@ VALUES
 -- Usuarios
 INSERT INTO Usuarios (email, nombre, apellidos, password, enabled, fecha_Registro, rol)
 VALUES
-('juan.garcia@example.com', 'Juan', 'García López', 'passjuan1', 1, '2025-01-10', 'EMPRESA'),
-('maria.perez@example.com', 'María', 'Pérez Gutiérrez', 'passmaria', 1, '2025-01-15', 'EMPRESA'),
-('luis.lopez@example.com', 'Luis', 'López Martínez', 'passluis2', 1, '2025-02-01', 'EMPRESA'),
-('ana.martinez@example.com', 'Ana', 'Martínez Díaz', 'passana3', 1, '2025-02-05', 'EMPRESA'),
-('carmen.rodriguez@example.com', 'Carmen', 'Rodríguez Silva', 'passcarmen', 1, '2025-03-01', 'EMPRESA'),
-('eloctavo@hotmail.com', 'Pepe', 'Ruiz Santana', 'alcalacrece',1,'2025-01-27' , 'ADMON'),
-('elseptimo@hotmail.com', 'Pilar', 'Ruiz', 'alcalacrece',1,'2025-01-28', 'CLIENTE'),
-('elquinto@hotmail.com', 'Marcos', 'Loyola Méndez', 'alcalacrece',1, '2025-01-28','CLIENTE'),
-('eltercero@hotmail.com', 'Adolfo', 'Rubio Flores', 'alcalacrece',1,'2025-01-27', 'ADMON'),
-('elprimero@hotmail.com', 'Aarón', 'Rivero Gómez', 'alcalacrece',1,'2025-01-27' ,'CLIENTE');
+('juan.garcia@example.com', 'Juan', 'García López', '{noop}passjuan1', 1, '2025-01-10', 'EMPRESA'),
+('maria.perez@example.com', 'María', 'Pérez Gutiérrez', '{noop}passmaria', 1, '2025-01-15', 'EMPRESA'),
+('luis.lopez@example.com', 'Luis', 'López Martínez', '{noop}passluis2', 1, '2025-02-01', 'EMPRESA'),
+('ana.martinez@example.com', 'Ana', 'Martínez Díaz', '{noop}passana3', 1, '2025-02-05', 'EMPRESA'),
+('carmen.rodriguez@example.com', 'Carmen', 'Rodríguez Silva', '{noop}passcarmen', 1, '2025-03-01', 'EMPRESA'),
+('eloctavo@hotmail.com', 'Pepe', 'Ruiz Santana', '{noop}alcalacrece',1,'2025-01-27' , 'ADMON'),
+('elseptimo@hotmail.com', 'Pilar', 'Ruiz', '{noop}alcalacrece',1,'2025-01-28', 'CLIENTE'),
+('elquinto@hotmail.com', 'Marcos', 'Loyola Méndez', '{noop}alcalacrece',1, '2025-01-28','CLIENTE'),
+('eltercero@hotmail.com', 'Adolfo', 'Rubio Flores', '{noop}alcalacrece',1,'2025-01-27', 'ADMON'),
+('elprimero@hotmail.com', 'Aarón', 'Rivero Gómez', '{noop}alcalacrece',1,'2025-01-27' ,'CLIENTE');
 
 
 -- Empresas
