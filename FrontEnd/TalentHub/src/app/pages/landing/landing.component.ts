@@ -1,11 +1,11 @@
 
-import { SolicitudService } from './../../service/solicitud.service';
-import { Usuario } from './../../interfaces/usuario';
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { map, Observable, of, Subscription } from 'rxjs';
 import { BotoneraComponent } from '../../components/botonera/botonera.component';
+import { Usuario } from './../../interfaces/usuario';
+import { SolicitudService } from './../../service/solicitud.service';
 
 import { EmpresaService } from '../../service/empresa.service';
 import { UsuarioService } from '../../service/usuario.service';
@@ -19,6 +19,7 @@ import { VacanteService } from '../../service/vacante.service';
   styleUrl: './landing.component.css',
 })
 export class LandingComponent implements OnInit, OnDestroy {
+
   // Inyección de dependencias
   route = inject(ActivatedRoute);
   usuarioService = inject(UsuarioService);
@@ -43,6 +44,19 @@ export class LandingComponent implements OnInit, OnDestroy {
   private dataSubscription: Subscription | null = null;
   private adjudicadasSubscription: Subscription | null = null;
 
+  quitarDeLista(itemEliminado: any) {
+    if (this.typeForBotonera === 'vacante') {
+      this.data = this.data.filter(item => item.idVacante !== itemEliminado.idVacante);
+    } else if (this.typeForBotonera === 'usuario') {
+      this.data = this.data.filter(item => item.email !== itemEliminado.email);
+    } else if (this.typeForBotonera === 'empresa') {
+      this.data = this.data.filter(item => item.idEmpresa !== itemEliminado.idEmpresa);
+    } else if (this.typeForBotonera === 'solicitud') {
+      this.solicitudesAdjudicadas = this.solicitudesAdjudicadas.filter(item => item.idSolicitud !== itemEliminado.idSolicitud);
+    } else {
+      console.warn('Tipo desconocido al intentar quitar de lista:', this.typeForBotonera);
+    }
+  }
   
 
   private getPageTitle(name: string | undefined, type: string): string {

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, Observable, of } from 'rxjs';
+import { catchError, lastValueFrom, Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Vacante } from '../interfaces/vacante';
 
@@ -51,6 +51,21 @@ export class VacanteService {
       actualizarVacante(vacante: any): Observable<any> {
         return this.httpClient.put(`${this.apiUrl}/actualizar`, vacante);
       }
+  async deleteVacante(vacante: Vacante): Promise<boolean> {
+    const body = vacante;
+    return lastValueFrom(
+      this.httpClient
+        .delete<boolean>(`${this.apiUrl}/eliminar`, {
+          body, // Enviamos la vacante completa en el cuerpo
+        })
+        .pipe(
+          catchError((error) => {
+            console.error('Error al eliminar la vacante:', error);
+            return of(false); // error
+          })
+        )
+    );
+  }
 }
 
 

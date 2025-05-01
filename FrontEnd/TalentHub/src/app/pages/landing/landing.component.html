@@ -21,7 +21,8 @@
                 }
                 <td>
                     @if(typeForBotonera) {
-                    <app-botonera [item]="item" [type]="typeForBotonera"></app-botonera>
+                      <app-botonera [item]="item" [type]="typeForBotonera" (eliminado)="quitarDeLista($event)"></app-botonera>
+
                     } @else {
                     <!-- Opcional: Mostrar algo si no hay tipo (ej. un guión o nada) -->
                     <span>-</span>

@@ -1,7 +1,9 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { EmpresaService } from '../../service/empresa.service';
 import { UsuarioService } from '../../service/usuario.service';
+import { VacanteService } from '../../service/vacante.service';
 
 @Component({
   selector: 'app-botonera',
@@ -15,9 +17,13 @@ export class BotoneraComponent {
   menuOpen = false;
 
   @Input() item: any;           // El objeto actual 
-  @Input() type: string = '';  // Tipo de entidad 
+  @Input() type: string = '';  // Tipo de entidad
+  @Output() eliminado = new EventEmitter<any>();//para recergar pagina 
 
   usuarioService = inject(UsuarioService);
+  empresaService = inject(EmpresaService);
+  vacanteService = inject(VacanteService);
+
 
   constructor(private router: Router) {}
 
@@ -37,27 +43,39 @@ export class BotoneraComponent {
       cancelButtonText: 'Cancelar'
     });
   
-    if (result.isConfirmed) {
+    if (!result.isConfirmed)return;
       let eliminado = false;
-  
-      if (this.type === 'usuario') {
-        const usuario = this.item;  // Obtenemos el objeto completo del usuario
-        if (usuario) {
-          eliminado = await this.usuarioService.deleteUsuario(usuario);  // Enviamos el usuario completo
-        }
+      switch (this.type) {
+        case 'usuario':
+          if (this.item?.email) {
+            eliminado = await this.usuarioService.deleteUsuario(this.item);
+          }
+          break;
+    
+        case 'empresa':
+          if (this.item?.idEmpresa) {
+            eliminado = await this.empresaService.deleteEmpresa(this.item);
+          }
+          break;
+    
+        case 'vacante':
+          if (this.item?.idVacante) {
+            eliminado = await this.vacanteService.deleteVacante(this.item);
+          }
+          break;
+    
+        default:
+          console.warn('Tipo no soportado:', this.type);
       }
-  
+    
       if (eliminado) {
-        Swal.fire(
-          'Eliminado!',
-          `${this.type} eliminado correctamente.`,
-          'success'
-        );
-        
+        Swal.fire('Eliminado!', `${this.type} eliminada correctamente.`, 'success');
+        // aquí puedes emitir un evento o refrescar una lista si es necesario
+        this.eliminado.emit(this.item);  // <<< Notifica al padre
       } else {
         Swal.fire('Error', `No se pudo eliminar el ${this.type}.`, 'error');
       }
-    }
+    
   }
   
 
@@ -120,7 +138,7 @@ export class BotoneraComponent {
     console.error('No se pudo obtener el id para el item:', this.item);
     return;
   }
-
+  const param = encodeURIComponent(id); 
   this.router.navigate(['detalle', tipo, id]);
 }
 

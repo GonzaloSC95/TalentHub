@@ -48,7 +48,7 @@
   }
 
   <!-- Detalle Solicitud -->
-  @if((tipo === 'solicitud' || tipo === 'mis solicitudes') && solicitud) {
+  @else if((tipo === 'solicitud' || tipo === 'mis solicitudes') && solicitud) {
     <div class="card">
       <div class="card-header">
         <h3 class="card-title"> Detalle de la Solicitud #{{ solicitud.idSolicitud }}</h3>
@@ -89,9 +89,60 @@
       </div>
     </div>
   }
-
+  @else if (tipo === 'empresa') {
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">{{ empresa.nombreEmpresa }}</h3>
+        </div>
+        <div class="card-body">
+          @if (empresa.nombreEmpresa) {
+            <p><strong>Dirección fiscal:</strong> {{ empresa.direccionFiscal }}</p>
+          }
+          @if (empresa.pais) {
+            <p><strong>Pais:</strong> {{ empresa.pais}}</p>
+          }
+          @if (empresa.email) {
+            <p><strong>E-mail:</strong> {{ empresa.email }}</p>
+          }
+          @if (empresa.cif) {
+            <p><strong>Cif:</strong> {{ empresa.cif }}</p>
+          }
+        </div>
+        <div class="card-footer text-center">
+          <button class="btn btn-secondary" (click)="volver()">Volver</button>
+        </div>
+      </div>
+    }
+    @else if (tipo === 'usuario') { 
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">{{ usuario.nombre }}, </h3>
+          <h4 class="card-title"> {{ usuario.apellidos }}</h4>
+        </div>
+        <div class="card-body">
+          @if (usuario.rol) {
+            <p><strong>Rol:</strong> {{ usuario.rol }}</p>
+          }
+          @if (usuario.nombreEmpresa) {
+            <p><strong>Empresa:</strong> {{ usuario.nombreEmpresa }}</p>
+          }
+          @if (usuario.email) {
+            <p><strong>Email:</strong> {{ usuario.email }}</p>
+          }
+          @if (usuario.enabled) {
+            <p><strong>Estado:</strong>{{ usuario.enabled === 1 ? 'Activo' : 'Inactivo' }}</p>
+          }
+          @if (usuario.fechaRegistro) {
+            <p><strong>Fecha registro:</strong> {{ usuario.fechaRegistro }}</p>
+          }
+        </div>
+        <div class="card-footer text-center">
+          <button class="btn btn-secondary" (click)="volver()">Volver</button>
+        </div>
+      </div>
+    }
   <!-- Cargando si no hay datos aún -->
-  @if(!vacante && !solicitud) {
+  @else  {
     <div class="alert alert-warning text-center">
       Cargando detalles...
     </div>

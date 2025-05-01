@@ -1,12 +1,11 @@
+import { CommonModule, Location } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { VacanteService } from '../../service/vacante.service';
-import { SolicitudService } from '../../service/solicitud.service';
-import { CommonModule } from '@angular/common';
-import { Vacante } from '../../interfaces/vacante';
 import { Solicitud } from '../../interfaces/solicitud';
-import { Location } from '@angular/common';
+import { Vacante } from '../../interfaces/vacante';
+import { SolicitudService } from '../../service/solicitud.service';
+import { VacanteService } from '../../service/vacante.service';
 
 
 @Component({
@@ -23,6 +22,7 @@ solictudService = inject (SolicitudService);
 formSolicitud: FormGroup;
 vacante!: Vacante;
 solicitud!: Solicitud;
+
 
 constructor(
   private fb: FormBuilder,

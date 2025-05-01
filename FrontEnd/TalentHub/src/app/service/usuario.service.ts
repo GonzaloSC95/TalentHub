@@ -8,8 +8,8 @@ import {
   of,
 } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Usuario } from '../interfaces/usuario';
 import { Empresa } from '../interfaces/empresa';
+import { Usuario } from '../interfaces/usuario';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +23,13 @@ export class UsuarioService {
   // URL de la API
   private apiUrl: string = environment.baseUrl + 'talenthub/api/usuario';
   constructor() {}
+
+  getUsuarioByEmail(email: string):Observable<Usuario>{
+    const url = `${this.apiUrl}/${email}`;
+    return this.httpClient.get<Usuario>(url).pipe(
+      catchError(this.handleError<Usuario>('getAllUsuarios')) // Manejo de errores
+    );
+  }
 
   getAllUsuarios(): Observable<Usuario[]> {
     const url = `${this.apiUrl}/all`;

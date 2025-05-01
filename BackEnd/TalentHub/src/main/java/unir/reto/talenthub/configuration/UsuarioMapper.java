@@ -30,5 +30,6 @@ public class UsuarioMapper {
     public Usuario mapToEntity(UsuarioDto dto) {
         return modelMapper.map(dto, Usuario.class);
     }
+    
 }
 

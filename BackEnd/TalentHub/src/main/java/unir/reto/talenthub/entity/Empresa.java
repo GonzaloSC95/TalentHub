@@ -5,6 +5,7 @@ package unir.reto.talenthub.entity;
 import java.io.Serializable;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -52,8 +53,11 @@ public class Empresa implements Serializable {
 	private Usuario usuario;
 
 	@ToString.Exclude
-	@OneToMany(mappedBy = "empresa")
+	@OneToMany(mappedBy = "empresa", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<Vacante> vacantes;
+	
+	
+
 
 
 }

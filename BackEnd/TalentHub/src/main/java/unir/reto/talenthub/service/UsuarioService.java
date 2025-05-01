@@ -25,4 +25,5 @@ public interface UsuarioService {
    int save(Usuario usuario);
    int update(Usuario usuario);
    int delete(Usuario usuario);
+
 }

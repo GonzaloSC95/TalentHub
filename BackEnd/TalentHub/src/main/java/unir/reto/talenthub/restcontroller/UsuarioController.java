@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +47,26 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioMapper usuarioMapper;
+    
+    @Operation(
+    	      summary = "Obtener una usuario por su email.",
+    	      description = "Devuelve usuario por su email."
+    	   )
+    @ApiResponses(value = {
+    	      @ApiResponse(responseCode = "200", description = "Usuario encontrada."),
+    	      @ApiResponse(responseCode = "404", description = "Usuario no encontrada.")
+    	   })
+    @GetMapping("/{email}")
+    	   public ResponseEntity<UsuarioDto> getUsuario(@PathVariable String email) {
+    		Usuario usuario = usuarioService.findByEmail(email);
+
+    	      if (usuario == null) {
+    	         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    	      }
+
+    	      UsuarioDto dto = usuarioMapper.mapWithEmpresa(usuario);
+    	      return ResponseEntity.ok(dto);
+    	   }
 
     @Operation(summary = "Obtener usuario por login", description = "Devuelve un usuario por email y contraseña.")
     @ApiResponses({
