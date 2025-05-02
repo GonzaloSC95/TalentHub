@@ -1,50 +1,88 @@
-    <div class="container p-4">
-    <h2>{{ pageTitle }}</h2>
-    @if (usuarioLogueado?.rol === 'ADMON' && listType === 'usuarios') {
-      <div class="btn-group m-2">
-        <button class="btn btn-outline-dark" (click)="filtrar('ADMON')">Administradores</button>
-        <button class="btn btn-outline-dark" (click)="filtrar('EMPRESA')">Empresa</button>
-        <button class="btn btn-outline-dark" (click)="filtrar('CLIENTE')">Clientes</button>
-        <button class="btn btn-outline-dark" (click)="clearFiltrar()">Todos</button>
-        <a class="btn btn-primary me-2" (click)="alta()" routerLinkActive="active">Nuevo Usuario</a> 
-      </div>
-      
-      
-    }
-    <table class="table table-bordered table-striped mt-4 m-2">
-        <thead>
-            <tr>
-                @for (col of config.columns; track col) {
-                <th>
-                    {{ col.label }}
-                </th>
-                }
-                <th>Acción</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (item of data; track item) {
-            <tr>
-                @for (col of config.columns; track col) {
-                <td>
-                    {{ item[col.key] }}
-                </td>
-                }
-                <td>
-                    @if(typeForBotonera) {
-                      <app-botonera [item]="item" [type]="typeForBotonera" (eliminado)="quitarDeLista($event)"></app-botonera>
+<div class="container p-4">
+  <h2>{{ pageTitle }}</h2>
 
-                    } @else {
-                    <!-- Opcional: Mostrar algo si no hay tipo (ej. un guión o nada) -->
-                    <span>-</span>
-                    }
-                </td>
-            </tr>
+  @if (usuarioLogueado?.rol === 'ADMON' && listType === 'usuarios') {
+    <div class="btn-group m-2">
+      <button class="btn btn-outline-dark" (click)="filtrar('ADMON')">Administradores</button>
+      <button class="btn btn-outline-dark" (click)="filtrar('EMPRESA')">Empresa</button>
+      <button class="btn btn-outline-dark" (click)="filtrar('CLIENTE')">Clientes</button>
+      <button class="btn btn-outline-dark" (click)="clearFiltrar()">Todos</button>
+      <a class="btn btn-primary me-2" (click)="alta()" routerLinkActive="active">Nuevo Usuario</a> 
+    </div>
+  }
+
+  <!-- NUEVO BLOQUE DE FILTROS SOLO PARA BUSCAR OFERTAS -->
+  @if (listType === 'buscar ofertas') {
+    <div class="card mb-4 p-3 border">
+      <form (ngSubmit)="aplicarFiltrosVacantes()" class="row g-3 align-items-end">
+        <div class="col-md-3">
+          <label for="filtroNombre" class="form-label">Título</label>
+          <input id="filtroNombre" class="form-control" type="text" [(ngModel)]="filtroNombre" name="filtroNombre" placeholder="Título contiene..." />
+        </div>
+        <div class="col-md-3">
+          <label for="filtroDescripcion" class="form-label">Descripción</label>
+          <input id="filtroDescripcion" class="form-control" type="text" [(ngModel)]="filtroDescripcion" name="filtroDescripcion" placeholder="Descripción contiene..." />
+        </div>
+        <div class="col-md-2">
+          <label for="filtroSalarioMin" class="form-label">Salario Mínimo</label>
+          <input type="number" min="0" [(ngModel)]="filtroSalarioMin" name="filtroSalarioMin" />
+        </div>
+        <div class="col-md-2">
+          <label for="filtroSalarioMax" class="form-label">Salario Máximo</label>
+          <input type="number" min="0" [(ngModel)]="filtroSalarioMax" name="filtroSalarioMax" />
+        </div>
+        <div class="col-md-2">
+          <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+        </div>
+
+        
+      </form>
+      
+    </div>
+    <br>
+    <div class="col-md-2 center">
+      <button class="btn btn-primary w-100" (click)="cargarTodasVacantes()">Mostrar Todas</button>
+    
+  </div>
+
+    
+  }
+<br><br>
+  <table class="table table-bordered table-striped mt-4 m-2">
+    <thead>
+      <tr>
+        @for (col of config.columns; track col) {
+          <th>
+            {{ col.label }}
+          </th>
+        }
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of data; track item) {
+        <tr>
+          @for (col of config.columns; track col) {
+            <td>
+              {{ item[col.key] }}
+            </td>
+          }
+          <td>
+            @if(typeForBotonera) {
+              <app-botonera [item]="item" [type]="typeForBotonera" (eliminado)="quitarDeLista($event)"></app-botonera>
+            } @else {
+              <!-- Opcional: Mostrar algo si no hay tipo (ej. un guión o nada) -->
+              <span>-</span>
             }
-        </tbody>
-    </table>
-    <br><br><br><br>
-    <!-- Segunda tabla SOLO!!!! para 'mis solicitudes' -->
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <br><br><br><br>
+
+  <!-- Segunda tabla SOLO!!!! para 'mis solicitudes' -->
   @if(listType === 'mis solicitudes') {
     <h3>Solicitudes Asignadas</h3>
     <table class="table table-bordered table-striped mt-4 m-2">
@@ -63,10 +101,8 @@
               <td>{{ item[col.key] }}</td>
             }
             <td>
-              
-                <!-- Aquí pasamos 'solicitud' siempre para que no haya líos-->
-                <app-botonera [item]="item" [type]="'solicitud'"></app-botonera>
-              
+              <!-- Aquí pasamos 'solicitud' siempre para que no haya líos-->
+              <app-botonera [item]="item" [type]="'solicitud'"></app-botonera>
             </td>
           </tr>
         }
@@ -74,4 +110,3 @@
     </table>
   }
 </div>
-

@@ -1,4 +1,3 @@
-
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,18 +9,16 @@ import { SolicitudService } from './../../service/solicitud.service';
 import { EmpresaService } from '../../service/empresa.service';
 import { UsuarioService } from '../../service/usuario.service';
 import { VacanteService } from '../../service/vacante.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, BotoneraComponent],
+  imports: [CommonModule, BotoneraComponent, FormsModule],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.css',
 })
 export class LandingComponent implements OnInit, OnDestroy {
-
-
-
 
   // Inyección de dependencias
   route = inject(ActivatedRoute);
@@ -41,7 +38,6 @@ export class LandingComponent implements OnInit, OnDestroy {
   estadoFiltro = '';//filtro usuarios admin
   todosLosUsuarios: Usuario[] = [];
 
-
   // Nueva propiedad para solicitudes adjudicadas
   solicitudesAdjudicadas: any[] = [];
 
@@ -49,6 +45,12 @@ export class LandingComponent implements OnInit, OnDestroy {
   private routeSubscription: Subscription | null = null;
   private dataSubscription: Subscription | null = null;
   private adjudicadasSubscription: Subscription | null = null;
+
+  // NUEVAS PROPIEDADES PARA FILTRAR VACANTES CREADAS
+  filtroNombre: string = '';
+  filtroDescripcion: string = '';
+  filtroSalarioMin: number | null = null;
+  filtroSalarioMax: number | null = null;
 
   ngOnInit(): void {
     this.usuarioLogueado = this.usuarioService.getUsuario();
@@ -100,6 +102,53 @@ export class LandingComponent implements OnInit, OnDestroy {
     });
   }
 
+  // NUEVO MÉTODO: Aplicar filtros y recargar las vacantes filtradas en estado CREADA
+  aplicarFiltrosVacantes(): void {
+    // Construimos el objeto filtros para el servicio
+    const filtros: {
+      nombre?: string,
+      descripcion?: string,
+      salarioMin?: number,
+      salarioMax?: number
+    } = {};
+
+    if (this.filtroNombre.trim() !== '') {
+      filtros.nombre = this.filtroNombre.trim();
+    }
+
+    if (this.filtroDescripcion.trim() !== '') {
+      filtros.descripcion = this.filtroDescripcion.trim();
+    }
+
+    if (this.filtroSalarioMin != null && !isNaN(this.filtroSalarioMin)) {
+      filtros.salarioMin = this.filtroSalarioMin;
+    }
+
+    if (this.filtroSalarioMax != null && !isNaN(this.filtroSalarioMax)) {
+      filtros.salarioMax = this.filtroSalarioMax;
+    }
+
+    this.dataSubscription?.unsubscribe();
+
+    // Usar el método que hay en el servicio para obtener vacantes filtradas
+    this.dataSubscription = this.vacanteService.getVacantesFiltradas(filtros).subscribe({
+      next: (vacantes) => {
+        this.data = vacantes;
+
+        // Limpiar filtros después de mostrar resultados
+      this.filtroNombre = '';
+      this.filtroDescripcion = '';
+      this.filtroSalarioMin = null;
+      this.filtroSalarioMax = null;
+
+      },
+      error: (error) => {
+        console.error('Error al cargar vacantes filtradas:', error);
+        this.data = [];
+      },
+    });
+  }
+
   quitarDeLista(itemEliminado: any) {
     if (this.typeForBotonera === 'vacante') {
       this.data = this.data.filter(item => item.idVacante !== itemEliminado.idVacante);
@@ -113,7 +162,6 @@ export class LandingComponent implements OnInit, OnDestroy {
       console.warn('Tipo desconocido al intentar quitar de lista:', this.typeForBotonera);
     }
   }
-  
 
   private getPageTitle(name: string | undefined, type: string): string {
     switch (type.toUpperCase()) {
@@ -137,7 +185,7 @@ export class LandingComponent implements OnInit, OnDestroy {
         return `Error`;
     }
   }
-    //en la lista de adjudicadas habia problemas con el tipo, asignamos y se pueden poner todos
+  //en la lista de adjudicadas habia problemas con el tipo, asignamos y se pueden poner todos
   private mapListTypeToBotoneraType(type: string | null): string {
     if (!type) return '';
 
@@ -151,7 +199,7 @@ export class LandingComponent implements OnInit, OnDestroy {
       case 'vacantes':
         return 'vacante';
       case 'mis solicitudes':
-        return 'solicitud'; // pos si acaso hay problema con el espacio
+        return 'solicitud'; // por si acaso hay problema con el espacio
       case 'mi perfil':
         return 'usuario';
       case 'buscar ofertas':
@@ -168,14 +216,14 @@ export class LandingComponent implements OnInit, OnDestroy {
   clearFiltrar() {
     this.estadoFiltro = '';
     this.data = this.todosLosUsuarios
-    }
-      // Método para hacer logout
+  }
+  // Método para hacer logout
   alta(): void {
-        // Redirigimos a la página de inicio o login con parametros de vuelta
-        this.router.navigate(['/registro'], {
-          state: { returnUrl: '/admin/list/usuarios' }
-        });
-      }
+    // Redirigimos a la página de inicio o login con parametros de vuelta
+    this.router.navigate(['/registro'], {
+      state: { returnUrl: '/admin/list/usuarios' }
+    });
+  }
   // --- Lógica para la Vista de Lista de Admin ---
   configureAdminListView(type: string): void {
     let serviceCall: Observable<any[]>;
@@ -188,7 +236,7 @@ export class LandingComponent implements OnInit, OnDestroy {
           { key: 'apellidos', label: 'Apellidos' },
           { key: 'email', label: 'Email' },
           { key: 'rol', label: 'Rol' },
-          { key: 'nombreEmpresa', label: 'Empresa' },
+          //{ key: 'nombreEmpresa', label: 'Empresa' },
         ];
         serviceCall = this.usuarioService.getAllUsuarios();
         break;
@@ -213,6 +261,7 @@ export class LandingComponent implements OnInit, OnDestroy {
           { key: 'idEmpresa', label: 'Empresa' },
           { key: 'nombreEmpresa', label: 'Empresa' },
           { key: 'estatus', label: 'Estado' },
+          
         ];
         serviceCall = this.vacanteService.getAllVacantes();
         break;
@@ -341,9 +390,13 @@ export class LandingComponent implements OnInit, OnDestroy {
           { key: 'idEmpresa', label: 'Empresa' },
           { key: 'nombreEmpresa', label: 'Empresa' },
           { key: 'estatus', label: 'Estado' },
+          { key: 'salario', label: 'Salario' },
         ];
-        serviceCall = this.vacanteService.getVacantesCreadas();
-        break;
+
+        // En vez de usar getVacantesCreadas, llamamos a aplicarFiltrosVacantes()
+        this.aplicarFiltrosVacantes();
+
+        return; // Salimos para prevenir carga doble
 
       default:
         this.pageTitle = this.getPageTitle(undefined, 'UNDEFINED');
@@ -366,7 +419,25 @@ export class LandingComponent implements OnInit, OnDestroy {
     }
   }
 
-
+  cargarTodasVacantes(): void {
+    this.dataSubscription?.unsubscribe();
+  
+    this.vacanteService.getVacantesCreadas().subscribe({
+      next: (vacantes) => {
+        this.data = vacantes;
+  
+        // Limpiar filtros para que se refleje vacío
+        this.filtroNombre = '';
+        this.filtroDescripcion = '';
+        this.filtroSalarioMin = null;
+        this.filtroSalarioMax = null;
+      },
+      error: (error) => {
+        console.error('Error cargando todas las vacantes:', error);
+        this.data = [];
+      }
+    });
+  }
 
   ngOnDestroy(): void {
     this.routeSubscription?.unsubscribe();

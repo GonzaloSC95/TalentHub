@@ -58,9 +58,8 @@ export class UsuarioService {
   //para actulizar el usuario
 
   async actualizarUsuario(usuario: Usuario): Promise<Usuario | undefined> {
-    const body = { usuario };
     return lastValueFrom(
-      this.httpClient.put<Usuario>(`${this.apiUrl}/actualizar`, body).pipe(
+      this.httpClient.put<Usuario>(`${this.apiUrl}/actualizar`, usuario).pipe(
         catchError((error) => {
           console.error('Error al actualizar el usuario:', error);
           return of(undefined);
@@ -68,6 +67,8 @@ export class UsuarioService {
       )
     );
   }
+  
+  
 
 
   async deleteUsuario(usuario: Usuario): Promise<boolean> {

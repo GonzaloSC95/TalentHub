@@ -4,6 +4,8 @@
       Detalles de la Vacante
     } @else if(tipo === 'solicitud' || tipo === 'mis solicitudes') {
       Detalles de la Solicitud
+    } @else if(tipo === 'usuario') {
+      Modificar Usuario
     } @else {
       Detalles
     }
@@ -20,9 +22,7 @@
         <p><strong>Fecha:</strong> {{ vacante.fecha }}</p>
         <p><strong>Salario:</strong> {{ vacante.salario | currency }}</p>
         <p><strong>Estado:</strong> {{ vacante.estatus }}</p>
-        <!-- <p><strong>Destacado:</strong> {{ vacante.destacado }}</p> -->
         <p><strong>Detalles adicionales:</strong> {{ vacante.detalles }}</p>
-        <!-- <p><strong>Categoría:</strong> {{ vacante.categoria }}</p> -->
         <p><strong>Empresa:</strong> {{ vacante.nombreEmpresa }}</p>
       </div>
     </div>
@@ -32,7 +32,7 @@
       <div class="row mb-3">
         <div class="col-md-6">
           <label for="fecha" class="form-label">Fecha</label>
-          <input type="date" id="fecha" class="form-control" formControlName="fecha" disableb />
+          <input type="date" id="fecha" class="form-control" formControlName="fecha" disable />
         </div>
         <div class="col-md-6">
           <label for="estado" class="form-label">Estado</label>
@@ -44,10 +44,16 @@
         <div class="col-md-6">
           <label for="archivo" class="form-label">Archivo</label>
           <input type="text" id="archivo" class="form-control" formControlName="archivo" />
+          @if(formSolicitud.get('archivo')?.invalid && formSolicitud.get('archivo')?.touched) {
+            <div class="text-danger">Archivo es obligatorio.</div>
+          }
         </div>
         <div class="col-md-6">
           <label for="curriculum" class="form-label">Currículum</label>
           <input type="text" id="curriculum" class="form-control" formControlName="curriculum" />
+          @if(formSolicitud.get('curriculum')?.invalid && formSolicitud.get('curriculum')?.touched) {
+            <div class="text-danger">Currículum es obligatorio.</div>
+          }
         </div>
       </div>
 
@@ -59,6 +65,9 @@
       <div class="mb-3">
         <label for="emailUsuario" class="form-label">Email</label>
         <input type="email" id="emailUsuario" class="form-control" formControlName="emailUsuario" />
+        @if(formSolicitud.get('emailUsuario')?.invalid && formSolicitud.get('emailUsuario')?.touched) {
+          <div class="text-danger">Email inválido.</div>
+        }
       </div>
 
       <input type="hidden" formControlName="idVacante" />
@@ -80,7 +89,6 @@
         <p><strong>Estado:</strong> {{ solicitud.estado }}</p>
         <p><strong>Candidato:</strong> {{ solicitud.candidato }}</p>
         <p><strong>Vacante:</strong> {{ solicitud.vacante }}</p>
-        
       </div>
     </div>
 
@@ -101,10 +109,16 @@
         <div class="col-md-6">
           <label for="archivo" class="form-label">Archivo</label>
           <input type="text" id="archivo" class="form-control" formControlName="archivo" />
+          @if(formSolicitud.get('archivo')?.invalid && formSolicitud.get('archivo')?.touched) {
+            <div class="text-danger">Archivo es obligatorio.</div>
+          }
         </div>
         <div class="col-md-6">
           <label for="curriculum" class="form-label">Currículum</label>
           <input type="text" id="curriculum" class="form-control" formControlName="curriculum" />
+          @if(formSolicitud.get('curriculum')?.invalid && formSolicitud.get('curriculum')?.touched) {
+            <div class="text-danger">Currículum es obligatorio.</div>
+          }
         </div>
       </div>
 
@@ -126,8 +140,55 @@
     </form>
   }
 
-  <!-- Mostrar mensaje de carga, por si aca -->
-  @if(!vacante && !solicitud) {
+  <!-- Mostrar detalles Usuario -->
+  @if(tipo === 'usuario' && usuario) {
+    <div class="card mb-4">
+      <div class="card-header">
+        <h3>Modificar Usuario</h3>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="formUsuario" (ngSubmit)="getDataUsuario()">
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" class="form-control" formControlName="email" readonly/>
+            
+          </div>
+
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" id="nombre" class="form-control" formControlName="nombre" />
+            @if(formUsuario.get('nombre')?.invalid && formUsuario.get('nombre')?.touched) {
+              <div class="text-danger">El nombre es obligatorio.</div>
+            }
+          </div>
+          
+          <div class="mb-3">
+            <label for="apellidos" class="form-label">Apellidos</label>
+            <input type="text" id="apellidos" class="form-control" formControlName="apellidos" />
+            @if(formUsuario.get('apellidos')?.invalid && formUsuario.get('apellidos')?.touched) {
+              <div class="text-danger">Los apellidos son obligatorios.</div>
+            }
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="text" id="password" class="form-control" formControlName="password" />
+            @if(formUsuario.get('password')?.invalid && formUsuario.get('password')?.touched) {
+              <div class="text-danger">La password es obligatoria.</div>
+            }
+          </div>
+  
+
+          <button type="submit" class="btn btn-primary" [disabled]="formUsuario.invalid">
+            Actualizar Usuario
+          </button>
+        </form>
+      </div>
+    </div>
+  }
+
+  <!-- Mostrar mensaje de carga -->
+  @if(!vacante && !solicitud && !(tipo === 'usuario' && usuario)) {
     <div class="alert alert-warning text-center">
       Cargando detalles...
     </div>

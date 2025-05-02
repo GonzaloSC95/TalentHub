@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, lastValueFrom, Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -66,7 +66,33 @@ export class VacanteService {
         )
     );
   }
+
+  //filtros de buscar ofertas
+  getVacantesFiltradas(filtros: {
+    nombre?: string,
+    descripcion?: string,
+    salarioMin?: number,
+    salarioMax?: number
+  }) {
+    let params = new HttpParams();
+  
+    if (filtros.nombre) {
+      params = params.set('nombre', filtros.nombre);
+    }
+    if (filtros.descripcion) {
+      params = params.set('descripcion', filtros.descripcion);
+    }
+   
+    if (filtros.salarioMin != null) {
+      params = params.set('salarioMin', filtros.salarioMin.toString());
+    }
+    if (filtros.salarioMax != null) {
+      params = params.set('salarioMax', filtros.salarioMax.toString());
+    }
+  
+    return this.httpClient.get<Vacante[]>(`${this.apiUrl}/filtrar`, { params });
 }
 
 
 
+}

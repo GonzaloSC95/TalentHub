@@ -1,4 +1,3 @@
-
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,6 +8,8 @@ import { SolicitudService } from '../../service/solicitud.service';
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 import { UsuarioService } from '../../service/usuario.service';
+import { Usuario } from '../../interfaces/usuario';
+
 
 
 @Component({
@@ -21,9 +22,13 @@ import { UsuarioService } from '../../service/usuario.service';
 export class ModificarComponent {
   vacante: Vacante | null = null;
   solicitud: Solicitud | null = null;
+  usuario: Usuario | null = null;
+
   formSolicitud!: FormGroup;
+  formUsuario!: FormGroup;
+
   tipo: string = '';
-  id: number = 0;
+  id: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -37,18 +42,36 @@ export class ModificarComponent {
 
   ngOnInit(): void {
     this.tipo = this.route.snapshot.params['tipo'];
-    this.id = +this.route.snapshot.params['id'];
+    this.id = this.route.snapshot.params['id'];
 
-    this.crearFormulario();
+    if (this.tipo === 'usuario') {
+      this.cargarUsuario(decodeURIComponent(this.id));
+    } else {
+      // Para vacante o solicitud convertir a número
+      const idNum = Number(this.id);
+      if (isNaN(idNum)) {
+        alert('ID inválido');
+        this.volver();
+        return;
+      }
 
-    if (this.tipo === 'vacante' || this.tipo === 'buscar ofertas') {
-      this.cargarVacante(this.id);
-    } else if (this.tipo === 'solicitud' || this.tipo === 'mis solicitudes') {
-      this.cargarSolicitud(this.id);
+      this.crearFormularioSolicitud();
+
+      if (this.tipo === 'vacante' || this.tipo === 'buscar ofertas') {
+        this.cargarVacante(idNum);
+      } else if (this.tipo === 'solicitud' || this.tipo === 'mis solicitudes') {
+        this.cargarSolicitud(idNum);
+      } else {
+        alert('Tipo no soportado');
+        this.volver();
+      }
     }
   }
 
-  crearFormulario() {
+  // ---------------------------------------------------
+  // FORMULARIO Y FUNCIONES PARA SOLICITUD / VACANTE
+  // ---------------------------------------------------
+  crearFormularioSolicitud() {
     this.formSolicitud = this.fb.group({
       fecha: ['', Validators.required],
       estado: ['', Validators.required],
@@ -65,29 +88,28 @@ export class ModificarComponent {
       next: (vacante) => {
         this.vacante = vacante;
 
-        const usuarioLogueado = this.usuarioService.getUsuario();//nos traemos el usuario con el que estamos logados
+        const usuarioLogueado = this.usuarioService.getUsuario();
 
         this.formSolicitud.patchValue({
           idVacante: vacante.idVacante,
-          emailUsuario: usuarioLogueado ? usuarioLogueado.email : '',  // email del usuario logueado o vacío
-          estado: '0',      // Estado inicial en creación x defecto presentada
+          emailUsuario: usuarioLogueado ? usuarioLogueado.email : '',
+          estado: '0',
           fecha: this.formatDateForInput(new Date()),
           archivo: '',
           curriculum: '',
           comentarios: '',
         });
 
-        // En creación: todos editables excepto estado (readonly)
         this.formSolicitud.get('estado')?.disable();
-
         this.formSolicitud.get('fecha')?.disable();
         this.formSolicitud.get('archivo')?.enable();
         this.formSolicitud.get('curriculum')?.enable();
         this.formSolicitud.get('comentarios')?.enable();
+
         if (usuarioLogueado) {
-          this.formSolicitud.get('emailUsuario')?.disable(); // para que no se pueda modificar el email
+          this.formSolicitud.get('emailUsuario')?.disable();
         } else {
-          this.formSolicitud.get('emailUsuario')?.enable(); // por si no hay usuario logueado, que puedan ponerlo por si en algun momeno se permite
+          this.formSolicitud.get('emailUsuario')?.enable();
         }
       },
       error: (err) => {
@@ -102,6 +124,7 @@ export class ModificarComponent {
     this.solicitudService.getSolicitudById(idSolicitud).subscribe({
       next: (solicitud) => {
         this.solicitud = solicitud;
+
         this.vacanteService.getVacanteById(Number(solicitud.vacante)).subscribe({
           next: (vacante) => (this.vacante = vacante),
           error: (err) => console.error('Error cargando vacante:', err),
@@ -117,7 +140,6 @@ export class ModificarComponent {
           idVacante: solicitud.vacante,
         });
 
-        // En modificación: solo archivo, curriculum y comentarios habilitados para modificar la solicitud
         this.formSolicitud.get('fecha')?.disable();
         this.formSolicitud.get('estado')?.disable();
         this.formSolicitud.get('emailUsuario')?.disable();
@@ -132,13 +154,6 @@ export class ModificarComponent {
         this.volver();
       },
     });
-  }
-
-  formatDateForInput(date: Date): string {
-    const d = new Date(date);
-    const month = ('0' + (d.getMonth() + 1)).slice(-2);
-    const day = ('0' + d.getDate()).slice(-2);
-    return `${d.getFullYear()}-${month}-${day}`;
   }
 
   getDataSolicitud() {
@@ -163,7 +178,7 @@ export class ModificarComponent {
       candidato: this.formSolicitud.value.emailUsuario,
     };
 
-    // Volver a deshabilitar si es edición (esto es de forma opcional)
+    // Volver a deshabilitar si es edición (opcional)
     if (this.tipo === 'solicitud' || this.tipo === 'mis solicitudes') {
       this.formSolicitud.get('fecha')?.disable();
       this.formSolicitud.get('estado')?.disable();
@@ -191,8 +206,91 @@ export class ModificarComponent {
     }
   }
 
-  
+  formatDateForInput(date: Date): string {
+    const d = new Date(date);
+    const month = ('0' + (d.getMonth() + 1)).slice(-2);
+    const day = ('0' + d.getDate()).slice(-2);
+    return `${d.getFullYear()}-${month}-${day}`;
+  }
+
   volver() {
     this.location.back();
   }
+
+  // ---------------------------------------------------
+  // FORMULARIO Y FUNCIONES PARA USUARIO
+  // ---------------------------------------------------
+  crearFormularioUsuario() {
+    this.formUsuario = this.fb.group({
+      email: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
+      nombre: ['', Validators.required],
+      apellidos: ['', Validators.required],
+      password: ['', Validators.required],  // obligatorio para actualizar usuario
+    });
+  }
+
+  cargarUsuario(email: string) {
+    this.crearFormularioUsuario();
+
+    this.usuarioService.getUsuarioByEmail(email).subscribe({
+      next: (usuario) => {
+        this.usuario = usuario;
+
+        // para no hacer nada de modifcar back, quitamos el {noop} que son siempre 6 digitos
+      const passwordSinNoop = usuario.password?.startsWith('{noop}')
+      ? usuario.password.substring(6)
+      : usuario.password;
+
+
+
+        this.formUsuario.patchValue({
+          email: usuario.email,
+          nombre: usuario.nombre,
+          apellidos: usuario.apellidos,
+          password: passwordSinNoop //aplicamos sin {noop}
+        });
+      },
+      error: (err) => {
+        console.error('Error cargando usuario:', err);
+        alert('No se pudo cargar el usuario');
+        this.volver();
+      },
+    });
+  }
+  async getDataUsuario() {
+    if (this.formUsuario.invalid) {
+      this.formUsuario.markAllAsTouched();
+      return;
+    }
+  
+    const usuarioOriginal = this.usuario!;
+  
+      //para pasarlo lo volvemos a poner, un poco guarrete pero funciona sin cambiar más
+    const password = this.formUsuario.value.password?.trim() || '';
+    const passwordConNoop = password.startsWith('{noop}') ? password : `{noop}${password}`;
+  
+    const usuarioActualizado: Usuario = {
+      email: usuarioOriginal.email,
+      nombre: this.formUsuario.value.nombre,
+      apellidos: this.formUsuario.value.apellidos,
+      password: passwordConNoop,
+      enabled: 1,
+      rol: 'CLIENTE',
+      fechaRegistro: usuarioOriginal.fechaRegistro,
+    };
+  
+    try {
+      const resultado = await this.usuarioService.actualizarUsuario(usuarioActualizado);
+      if (resultado) {
+        alert('Usuario actualizado con éxito');
+        this.volver();
+      } else {
+        alert('No se pudo actualizar el usuario');
+      }
+    } catch (error) {
+      alert('Error al actualizar usuario: ' + error);
+    }
+  }
+  
+  
 }
