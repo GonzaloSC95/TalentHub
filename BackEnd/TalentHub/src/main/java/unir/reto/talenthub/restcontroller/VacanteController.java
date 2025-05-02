@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -228,5 +229,52 @@ public class VacanteController {
 	      return ResponseEntity.ok(vacantes);
 	   }
 	   
-	 
+	 //añadimos rest para poder hacer los filtros en las vacantes creadas
+	   
+	   
+
+	   @GetMapping("/filtrar")
+	   public ResponseEntity<List<VacanteDto>> filtrarVacantes(
+	       @RequestParam(required = false) String nombre,
+	       @RequestParam(required = false) String descripcion,
+	       @RequestParam(required = false) Integer salarioMin,
+	       @RequestParam(required = false) Integer salarioMax
+	       
+	   ) {
+	       List<Vacante> vacantes = vacanteService.findByEstatus(Estatus.CREADA);
+
+	       if (nombre != null && !nombre.isEmpty()) {
+	           vacantes = vacantes.stream()
+	               .filter(v -> v.getNombre() != null && v.getNombre().toLowerCase().contains(nombre.toLowerCase()))
+	               .collect(Collectors.toList());
+	       }
+
+	       if (descripcion != null && !descripcion.isEmpty()) {
+	           vacantes = vacantes.stream()
+	               .filter(v -> v.getDescripcion() != null && v.getDescripcion().toLowerCase().contains(descripcion.toLowerCase()))
+	               .collect(Collectors.toList());
+	       }
+
+	       
+	       if (salarioMin != null) {
+	           vacantes = vacantes.stream()
+	        		   .filter(v -> v.getSalario() >= salarioMin)
+	               .collect(Collectors.toList());
+	       }
+
+	       if (salarioMax != null) {
+	           vacantes = vacantes.stream()
+	               .filter(v -> v.getSalario() <= salarioMax)
+	               .collect(Collectors.toList());
+	       }
+
+	       List<VacanteDto> vacantesDto = vacantes.stream()
+	           .map(vacanteMapper::mapToDto)
+	           .collect(Collectors.toList());
+
+	       return ResponseEntity.ok(vacantesDto);
+	   }
+
+	   
+	   
 	}
