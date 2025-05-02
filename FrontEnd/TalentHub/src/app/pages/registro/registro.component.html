@@ -1,6 +1,8 @@
 <div class="container py-4">
    <div class="row">
       <!-- Sección izquierda -->
+      @if(esRegistroPublico)
+      {
       <div class="col-md-5 mb-4">
          <h2 class="fw-bold title-primary mb-3">Regístrate y disfruta de nuestros servicios !!!!</h2>
          <ul class="mt-4 list-unstyled">
@@ -13,7 +15,7 @@
                sesión</a>😊
          </p>
       </div>
-
+   }
       <!-- Formulario -->
       <div class="col-md-7">
          <div class="card shadow-sm">
@@ -115,10 +117,17 @@
                         <input class="form-check-input" type="radio" formControlName="rol" value="CLIENTE" />
                         <label class="form-check-label">Candidato</label>
                      </div>
+                     @if(!esRegistroPublico){
+                     <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" formControlName="rol" value="ADMON" />
+                        <label class="form-check-label">Administrador</label>
+                     </div>
+                  }
                      @if(checkControl('rol', 'required')){
                      <p class="text-danger my-2">Campo obligatorio</p>
                      }
                   </div>
+                  @if(esRegistroPublico){
                <div class="form-check mb-3">
                      <input class="form-check-input" type="checkbox" formControlName="lopd" id="lopd" />
                      <label class="form-check-label" for="lopd">Acepto la política de privacidad</label>
@@ -126,10 +135,16 @@
                         <p class="text-danger my-2">Es obligatorio aceptar la política de protección de datos</p>
                         }
                </div>
-
+            }
+            <div class="d-flex flex-wrap gap-2 mt-3">
                   <button type="submit" class="btn btn-primary rounded-pill w-100" [disabled]="reactiveForm.invalid">
                      Registrar
                   </button>
+                  <button type="reset" class="btn btn-primary  rounded-pill w-20"  routerLinkActive="active">Borrar</button>
+                  @if(!esRegistroPublico){
+                  <button type="reset" class="btn btn-primary  rounded-pill w-20" (click)="volver()" routerLinkActive="active">Volver</button>
+                  }
+            </div>
                </form>
             </div>
          </div>

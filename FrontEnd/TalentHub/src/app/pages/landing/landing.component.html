@@ -1,5 +1,16 @@
     <div class="container p-4">
     <h2>{{ pageTitle }}</h2>
+    @if (usuarioLogueado?.rol === 'ADMON' && listType === 'usuarios') {
+      <div class="btn-group m-2">
+        <button class="btn btn-outline-dark" (click)="filtrar('ADMON')">Administradores</button>
+        <button class="btn btn-outline-dark" (click)="filtrar('EMPRESA')">Empresa</button>
+        <button class="btn btn-outline-dark" (click)="filtrar('CLIENTE')">Clientes</button>
+        <button class="btn btn-outline-dark" (click)="clearFiltrar()">Todos</button>
+        <a class="btn btn-primary me-2" (click)="alta()" routerLinkActive="active">Nuevo Usuario</a> 
+      </div>
+      
+      
+    }
     <table class="table table-bordered table-striped mt-4 m-2">
         <thead>
             <tr>

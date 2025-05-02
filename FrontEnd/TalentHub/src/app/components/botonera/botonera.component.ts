@@ -155,8 +155,6 @@ export class BotoneraComponent {
   }
   
 
-  //verDetalle() {
-   // this.router.navigate([`vacante/detalle`, this.item?.id || this.item?.idVacante]);}
    verDetalle() {
   const tipo = this.type.toLowerCase().replace(/\s+/g, ''); //para espacios
   const id = this.getId();
@@ -169,15 +167,5 @@ export class BotoneraComponent {
   this.router.navigate(['detalle', tipo, id]);
 }
 
-//modificar() {
-//  const tipo = this.type.toLowerCase().replace(/\s+/g, '');
-//const id = this.getId();
-
-// if (!id) {
-//    console.error('No se pudo obtener el id para modificar:', this.item);
-//    return;
-//  }
-
-//  this.router.navigate(['modificar', tipo, id]);
 }
 

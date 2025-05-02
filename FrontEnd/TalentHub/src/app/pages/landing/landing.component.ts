@@ -1,7 +1,7 @@
 
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { map, Observable, of, Subscription } from 'rxjs';
 import { BotoneraComponent } from '../../components/botonera/botonera.component';
 import { Usuario } from './../../interfaces/usuario';
@@ -20,8 +20,12 @@ import { VacanteService } from '../../service/vacante.service';
 })
 export class LandingComponent implements OnInit, OnDestroy {
 
+
+
+
   // Inyección de dependencias
   route = inject(ActivatedRoute);
+  router = inject(Router);
   usuarioService = inject(UsuarioService);
   empresaService = inject(EmpresaService);
   vacanteService = inject(VacanteService);
@@ -34,6 +38,8 @@ export class LandingComponent implements OnInit, OnDestroy {
   config = { columns: [] as { key: string; label: string }[] };
   data: any[] = [];
   typeForBotonera: string = ''; // para los diferentes type
+  estadoFiltro = '';//filtro usuarios admin
+  todosLosUsuarios: Usuario[] = [];
 
 
   // Nueva propiedad para solicitudes adjudicadas
@@ -43,6 +49,56 @@ export class LandingComponent implements OnInit, OnDestroy {
   private routeSubscription: Subscription | null = null;
   private dataSubscription: Subscription | null = null;
   private adjudicadasSubscription: Subscription | null = null;
+
+  ngOnInit(): void {
+    this.usuarioLogueado = this.usuarioService.getUsuario();
+    this.filtrar(this.estadoFiltro);
+
+    this.routeSubscription = this.route.paramMap.subscribe((params) => {
+      this.dataSubscription?.unsubscribe();
+      this.adjudicadasSubscription?.unsubscribe();
+
+      this.data = [];
+      this.solicitudesAdjudicadas = [];
+      this.config.columns = [];
+      this.listType = null;
+      this.typeForBotonera = '';
+
+      const typeParam = params.get('type');
+      const emailParam = params.get('email');
+
+      const urlSegments = this.route.snapshot.url.map(segment => segment.path);
+      const urlPath = urlSegments.join('/');
+
+      if (typeParam && urlPath.startsWith('admin/list')) {
+        this.listType = typeParam;
+        this.typeForBotonera = this.mapListTypeToBotoneraType(typeParam);
+        this.configureAdminListView(typeParam);
+      } else if (typeParam && urlPath.startsWith('user/list')) {
+        this.listType = typeParam;
+        this.typeForBotonera = this.mapListTypeToBotoneraType(typeParam);
+        this.configureUserListView(typeParam);
+      } else if (emailParam && this.usuarioLogueado) {
+        this.listType = this.usuarioLogueado.rol ?? null;
+        this.typeForBotonera = this.mapListTypeToBotoneraType(this.listType);
+
+        if (this.listType !== null) {
+          this.configurePostLoginView(this.usuarioLogueado);
+        } else {
+          console.warn('Usuario logueado no tiene un rol definido.');
+          this.pageTitle = `${this.getPageTitle(this.usuarioLogueado.nombre, 'USER')} (Rol no definido)`;
+          this.config.columns = [
+            { key: 'nombre', label: 'Nombre' },
+            { key: 'email', label: 'Email' },
+          ];
+          this.data = [this.usuarioLogueado];
+        }
+      } else {
+        console.error('Parámetros de ruta inválidos o usuario no encontrado.');
+        this.pageTitle = this.getPageTitle(undefined, 'ERROR');
+      }
+    });
+  }
 
   quitarDeLista(itemEliminado: any) {
     if (this.typeForBotonera === 'vacante') {
@@ -104,55 +160,22 @@ export class LandingComponent implements OnInit, OnDestroy {
         return lowerType.replace(/\s+/g, ''); // para los espacios
     }
   }
-  ngOnInit(): void {
-    this.usuarioLogueado = this.usuarioService.getUsuario();
 
-    this.routeSubscription = this.route.paramMap.subscribe((params) => {
-      this.dataSubscription?.unsubscribe();
-      this.adjudicadasSubscription?.unsubscribe();
-
-      this.data = [];
-      this.solicitudesAdjudicadas = [];
-      this.config.columns = [];
-      this.listType = null;
-      this.typeForBotonera = '';
-
-      const typeParam = params.get('type');
-      const emailParam = params.get('email');
-
-      const urlSegments = this.route.snapshot.url.map(segment => segment.path);
-      const urlPath = urlSegments.join('/');
-
-      if (typeParam && urlPath.startsWith('admin/list')) {
-        this.listType = typeParam;
-        this.typeForBotonera = this.mapListTypeToBotoneraType(typeParam);
-        this.configureAdminListView(typeParam);
-      } else if (typeParam && urlPath.startsWith('user/list')) {
-        this.listType = typeParam;
-        this.typeForBotonera = this.mapListTypeToBotoneraType(typeParam);
-        this.configureUserListView(typeParam);
-      } else if (emailParam && this.usuarioLogueado) {
-        this.listType = this.usuarioLogueado.rol ?? null;
-        this.typeForBotonera = this.mapListTypeToBotoneraType(this.listType);
-
-        if (this.listType !== null) {
-          this.configurePostLoginView(this.usuarioLogueado);
-        } else {
-          console.warn('Usuario logueado no tiene un rol definido.');
-          this.pageTitle = `${this.getPageTitle(this.usuarioLogueado.nombre, 'USER')} (Rol no definido)`;
-          this.config.columns = [
-            { key: 'nombre', label: 'Nombre' },
-            { key: 'email', label: 'Email' },
-          ];
-          this.data = [this.usuarioLogueado];
-        }
-      } else {
-        console.error('Parámetros de ruta inválidos o usuario no encontrado.');
-        this.pageTitle = this.getPageTitle(undefined, 'ERROR');
-      }
-    });
+  filtrar(estado: string) {
+    this.estadoFiltro = estado;
+    this.data = this.todosLosUsuarios.filter(c => c.rol === estado);
   }
-
+  clearFiltrar() {
+    this.estadoFiltro = '';
+    this.data = this.todosLosUsuarios
+    }
+      // Método para hacer logout
+  alta(): void {
+        // Redirigimos a la página de inicio o login con parametros de vuelta
+        this.router.navigate(['/registro'], {
+          state: { returnUrl: '/admin/list/usuarios' }
+        });
+      }
   // --- Lógica para la Vista de Lista de Admin ---
   configureAdminListView(type: string): void {
     let serviceCall: Observable<any[]>;
@@ -201,6 +224,7 @@ export class LandingComponent implements OnInit, OnDestroy {
 
     serviceCall.subscribe({
       next: (response) => {
+        this.todosLosUsuarios =response;
         this.data = response;
       },
       error: (err) => {

@@ -7,11 +7,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import Swal from 'sweetalert2';
 import { Empresa } from '../../interfaces/empresa';
 import { Usuario } from '../../interfaces/usuario';
 import { PaisesService } from '../../service/paises.service';
 import { UsuarioService } from '../../service/usuario.service';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-registro',
@@ -21,6 +21,7 @@ import Swal from 'sweetalert2';
   styleUrl: './registro.component.css',
 })
 export class RegistroComponent {
+
   //Inyección de dependencias
   usuarioService = inject(UsuarioService);
   paisesService = inject(PaisesService);
@@ -30,11 +31,19 @@ export class RegistroComponent {
   usuario!: Usuario;
   empresa!: Empresa;
   reactiveForm!: FormGroup;
+  esRegistroPublico = true;
+
+
+
 
   constructor() {}
 
   ngOnInit(): void {
-    // Inicializamos el formulario reactivo
+    
+    const usuarioActual = this.usuarioService.getUsuario();
+    this.esRegistroPublico = !usuarioActual;
+  
+    // Inicializamos el formulario reactivo primero
     this.reactiveForm = new FormGroup(
       {
         email: new FormControl(null, [
@@ -57,6 +66,18 @@ export class RegistroComponent {
       },
       [this.empresaValidator]
     );
+        // --- DESHABILITAR LOPD SI ES ADMIN ---
+        if (!this.esRegistroPublico) {
+          // Si no es registro público (es admin), deshabilita el control LOPD
+      //  this.reactiveForm.get('lopd')?.disable();
+          //si es admin
+           this.reactiveForm.get('lopd')?.setValue(true);
+        }
+  
+    // Luego registramos el valueChanges
+    this.reactiveForm.get('rol')?.valueChanges.subscribe(() => {
+      this.reactiveForm.updateValueAndValidity();
+    });
   }
 
   checkControl(
@@ -79,19 +100,30 @@ export class RegistroComponent {
     const direccion = formGroup.get('direccion');
     const pais = formGroup.get('pais');
     const rol = formGroup.get('rol')?.value;
-
+  
     if (rol === 'EMPRESA') {
       if (!empresa?.value || empresa.value.trim() === '') {
         empresa?.setErrors({ required: true });
+      } else {
+        empresa?.setErrors(null);
       }
+  
       if (!cif?.value || cif.value.trim() === '') {
         cif?.setErrors({ required: true });
+      } else {
+        cif?.setErrors(null);
       }
+  
       if (!direccion?.value || direccion.value.trim() === '') {
         direccion?.setErrors({ required: true });
+      } else {
+        direccion?.setErrors(null);
       }
+  
       if (!pais?.value || pais.value.trim() === '') {
         pais?.setErrors({ required: true });
+      } else {
+        pais?.setErrors(null);
       }
     } else {
       empresa?.setErrors(null);
@@ -99,10 +131,18 @@ export class RegistroComponent {
       direccion?.setErrors(null);
       pais?.setErrors(null);
     }
+  
     return null;
   }
-
+  
+  volver() {
+    this.router.navigate(['/admin/list/usuarios']);
+    }
   async onSubmit(): Promise<void> {
+    console.log(this.reactiveForm.value)
+    console.log(this.reactiveForm.status)
+    console.log(this.reactiveForm.errors)
+    
     if (this.reactiveForm.valid) {
       let response = undefined;
       console.log('Formulario enviado:', this.reactiveForm.value);
@@ -161,7 +201,11 @@ export class RegistroComponent {
           if (result.isConfirmed) {
             //TODO: redirigir al usuario a otra página o realizar otras acciones
             this.reactiveForm.reset();
-            this.router.navigate([`/landing/${this.usuario.email}`]);
+            if(!this.esRegistroPublico){
+              this.router.navigate(['/admin/list/usuarios']);
+            } else {
+              this.router.navigate([`/landing/${this.usuario.email}`]);
+            }
           }
         });
       }
