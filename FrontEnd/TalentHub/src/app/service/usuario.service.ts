@@ -4,6 +4,7 @@ import {
   BehaviorSubject,
   catchError,
   lastValueFrom,
+  map,
   Observable,
   of,
 } from 'rxjs';
@@ -71,21 +72,19 @@ export class UsuarioService {
   
 
 
-  async deleteUsuario(usuario: Usuario): Promise<boolean> {
-    const body = { usuario };
-    return lastValueFrom(
-      this.httpClient
-        .delete<boolean>(`${this.apiUrl}/eliminar`, {
-          body, // Enviamos el usuario completo en el cuerpo
-        })
-        .pipe(
-          catchError((error) => {
-            console.error('Error al eliminar el usuario:', error);
-            return of(false); // error
-          })
-        )
-    );
-  }
+  // async deleteUsuario(usuario: Usuario): Promise<boolean> {
+  //     const url = `${this.apiUrl}/disable`;
+  //   return lastValueFrom(
+  //     this.httpClient
+  //     .put<Usuario>(url, usuario)
+  //       .pipe(
+  //         catchError((error) => {
+  //           console.error('Error al eliminar el usuario:', error);
+  //           return of(false); // error
+  //         })
+  //       )
+  //   );
+  // }
 
   async getUsuarioByLogin(usuario: Usuario): Promise<Usuario | undefined> {
     const params = {
@@ -137,4 +136,27 @@ export class UsuarioService {
       return of(result as T);
     };
   }
+  
+
+
+
+  async deleteUsuario(usuario: Usuario): Promise<boolean> {
+    //modificamos a PUT, por necesidad de cliente
+
+    const url = `${this.apiUrl}/disable`;
+
+    return lastValueFrom(
+      this.httpClient
+        .put<Usuario>(url, usuario)
+        .pipe(
+          map(() => true), // Si la petición PUT tiene éxito (2xx), considerarlo true
+          catchError((error) => {
+            console.error('Error al deshabilitar (soft delete) el usuario:', error);
+            return of(false); 
+          })
+        )
+    );
+  }
+
 }
+

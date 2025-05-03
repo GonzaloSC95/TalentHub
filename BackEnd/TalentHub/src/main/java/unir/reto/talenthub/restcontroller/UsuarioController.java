@@ -177,16 +177,20 @@ public class UsuarioController {
         return result == 1 ? ResponseEntity.ok(usuarioDto) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @Operation(summary = "Eliminar usuario", description = "Elimina un usuario existente.")
+    @Operation(summary = "Eliminar/inactivar usuario", description = "Elimina un usuario existente.")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Usuario eliminado"),
+        @ApiResponse(responseCode = "200", description = "Usuario "),
         @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
     })
-    @DeleteMapping("/eliminar")
+    @PutMapping("/disable")
     public ResponseEntity<UsuarioDto> deleteUsuario(@RequestBody UsuarioDto usuarioDto) {
         Usuario usuario = usuarioMapper.mapToEntity(usuarioDto);
-        int result = usuarioService.delete(usuario);
-        return result == 1 ? ResponseEntity.ok(usuarioDto) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+       /* int result = usuarioService.delete(usuario);
+        return result == 1 ? ResponseEntity.ok(usuarioDto) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();*/
+        usuario.setEnabled(0);
+        int result = usuarioService.save(usuario);
+        UsuarioDto dto = usuarioMapper.mapWithEmpresa(usuario);
+        return result == 1 ? ResponseEntity.ok(dto) : ResponseEntity.badRequest().build();
     }
 
     @Operation(summary = "Obtener todos los usuarios", description = "Devuelve todos los usuarios.")
