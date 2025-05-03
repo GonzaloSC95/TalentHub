@@ -19,7 +19,7 @@ export const routes: Routes = [
   { path: 'user/list/:type', component :LandingComponent},
   //{ path: 'vacante/detalle/:id', component: VacanteDetalleComponent },
   { path: 'detalle/:type/:param', component: VacanteDetalleComponent },
-  //{ path: 'modificar/:tipo/:id', component: VacanteModificarComponent  }
+  // { path: 'modificar/:tipo/:id', component: ModificarComponent  },
   { path: 'modificar2/:tipo/:id', component: ModificarComponent }
 
 ];

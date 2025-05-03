@@ -1,14 +1,15 @@
+import { CommonModule, Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Vacante } from '../../interfaces/vacante';
+import { Empresa } from '../../interfaces/empresa';
 import { Solicitud } from '../../interfaces/solicitud';
-import { VacanteService } from '../../service/vacante.service';
-import { SolicitudService } from '../../service/solicitud.service';
-import { CommonModule } from '@angular/common';
-import { Location } from '@angular/common';
-import { UsuarioService } from '../../service/usuario.service';
 import { Usuario } from '../../interfaces/usuario';
+import { Vacante } from '../../interfaces/vacante';
+import { EmpresaService } from '../../service/empresa.service';
+import { SolicitudService } from '../../service/solicitud.service';
+import { UsuarioService } from '../../service/usuario.service';
+import { VacanteService } from '../../service/vacante.service';
 
 
 
@@ -20,15 +21,18 @@ import { Usuario } from '../../interfaces/usuario';
   styleUrls: ['./modificar.component.css'],
 })
 export class ModificarComponent {
+
   vacante: Vacante | null = null;
   solicitud: Solicitud | null = null;
   usuario: Usuario | null = null;
+  empresa !:Empresa 
 
   formSolicitud!: FormGroup;
   formUsuario!: FormGroup;
 
   tipo: string = '';
   id: string = '';
+  formEmpresa !: FormGroup;
 
   constructor(
     private fb: FormBuilder,
@@ -38,6 +42,7 @@ export class ModificarComponent {
     private solicitudService: SolicitudService,
     private location: Location,
     private usuarioService: UsuarioService,
+    private empresaService : EmpresaService
   ) {}
 
   ngOnInit(): void {
@@ -46,7 +51,16 @@ export class ModificarComponent {
 
     if (this.tipo === 'usuario') {
       this.cargarUsuario(decodeURIComponent(this.id));
-    } else {
+    } else if (this.tipo === 'empresa') {
+
+      const idNum = Number(this.id);
+      if (isNaN(idNum) || idNum <= 0) {
+        alert('ID de empresa inválido');
+        this.volver();
+        return;
+      }
+    this.cargarEmpresa(idNum); 
+  }else {
       // Para vacante o solicitud convertir a número
       const idNum = Number(this.id);
       if (isNaN(idNum)) {
@@ -257,6 +271,7 @@ export class ModificarComponent {
       },
     });
   }
+  
   async getDataUsuario() {
     if (this.formUsuario.invalid) {
       this.formUsuario.markAllAsTouched();
@@ -289,6 +304,131 @@ export class ModificarComponent {
       }
     } catch (error) {
       alert('Error al actualizar usuario: ' + error);
+    }
+  }
+    // ---------------------------------------------------
+  // FORMULARIO Y FUNCIONES PARA EMPRESA (¡NUEVO!)
+  // ---------------------------------------------------
+
+  /** Crea el FormGroup para editar la empresa */
+  crearFormularioEmpresa(): void {
+    this.formEmpresa = this.fb.group({
+      // El ID de la empresa no se edita, pero puede ser útil tenerlo
+      idEmpresa: [{ value: null, disabled: true }],
+      // El CIF podría ser o no editable, lo dejo editable por ahora
+      cif: ['', [Validators.required, Validators.pattern(/^\w{1}\d{7}\w{1}$/)]], // Ejemplo de patrón CIF español simple, ajusta!
+      nombreEmpresa: ['', Validators.required],
+      direccionFiscal: ['', Validators.required],
+      pais: ['', Validators.required],
+      // El email del usuario asociado (contacto)
+      email: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
+       // Podrías añadir aquí campos del USUARIO asociado si quieres editarlos a la vez
+       // nombreContacto: [''],
+       // apellidosContacto: [''],
+       // passwordContacto: [''] // ¡CUIDADO con editar passwords aquí!
+    });
+  }
+
+  /** Carga los datos de la empresa y su usuario asociado */
+  cargarEmpresa(idEmpresa: number): void {
+    this.crearFormularioEmpresa(); // Crea el formulario antes de cargar datos
+
+    this.empresaService.getEmpresaById(idEmpresa).subscribe({ // Asume que tienes este método en EmpresaService
+      next: (empresaData) => {
+        this.empresa = empresaData;
+
+        // Obtenemos el usuario asociado (si la relación está bien configurada y viene en la respuesta)
+        // Asumiendo que 'empresaData' tiene una propiedad 'usuario' o necesitas buscarlo por email
+        const usuarioAsociado = empresaData.email; // Ajusta esto según tu modelo Empresa
+
+        this.formEmpresa.patchValue({
+          idEmpresa: empresaData.idEmpresa,
+          cif: empresaData.cif,
+          nombreEmpresa: empresaData.nombreEmpresa,
+          direccionFiscal: empresaData.direccionFiscal,
+          pais: empresaData.pais,
+          email: usuarioAsociado ? usuarioAsociado : empresaData.email, // Usa el email del usuario o el de la empresa si no hay usuario
+          // Si añades campos de contacto al form:
+          // nombreContacto: usuarioAsociado ? usuarioAsociado.nombre : '',
+          // apellidosContacto: usuarioAsociado ? usuarioAsociado.apellidos : '',
+        });
+
+        // Deshabilitar campos que no se deben editar (como el ID, quizás el email de contacto)
+        this.formEmpresa.get('idEmpresa')?.disable();
+        
+
+      },
+      error: (err) => {
+        console.error('Error cargando empresa:', err);
+        alert('No se pudo cargar la empresa');
+        this.volver();
+      },
+    });
+  }
+
+ /** Procesa y guarda los datos actualizados de la empresa */
+ async getDataEmpresa() { // Marcado como async por si llamas a servicios async
+    if (this.formEmpresa.invalid) {
+      this.formEmpresa.markAllAsTouched();
+      alert('Por favor, corrija los errores del formulario.');
+      return;
+    }
+    const nuevoEmail = this.formEmpresa.value.email?.trim(); // Normalmente el email de contacto no se cambia fácilmente
+    // Re-habilitar campos si es necesario obtener su valor (aunque patchValue funciona con disabled)
+    // this.formEmpresa.get('idEmpresa')?.enable();
+    // this.formEmpresa.get('email')?.enable();
+
+    // Construye el objeto Empresa actualizado desde el formulario
+    const empresaActualizada: Empresa = {
+      // Mantenemos el ID original
+      idEmpresa: this.empresa!.idEmpresa, // Usamos el ID cargado inicialmente
+      // Tomamos los valores del formulario
+      cif: this.formEmpresa.value.cif,
+      nombreEmpresa: this.formEmpresa.value.nombreEmpresa,
+      direccionFiscal: this.formEmpresa.value.direccionFiscal,
+      pais: this.formEmpresa.value.pais,
+      // El email de contacto (usamos el original ya que está deshabilitado)
+      email: nuevoEmail // O this.empresa!.email si prefieres
+      // --- IMPORTANTE: Manejo del Usuario Asociado ---
+      // Aquí hay dos opciones:
+      // 1. NO actualizar el usuario aquí: Se asume que la relación no cambia o se actualiza por separado.
+      //    En este caso, no necesitas incluir 'usuario' en el objeto enviado.
+      // 2. Actualizar TAMBIÉN el usuario aquí (si editaste campos de contacto):
+      //    Necesitarías construir el objeto Usuario también y tu backend debería manejarlo.
+      //    Por simplicidad, asumiremos la opción 1 por ahora.
+      //    Si necesitas la opción 2, tendrías que construir 'usuarioActualizado' aquí.
+      // usuario: this.empresa!.email // Mantenemos la referencia al usuario original cargado
+                                       // O null si no quieres enviar el objeto usuario completo
+    };
+
+    // --- Llamada al Servicio de Actualización ---
+    try {
+        // Asume que tienes un método 'actualizarEmpresa' en tu servicio
+        const resultado = await this.empresaService.actualizarEmpresa(empresaActualizada); // Usa await si el método devuelve Promise
+        // O usa subscribe si devuelve Observable:
+        // this.empresaService.actualizarEmpresa(empresaActualizada).subscribe({
+        //    next: (empresaGuardada) => {
+        //        alert('Empresa actualizada con éxito');
+        //        this.volver();
+        //    },
+        //    error: (err) => alert('Error al actualizar empresa: ' + (err.error?.message || err.message || 'Error desconocido'))
+        // });
+
+        // Si usaste await:
+         if (resultado) { // Asumiendo que actualizarEmpresa devuelve algo útil (o true/false)
+             alert('Empresa actualizada con éxito');
+             this.volver();
+         } else {
+              alert('No se pudo actualizar la empresa (respuesta inesperada)');
+         }
+
+    } catch (error: any) {
+        console.error("Error en getDataEmpresa:", error);
+        alert('Error al actualizar empresa: ' + (error.error?.message || error.message || 'Error desconocido'));
+    } finally {
+         // Volver a deshabilitar campos si los habilitaste (opcional)
+         // this.formEmpresa.get('idEmpresa')?.disable();
+         // this.formEmpresa.get('email')?.disable();
     }
   }
   

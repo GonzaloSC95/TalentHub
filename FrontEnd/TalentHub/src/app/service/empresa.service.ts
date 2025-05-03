@@ -17,35 +17,46 @@ export class EmpresaService {
   constructor() {}
 
 
-    getAllEmpresas():Observable<Empresa[]>{
-      const url = `${this.apiUrl}/all`;
-          // Llama al endpoint GET /all que devuelve List<UsuarioDto>
+  getAllEmpresas():Observable<Empresa[]>{
+    const url = `${this.apiUrl}/all`;
+        // Llama al endpoint GET /all que devuelve List<UsuarioDto>
       
-      return this.httpClient.get<Empresa[]>(url).pipe(
-        catchError(this.handleError<Empresa[]>('getAllEmpresas', [])) // Manejo de errores
+    return this.httpClient.get<Empresa[]>(url).pipe(
+      catchError(this.handleError<Empresa[]>('getAllEmpresas', [])) // Manejo de errores
+    );
+  }
+
+  private handleError<T> (operation= 'operation', result?:T){
+    return (error: any): Observable<T> =>{
+      console.error(`${operation} falló: ${error.message}`, error)
+      return of (result as T);
+    }
+  }
+
+  async registrarEmpresa(empresa: Empresa): Promise<Empresa | undefined> {
+    const body = { empresa };
+    return lastValueFrom(
+      this.httpClient.post<Empresa>(`${this.apiUrl}/registrar`, body).pipe(
+        catchError((error) => {
+          console.error('Error al registrar la empresa:', error);
+          return of(undefined);
+        })
+      )
+    );
+  }
+    async actualizarEmpresa(empresa: Empresa): Promise<Empresa | undefined> {
+      return lastValueFrom(
+        this.httpClient.put<Empresa>(`${this.apiUrl}/actualizar`, empresa).pipe(
+          catchError((error) => {
+            console.error('Error al actualizar el usuario:', error);
+            return of(undefined);
+          })
+        )
       );
     }
-      private handleError<T> (operation= 'operation', result?:T){
-        return (error: any): Observable<T> =>{
-          console.error(`${operation} falló: ${error.message}`, error)
-          return of (result as T);
-        }
-      }
-
-        async registrarEmpresa(empresa: Empresa): Promise<Empresa | undefined> {
-          const body = { empresa };
-          return lastValueFrom(
-            this.httpClient.post<Empresa>(`${this.apiUrl}/registrar`, body).pipe(
-              catchError((error) => {
-                console.error('Error al registrar la empresa:', error);
-                return of(undefined);
-              })
-            )
-          );
-        }
 
         
-  // Guarda usuario logueado
+  // Guarda empresa logueado
   setUsuario(empresa: Empresa): void {
     this.empresaSubject.next(empresa);
   }
@@ -61,7 +72,7 @@ export class EmpresaService {
       catchError(this.handleError<Empresa>('getAllEmpresas')) // Manejo de errores
     );
   }       
-    // Getter para usuario actual (ej: desde navbar)
+    // Getter para empresa actual (ej: desde navbar)
   getEmpresa(): Empresa | null {
     return this.empresaSubject.value;
     }

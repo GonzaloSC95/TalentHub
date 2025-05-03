@@ -121,6 +121,10 @@ export class BotoneraComponent {
       case 'solicitud':
         id = this.item?.idSolicitud;
         break;
+      case 'empresa':
+          id = this.item?.idEmpresa;
+          // this.router.navigate(['modificar', tipo, id]);
+          break;
       default:
         id = this.item?.id || this.item?.email; // fallback
     }
