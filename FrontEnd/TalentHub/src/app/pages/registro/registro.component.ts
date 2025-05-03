@@ -138,6 +138,7 @@ export class RegistroComponent {
   volver() {
     this.router.navigate(['/admin/list/usuarios']);
     }
+
   async onSubmit(): Promise<void> {
     console.log(this.reactiveForm.value)
     console.log(this.reactiveForm.status)
@@ -150,9 +151,9 @@ export class RegistroComponent {
       if (this.isRolEmpresa()) {
         this.usuario = {
           email: this.reactiveForm.get('email')?.value,
-          nombre: this.reactiveForm.get('empresa')?.value,
-          apellidos: this.reactiveForm.get('direccion')?.value,
-          password: this.reactiveForm.get('cif')?.value,
+          nombre: this.reactiveForm.get('nombre')?.value,
+          apellidos: this.reactiveForm.get('apellidos')?.value,
+          password: this.reactiveForm.get('password')?.value,
           enabled: 1,
           fechaRegistro: new Date(),
           rol: this.reactiveForm.get('rol')?.value,

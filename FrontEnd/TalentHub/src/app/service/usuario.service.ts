@@ -102,9 +102,9 @@ export class UsuarioService {
   }
 
   async registrarUsuario(usuario: Usuario): Promise<Usuario | undefined> {
-    const body = { usuario };
+    
     return lastValueFrom(
-      this.httpClient.post<Usuario>(`${this.apiUrl}/registrar`, body).pipe(
+      this.httpClient.post<Usuario>(`${this.apiUrl}/registrar`, usuario).pipe(
         catchError((error) => {
           console.error('Error al registrar el usuario:', error);
           return of(undefined);
@@ -117,7 +117,7 @@ export class UsuarioService {
     usuario: Usuario,
     empresa: Empresa
   ): Promise<Usuario | undefined> {
-    const body = { usuario, empresa };
+    const body = { usuario:usuario, empresa:empresa };
     return lastValueFrom(
       this.httpClient
         .post<Usuario>(`${this.apiUrl}/registrar/empresa`, body)

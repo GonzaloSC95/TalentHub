@@ -3,6 +3,7 @@ package unir.reto.talenthub.restcontroller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import unir.reto.talenthub.configuration.UsuarioMapper;
 import unir.reto.talenthub.dto.EmpresaDto;
+import unir.reto.talenthub.dto.RegistroEmpresaRequestDto;
 import unir.reto.talenthub.dto.UsuarioDto;
 import unir.reto.talenthub.entity.Empresa;
 import unir.reto.talenthub.entity.Usuario;
@@ -110,8 +112,56 @@ public class UsuarioController {
         }
         return ResponseEntity.badRequest().build();
     }
-
     @Operation(
+            summary = "Registrar usuario y empresa.",
+            description = "registra un usuario y una empresa nuevos."
+        )
+        @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Usuario y empresa creados"),
+            @ApiResponse(responseCode = "400", description = "Error al crear el usuario o la empresa")
+        })
+        @Transactional
+        @PostMapping("/registrar/empresa")
+        // Acepta UN RequestBody del tipo contenedor
+        public ResponseEntity<?> registrarUsuarioEmpresa(@RequestBody /*@Valid*/ RegistroEmpresaRequestDto requestDto) {
+            try {
+                // Accede a los DTOs individuales desde el contenedor
+                UsuarioDto usuarioDto = requestDto.getUsuario();
+                EmpresaDto empresaDto = requestDto.getEmpresa();
+
+                // --- Validación básica (o usa @Valid) ---
+                if (usuarioDto == null || empresaDto == null) {
+                    return ResponseEntity.badRequest().body("Faltan datos de usuario o empresa.");
+                }
+                // Puedes añadir más validaciones aquí si no usas @Valid
+
+                // Mapeamos el usuario y la empresa desde el DTO a la entidad
+                // Asumiendo que los mappers/DTOs tienen métodos mapToEntity
+                Usuario usuario = usuarioMapper.mapToEntity(usuarioDto); // O usa un constructor/builder
+                Empresa empresa = empresaDto.mapToEntity(empresaDto); // O usa un constructor/builder
+
+                // --- Lógica de guardado ---
+                // Guarda el usuario PRIMERO (si empresa depende de él)
+                 usuarioService.save(usuario); // Habria que verificar con try/catch
+                 Usuario savedUsuario = usuarioService.findByEmail(usuario.getEmail());
+                // Asigna el usuario guardado (con ID) a la empresa y guarda la empresa
+                empresa.setUsuario(savedUsuario);
+                empresaService.save(empresa); // Asume que save maneja la creación
+
+                // Devuelve el DTO del usuario creado (o un mensaje de éxito)
+                UsuarioDto responseDto = usuarioMapper.mapWithEmpresa(savedUsuario); // Mapea la entidad guardada a DTO
+                return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+
+            } catch (DataIntegrityViolationException e) { // Ejemplo: Captura errores de constraint
+                // Log e
+                 return ResponseEntity.badRequest().body("Error de datos: " + e.getMessage());
+            } catch (Exception e) { // Captura genérica
+                // Log e
+                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno al registrar.");
+            }
+        }
+
+/*    @Operation(
         summary = "Registrar usuario y empresa.",
         description = "registra un usuario y una empresa nuevos."
     )
@@ -137,7 +187,7 @@ public class UsuarioController {
             }
         }
         return ResponseEntity.badRequest().build();
-    }
+    }*/
 
     @Operation(summary = "Crear usuario", description = "Crea un nuevo usuario.")
     @ApiResponses({
@@ -182,7 +232,7 @@ public class UsuarioController {
         @ApiResponse(responseCode = "200", description = "Usuario "),
         @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
     })
-    @PutMapping("/disable")
+    @PutMapping("/disable")//antes delete
     public ResponseEntity<UsuarioDto> deleteUsuario(@RequestBody UsuarioDto usuarioDto) {
         Usuario usuario = usuarioMapper.mapToEntity(usuarioDto);
        /* int result = usuarioService.delete(usuario);
