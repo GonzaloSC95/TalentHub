@@ -62,17 +62,26 @@
     <tbody>
       @for (item of data; track item) {
         <tr>
-          @for (col of config.columns; track col) {
+          @for (col of config.columns; track col.key) {
             <td>
-              {{ item[col.key] }}
+              @if (col.key === 'enabled') {
+                <!-- Condicional directo basado en el valor de item[col.key] (que es item['enabled']) -->
+                @if (item[col.key] === 1) {
+                  <span>Activo</span>
+                } @else if (item[col.key] === 0) {
+                  <span>Inactivo</span>
+                } @else {
+                  <span>Desconocido</span> <!-- Opcional -->
+                }
+              } @else {
+                <!-- Muestra el valor directamente para otras columnas -->
+                {{ item[col.key] }}
+              }
             </td>
           }
           <td>
             @if(typeForBotonera) {
               <app-botonera [item]="item" [type]="typeForBotonera" (eliminado)="quitarDeLista($event)"></app-botonera>
-            } @else {
-              <!-- Opcional: Mostrar algo si no hay tipo (ej. un guión o nada) -->
-              <span>-</span>
             }
           </td>
         </tr>

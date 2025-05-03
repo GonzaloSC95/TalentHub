@@ -6,10 +6,10 @@ import { BotoneraComponent } from '../../components/botonera/botonera.component'
 import { Usuario } from './../../interfaces/usuario';
 import { SolicitudService } from './../../service/solicitud.service';
 
+import { FormsModule } from '@angular/forms';
 import { EmpresaService } from '../../service/empresa.service';
 import { UsuarioService } from '../../service/usuario.service';
 import { VacanteService } from '../../service/vacante.service';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-landing',
@@ -236,6 +236,7 @@ export class LandingComponent implements OnInit, OnDestroy {
           { key: 'apellidos', label: 'Apellidos' },
           { key: 'email', label: 'Email' },
           { key: 'rol', label: 'Rol' },
+          { key: 'enabled', label: 'Estado'}
           //{ key: 'nombreEmpresa', label: 'Empresa' },
         ];
         serviceCall = this.usuarioService.getAllUsuarios();
