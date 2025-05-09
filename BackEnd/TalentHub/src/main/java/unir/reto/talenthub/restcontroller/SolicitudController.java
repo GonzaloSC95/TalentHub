@@ -44,7 +44,7 @@ public class SolicitudController {
       @ApiResponse(responseCode = "404", description = "Solicitud no encontrada")
    })
    @GetMapping("/{id}")
-   public ResponseEntity<SolicitudDto> getSolicitudById(@PathVariable("id") Integer id) {
+   public ResponseEntity<SolicitudDto> getSolicitudById(@PathVariable Integer id) {
        Solicitud solicitud = solicitudService.findByIdSolicitud(id);
        if (solicitud != null) {
            SolicitudDto solicitudDto = new SolicitudDto();
