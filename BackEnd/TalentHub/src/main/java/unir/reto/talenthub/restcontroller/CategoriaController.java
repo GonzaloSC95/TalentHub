@@ -65,7 +65,8 @@ public class CategoriaController {
       List<CategoriaDto> categorias = categoriaService.findAll().stream()
             .map(categoria -> new CategoriaDto().mapFromEntity(categoria))
             .toList();
-      return ResponseEntity.ok(categorias);
+      //return ResponseEntity.ok(categorias);
+      return ResponseEntity.status(HttpStatus.OK).body(categorias);
    }
 
    @Operation(
